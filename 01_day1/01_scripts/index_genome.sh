@@ -1,0 +1,1 @@
+samtools faidx 02_genome/genome_mallotus_dummy.fasta
