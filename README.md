@@ -1,7 +1,13 @@
 # physalia_adaptation_course
 
-Day1: Handling NGS data: From raw reads to SNPs matrix
+## Day1: Handling NGS data: From raw reads to SNPs matrix
 
+Capelin data: They are taken from Cayuela et al,2020. Molecular Ecology https://doi-org.acces.bibl.ulaval.ca/10.1111/mec.15499
+ 
+Genome assembly: For this course, we made a dummy assembly of about 14 MB (instead of about 500 MB) and 4 chromosomes (instead of 24).
+
+Raw reads: Obtained by GBS methods, sequenced with IonTorrent.
+ 
 Day2: Population structure and confounding factors
 
 Day3: Outlier detection - Environmental associations
