@@ -1,0 +1,17 @@
+#before starting 
+git clone (to clone the repository the first time)
+
+git pull (to update the repository when you open it)
+
+#working
+if you add big files, update the .gitignore so that we don't add to the repository big files or big folders
+
+if you want to upload an empty folder, make the folder, and add inside a README.MD with one line explaining what will go into 
+that forlder
+
+#finishing
+git add . (to add the files that you ahve made or update)
+
+git commit -m "blabla" (to document what are the changes you did)
+
+git push (to update the files you add to the webrepository)
