@@ -17,4 +17,10 @@ ln -s ~/*yourlastname* ~/home
 Copy this repository in your folder
 ```
 cd ~/home
-git clone 
+git clone  https://github.com/clairemerot/physalia_adaptation_course.git
+```
+
+
+## Step 1 : Mapping short reads to the capelin (dummy) reference genome
+The data we'll be working on are from capelin (Mallotus villosus), a small marine fish, from Cayuela et al. 2020, Molecular Ecology. They were generated on the IonTorrent platform but all the preprocessing (demultiplexing, adapter removal, read trimming, quality filtering) has already been done. You can find example script for these preliminary steps here and here.
+
