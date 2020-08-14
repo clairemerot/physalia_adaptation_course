@@ -6,3 +6,6 @@
 *.fasta
 *.fastq
 *.log
+*.fa*
+*.fasta*
+*.bai
