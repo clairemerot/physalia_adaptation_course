@@ -12,7 +12,7 @@ mkdir samfiles
 mkdir bamfiles
 
 for IND in `cat $SAMPLELIST`; do
-bowtie2 -p 24 -q --phred33 --end-to-end --very-sensitive --fr --time -x ~/home/physalia_adaptation_course/01_day1/02_genome/mallotus -U ~/home/data/${IND}.fq.gz -S ~/home/mapped/samfiles/${IND}.sam
+bowtie2 -p 24 -q --phred33 --end-to-end --very-sensitive --fr --time -x ~/home/physalia_adaptation_course/01_day1/02_genome/mallotus -q ~/home/data/${IND}.fq.gz > ~/home/mapped/samfiles/${IND}.sam >2 bowtie.log
 
 cd ~/home/mapped/samfiles/
 grep -v XS:i: ${IND}.sam > ${IND}.xs.sam
