@@ -6,10 +6,10 @@ SAMPLELIST=$1 ### samplelist_all.txt
 cd ~/home/physalia_adaptation_course/01_day1/02_genome/
 bowtie2-build -f genome_mallotus_dummy.fasta mallotus
 
-mkdir ~/home/mapped/
+mkdir -p ~/home/mapped/
 cd ~/home/mapped/
-mkdir samfiles
-mkdir bamfiles
+mkdir -p samfiles
+mkdir -p bamfiles
 
 for IND in `cat $SAMPLELIST`; do
 bowtie2 -p 24 -q --phred33 --end-to-end --very-sensitive --fr --time -x ~/home/physalia_adaptation_course/01_day1/02_genome/mallotus -q ~/home/data/${IND}.fq.gz > ~/home/mapped/samfiles/${IND}.sam >2 bowtie.log
