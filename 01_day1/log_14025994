@@ -1,0 +1,10 @@
+[bwa_index] Pack FASTA... 0.18 sec
+[bwa_index] Construct BWT for the packed sequence...
+[bwa_index] 43.62 seconds elapse.
+[bwa_index] Update BWT... 0.13 sec
+[bwa_index] Pack forward-only FASTA... 0.11 sec
+[bwa_index] Construct SA from BWT and Occ... 32.47 sec
+[main] Version: 0.7.17-r1188
+[main] CMD: bwa index -p 02_genome/genome_mallotus_dummy.fasta 02_genome/genome_mallotus_dummy.fasta
+[main] Real time: 77.622 sec; CPU: 76.511 sec
+ls: cannot access '03_raw_reads/*.fa.gz': No such file or directory

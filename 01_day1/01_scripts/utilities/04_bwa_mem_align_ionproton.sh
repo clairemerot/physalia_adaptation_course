@@ -34,7 +34,7 @@ module load samtools
 # Index genome if not alread done
 bwa index -p "$GENOMEFOLDER"/"$GENOME" "$GENOMEFOLDER"/"$GENOME"
 
-for file in $(ls -1 "$DATAFOLDER"/*.fa.gz)
+for file in $(ls -1 "$DATAFOLDER"/*.fq.gz)
 do
     # Name of uncompressed file
     echo "Aligning file $file"
@@ -47,13 +47,13 @@ do
         -R "$ID" \
         "$GENOMEFOLDER"/"$GENOME" "$DATAFOLDER"/"$name" 2> /dev/null |
         samtools view -Sb -q 1 -F 4 -F 256 -F 2048 \
-        - > "$ALIGNEDFOLDER"/"${name%.fa.gz}".bam
+        - > "$ALIGNEDFOLDER"/"${name%.fq.gz}".bam
 
     # Samtools sort
-    samtools sort --threads "$NCPU" -o "$ALIGNEDFOLDER"/"$name".sorted.bam "$ALIGNEDFOLDER"/"${name%.fa.gz}".bam
+    samtools sort --threads "$NCPU" -o "$ALIGNEDFOLDER"/"$name".sorted.bam "$ALIGNEDFOLDER"/"${name%.fq.gz}".bam
 
     # Cleanup
-    rm "$ALIGNEDFOLDER"/"${name%.fa.gz}".bam
+    rm "$ALIGNEDFOLDER"/"${name%.fq.gz}".bam
 done
 
 
