@@ -11,7 +11,10 @@ Here are the instructions to log in the AWS server.
 Once you have successfully logged in, the first thing you will do is to create your own folder and generate a symbolic link so that we don't need to personalize all the scripts
 ```
 mkdir *yourlastname*
-ln -s ~/*yourlastname* ~/home
+cd *yourlastname*
+mkdir data
+cd data
+cp -l ~/Share/GBS_reads/*.gz .
 ```
 
 Copy this repository in your folder
@@ -19,7 +22,13 @@ Copy this repository in your folder
 cd ~/home
 git clone  https://github.com/clairemerot/physalia_adaptation_course.git
 ```
+--> github repo will be in shared folder!
 
+mkdir scripts
+--> here go scripts and popmaps
+cp ~/Share/physalia_adaptation_course/01_day1/01_scripts/\*.sh scripts/
+cp ~/Share/physalia_adaptation_course/00_documents/* scripts/
+cp -l ~/Share/physalia_adaptation_course/01_day1/02_genome/genome_mallotus_dummy.fasta scripts
 
 ## Step 1 : Mapping short reads to the capelin (dummy) reference genome
 The data we'll be working on are from capelin (Mallotus villosus), a small marine fish, from Cayuela et al. 2020, Molecular Ecology. They were generated on the IonTorrent platform but all the preprocessing (demultiplexing, adapter removal, read trimming, quality filtering) has already been done. You can find example script for these preliminary steps here and here.
