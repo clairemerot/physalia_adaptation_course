@@ -27,12 +27,12 @@ The data we'll be working on are from capelin (Mallotus villosus), a small marin
 To run analysis that take some time we will submit jobs through bash scripts.
 To map the filtered data to the capelin reference genome, make the script ```bowtie_mapping.sh``` in folder xxx executable and submit it with
 ```
-chmod +x bowtie_mapping.sh
-./bowtie_mapping.sh
+chmod +x physalia_adaptation_course/01_day1/01_scripts/bowtie_mapping.sh
+physalia_adaptation_course/01_day1/01_scripts/bowtie_mapping.sh physalia_adaptation_course/00_documents/samplelist_all.txt
 ```
 To run a bash script like this you can also type
 ```
-bash bowtie_mapping.sh
+bash physalia_adaptation_course/01_day1/01_scripts/bowtie_mapping.sh physalia_adaptation_course/00_documents/samplelist_all.txt
 ``` 
 without making it executable.
 
