@@ -36,3 +36,35 @@ bash bowtie_mapping.sh
 ``` 
 without making it executable.
 
+### File formats
+While we wait we can explore the read file (.fastq format) and the alignment file (.sam/.bam format), which are the input and output of the alignemnt, respectively.
+#### FASTQ
+```
+@NB551191:35:HNWGCBGX3:1:11101:9622:1037 1:N:0:AGGCAGAA+ACTCTAGG
+CCTTGNTGCACCTGTGGCATGGAGACCGAATCTTGTGGGGAAACAATCATTTCTTCAGGTCTGAGCTCTCAGATTT
++
+AAAAA#EAEEEEEEEEEEEEEEEEEEEEAEEEEEEEEEEEAE/E/AEEEEEEEEEE/EEEEEEEEEEEEEEEEEEE
+@NB551191:35:HNWGCBGX3:1:11101:20086:1038 1:N:0:AGGCAGAA+ACTCTAGG
+CTGGTNCACCATCCTTGTGTGCTGTTTCATGACAGTAATTACTGAGAGGGTCTGCAATTCAGATCACCTGAAACTC
++
+AAAAA#EEEEAEEEEEEEEEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+@NB551191:35:HNWGCBGX3:1:11101:4269:1051 1:N:0:AGGCAGAA+ACTGTAGG
+TAACAGCACAGAGGATTGAATAAGGTGAGAGCAAAAGTCCTACTACTTATTCAGGCCCCATGTAGCAGTATTCCTC
++
+AAAAA6EEEEEEEEEEEEEA/EEEEEEEAEEEEEEE6/EA/EEEEEE/E//EA//EEEEEEEE6A/E6/EE/EEEE
+```
+The snippet above shows 3 reads, with each read coming with 4 lines of information.
+1. Sequence ID and information
+2. The actual read sequence
+3. Generally plus a '+' sign but it could contain additional information
+4. The quality scores for each base in line 2
+
+Knowing this, we can calculate the number of reads in a file by counting the number of lines
+```
+wc -l file.fastq
+```
+and divide by 4.
+
+When we have paired reads, they are generally stored in two separate files and are paired by position: the first read in ```read1.fastq``` is paired with the first read in ```read2.fastq```, the second read in ```read1.fastq``` is paired with the second read in ```read2.fastq```, and so on. One way to check if your files are intact is to check that the two read files have the same amount of lines/reads.
+#### SAM/BAM
+The alignment file contains much more information. In addition to all the information contained in the .fastq files, we now have infromation of the quality of the alignment and the position of where those reads mapped in the genome. Although we produce .sam files with the alignment, we quickly convert them to .bam, which is in binary format. These files are not readable directly (but you can use ```samtools view```)
