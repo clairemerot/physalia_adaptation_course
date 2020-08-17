@@ -33,6 +33,42 @@ cp -l ~/Share/physalia_adaptation_course/01_day1/02_genome/genome_mallotus_dummy
 ## Step 1 : Mapping short reads to the capelin (dummy) reference genome
 The data we'll be working on are from capelin (Mallotus villosus), a small marine fish, from Cayuela et al. 2020, Molecular Ecology. They were generated on the IonTorrent platform but all the preprocessing (demultiplexing, adapter removal, read trimming, quality filtering) has already been done. You can find example script for these preliminary steps here and here.
 
+To run analysis that take some time we will submit jobs through bash scripts. Below is an example of a short bash scripts
+```
+#!/bin/bash
+
+
+setsid nohup serve.js &
+nohup ./model >outfile.txt &
+
+Mapping is our computational bottleneck we have done it for you using this script here https://github.com/enormandeau/stacks_workflow/blob/master/00-scripts/bwa_mem_align_reads.sh
+
+Here I will provide yua step-by-step breakdown of that script.
+First, it uses a for loop in bash to loop through the list of fastq files to map to the reference genome
+```
+for file in $(ls -1 "$DATAFOLDER"/*.fq.gz)
+do
+```
+then, it uses a one-liner (even though it looks like multiple lines for the use of backslashes \) to map the data and pipe (with |) the .sam output into the binary format .bam
+```
+bwa mem -t "$NCPU" -k 19 -c 500 -O 0,0 -E 2,2 -T 0 \
+        -R "$ID" \
+        "$GENOMEFOLDER"/"$GENOME" "$DATAFOLDER"/"$name" 2> /dev/null |
+        samtools view -Sb -q 1 -F 4 -F 256 -F 2048 \
+        - > "$DATAFOLDER"/"${name%.fq.gz}".bam
+```
+The alignments in bam files are sorted and indexed
+```
+samtools sort --threads "$NCPU" -o "$DATAFOLDER"/"${name%.fq.gz}".sorted.bam \
+        "$DATAFOLDER"/"${name%.fq.gz}".bam
+
+    samtools index "$DATAFOLDER"/"${name%.fq.gz}".sorted.bam
+```
+and the intermediate files are deleted with
+```
+rm "$DATAFOLDER"/"${name%.fq.gz}".bam
+```
+        
 To run analysis that take some time we will submit jobs through bash scripts.
 To map the filtered data to the capelin reference genome, make the script ```bowtie_mapping.sh``` in folder xxx executable and submit it with
 ```
