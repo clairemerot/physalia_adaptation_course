@@ -3,7 +3,7 @@
 *.sam
 *.bam
 *.fa
-*.fasta
+
 *.fastq
 *.log
 *.fa*

@@ -2,3 +2,17 @@
 [bwa_index] Construct BWT for the packed sequence...
 [BWTIncCreate] textLength=183851948, availableWord=24936316
 [BWTIncConstructFromPacked] 10 iterations done. 41133340 characters processed.
+[BWTIncConstructFromPacked] 20 iterations done. 75989788 characters processed.
+[BWTIncConstructFromPacked] 30 iterations done. 106966284 characters processed.
+[BWTIncConstructFromPacked] 40 iterations done. 134494204 characters processed.
+[BWTIncConstructFromPacked] 50 iterations done. 158957068 characters processed.
+[BWTIncConstructFromPacked] 60 iterations done. 180695692 characters processed.
+[bwt_gen] Finished constructing BWT in 62 iterations.
+[bwa_index] 99.90 seconds elapse.
+[bwa_index] Update BWT... 0.61 sec
+[bwa_index] Pack forward-only FASTA... 0.48 sec
+[bwa_index] Construct SA from BWT and Occ... 31.74 sec
+[main] Version: 0.7.17-r1188
+[main] CMD: bwa index -p 02_genome/genome_mallotus_dummy.fasta 02_genome/genome_mallotus_dummy.fasta
+[main] Real time: 134.679 sec; CPU: 133.521 sec
+Aligning file 03_raw_reads/A_01.fq.gz
