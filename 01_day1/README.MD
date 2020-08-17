@@ -3,8 +3,7 @@
 Welcome to the practical portion of the Adaptation Genomics course!
 
 ## Step 1 : Logging on the AWS server from your computer
-Mac OS X and Linux users
-Logging on
+### Mac OS X and Linux users
 If you are using a Mac or Linux machine, you will need to open a terminal window and then type ```ssh```. ssh stands for secure shell and is a way of interacting with remote servers. You will need to log in to the cluster using both ssh and a keyfile that has been generated for you.
 Firstly, download the keyfile and open a terminal window. Then copy it into your home directory like so:
 ```
@@ -33,70 +32,51 @@ Copying files back on to our local machine is just as straightforward. You can d
 scp -i "~/mark.pem" mark@54.245.175.86:~/test_file ./
 ```
 Where here all we did was use scp with cluster address first and the the location (our working directory) second - i.e. ./
+
 Alternatively, we can use Cyberduck, or similar software, to transfer data back and forth.
 Open Cyberduck, and click on 'Open connection' on the top left of the screen. Select 'SFTP (SSH File Tranfer Protocol)' from the dropdown menu and copy the IP address for the day in the Server field and your username for in the Username field. Leave the PAssword field empty, go down to SSH Private Key and add the Private Key Carlo sent you. Press Connect and you're connected!
 
-Windows users
-Logging on
+### Windows users
 If you are using a Windows machine, you will need to log on using PuTTY since there is no native ssh client. PuTTY does not natively support the private key format (.pem) needed to login to our Amazon cloud instance. You first need to convert the private key that we gave to you to a key that PuTTY can read. PuTTY has a tool named PuTTYgen, which can convert keys to the required PuTTY format (.ppk). When you installed PuTTY, it will also have installed PuTTYgen.
 
 First, start PuTTYgen (for example, from the Start menu, choose All Programs > PuTTY > PuTTYgen). Then select RSA and click on Load:
 
-
-
 In the new window that pops up, Change “PuTTY Private Key Files” to “All Files” to allow you to find your pem file.
-
-
 
 Then save your key and click on YES to dismiss the Warning as shown below.
 
-
-
 Great, now your key file is ready and we can start Putty. In Putty, enter your user name and the IP address in the format <user_name>@<IP adress>. Make sure that 22 is given as Port and that SSH is selected.
-
-
 
 Next, on the menu on the left, expand the “SSH” panel by clicking on the + and select “Auth”. Then, select your new putty format key file (.ppk) with Browse. Do NOT click on Open yet.
 
-
-
 To make sure that you will not get logged out if you are inactive for a while, you can configure PuTTY to automatically send ‘keepalive’ signals at regular intervals to keep the session active. Click on Connection, then insert 180 to send keepalive signals every 3 minutes. Do NOT click on Open yet.
-
-
 
 To avoid having to change the settings each time you log in, you can save the PuTTY session. Click on Session to get back to the basic options window. Once you are happy with all settings, give the session a name and click Save. Now you are ready to start the session with “Open”. The first time PuTTY will display a security alert dialog box that asks whether you trust the host you are connecting to. Click yes.
 
-
-
 When you log in the next time, you can just click on the saved session and click load. If the IP address changed in the mean time (e.g. because we stopped the Amazon instance over night), you will need to replace the IP address by the new one. I would then recommend to Save the changed settings. Then simply click Open to start the session.
-
-
 
 If the IP address did not change and you just want to login again, you can also right-click on the putty symbol in the taskbar (provided that you have pinned it to the taskbar) and select the session.
 
-
-
-Downloading and uploading files with Filezilla
-Filezilla is a handy software to move files from a remote server such as the Amazon cloud or a cluster of your university.
+You can tranfer files back and forth with Filezilla, a handy software to move files from a remote server such as the Amazon cloud or a cluster of your university.
 
 Open Filezilla and choose Edit -> Settings.
-
-
-
 Next, choose SFTP and Add the .pem key file as indicated below and click OK.
-
-
-
 Finally, enter the IP address and the user name and when you hit enter, it should connect you. Next, time, you can use the Quickconnect dropdown menu, provided the IP address has not changed in the meantime.
-
-
-
 Now you will see the file directory system (folders) on your local computer on the left and your folders on the amazon cloud on the right. You can now just drag and drop files from one side to the other.
 
+## Step 2: Getting familiar with the UNIX environment
+Although you should have familiarized with working on a UNIX environment before the beginning of the course, here below are the commands that we will use most commonly. After you have logged in, create your own folder and move in it. You will run all your scripts from here
+```
+mkdir yourname
+cd yourname
+```
+We will use ```nano``` as a text editor to create and edit scripts and files.
+Type ```nano```
+and write
+```
+#!/bin/bash
+echo 
 
-
-
-Here are the instructions to log in the AWS server.
 
 Once you have successfully logged in, the first thing you will do is to create your own folder and generate a symbolic link so that we don't need to personalize all the scripts
 ```
