@@ -19,7 +19,7 @@ GENOMEFOLDER="02_genome"
 GENOME="genome_mallotus_dummy.fasta"
 DATAFOLDER="03_raw_reads"
 ALIGNEDFOLDER="04_aligned_files"
-NCPU=$4
+NCPU=$1
 
 # Test if user specified a number of CPUs
 if [[ -z "$NCPU" ]]
