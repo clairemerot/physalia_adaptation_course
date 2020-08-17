@@ -1,10 +1,6 @@
 # Day1: Handling NGS data: From raw reads to SNPs matrix
 
-Welcome to the practical portion of the Adaptation Genomics course!
-
-
-
-## Step 2: Getting familiar with the UNIX environment
+## Step 1: Getting familiar with the UNIX environment
 Although you should have familiarized with working on a UNIX environment before the beginning of the course, here below are the commands that we will use most commonly. After you have logged in, create your own folder and move in it. You will run all your scripts from here
 ```
 mkdir yourname
