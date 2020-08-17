@@ -3,9 +3,10 @@
 *.sam
 *.bam
 *.fa
-
+*.fasta
 *.fastq
 *.log
 *.fa*
 *.fasta*
 *.bai
+*log_*
