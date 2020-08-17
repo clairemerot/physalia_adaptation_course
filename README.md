@@ -7,7 +7,7 @@ Prepared by Anna Tigano, Yann Dorant and Claire Mérot
 
 Capelin data: They are taken from Cayuela et al,2020. Molecular Ecology https://doi-org.acces.bibl.ulaval.ca/10.1111/mec.15499
  
-Genome assembly: For this course, we made a dummy assembly of about 14 MB (instead of about 500 MB) and 4 chromosomes (instead of 24).
+Genome assembly: For this course, we made a dummy assembly of about 90 MB (instead of about 500 MB) and 5 chromosomes (instead of 24).
 
 Raw reads: Obtained by GBS methods, sequenced with IonTorrent.
  
