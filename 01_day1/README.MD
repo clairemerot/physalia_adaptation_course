@@ -36,7 +36,7 @@ rm test_nano.txt
 ```
 WARNING!!! ```rm``` removes files and folders for good, and they can't be retrieved. So please keep that in mind!
 
-## Step 3: Getting from raw data to mapped data
+## Step 2: Getting from raw data to mapped data
 ### Pre-processing of raw data
 The data we'll be working on are from capelin (Mallotus villosus), a small marine fish, from Cayuela et al. 2020, Molecular Ecology. They were generated on the IonTorrent platform but all the preprocessing (demultiplexing, adapter removal, read trimming, quality filtering) has already been done. You can find example script for these preliminary steps in the scripts folder of day 1.
 
@@ -88,7 +88,7 @@ GENOMEFOLDER="02_genome"
 GENOME="genome_mallotus_dummy.fasta"
 DATAFOLDER="03_raw_reads"
 ALIGNEDFOLDER="04_aligned_files"
-NCPU=$4
+NCPU=$1
 ```
 
 First, it uses a for loop in bash to loop through the list of fastq files to map to the reference genome
