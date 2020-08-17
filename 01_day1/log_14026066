@@ -16,3 +16,4 @@
 [main] CMD: bwa index -p 02_genome/genome_mallotus_dummy.fasta 02_genome/genome_mallotus_dummy.fasta
 [main] Real time: 134.679 sec; CPU: 133.521 sec
 Aligning file 03_raw_reads/A_01.fq.gz
+Aligning file 03_raw_reads/A_02.fq.gz
