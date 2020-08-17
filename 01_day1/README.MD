@@ -70,50 +70,59 @@ Although you should have familiarized with working on a UNIX environment before 
 mkdir yourname
 cd yourname
 ```
-We will use ```nano``` as a text editor to create and edit scripts and files.
-Type ```nano```
-and write
+Then copy some of the files we will need today in a new folder
 ```
-#!/bin/bash
-echo 
-
-
-Once you have successfully logged in, the first thing you will do is to create your own folder and generate a symbolic link so that we don't need to personalize all the scripts
-```
-mkdir *yourlastname*
-cd *yourlastname*
-mkdir data
-cd data
-cp -l ~/Share/GBS_reads/*.gz .
-```
-
-Copy this repository in your folder
-```
-cd ~/home
-git clone  https://github.com/clairemerot/physalia_adaptation_course.git
-```
---> github repo will be in shared folder!
-
 mkdir scripts
---> here go scripts and popmaps
-cp ~/Share/physalia_adaptation_course/01_day1/01_scripts/\*.sh scripts/
-cp ~/Share/physalia_adaptation_course/00_documents/* scripts/
-cp -l ~/Share/physalia_adaptation_course/01_day1/02_genome/genome_mallotus_dummy.fasta scripts
+cd scripts
+cp ~/Share/physalia_adaptation_course/00_documents/* ./ ###this command copies all the files in the folder 00_documents into the folder you're currently in
+```
+Use ```ls``` to get a list of the files we have copied over, and look at the content of one of those files with
+```
+less popmap_2lin.txt 
+```
+You can stroll down by pressing the bar on your keyboard and ```q``` to exit from the screen.
 
-## Step 1 : Mapping short reads to the capelin (dummy) reference genome
-The data we'll be working on are from capelin (Mallotus villosus), a small marine fish, from Cayuela et al. 2020, Molecular Ecology. They were generated on the IonTorrent platform but all the preprocessing (demultiplexing, adapter removal, read trimming, quality filtering) has already been done. You can find example script for these preliminary steps here and here.
+If you want to print a few lines to the screen (which won't disapper) type
+```
+head popmap_2lin.txt
+```
+which will print the first 10 lines by default. You can specify the number of lines with ```-n 25```. Same for ```tail```, which shows the end of the file.
 
-To run analysis that take some time we will submit jobs through bash scripts. Below is an example of a short bash scripts
+To edit scripts and files, we'll use ```nano``` as text editor
+Type 
+```
+nano popmap_2lin.txt
+``` 
+and move around using the arrows on your keyboard.
+At the bottom of your screen are the shortcuts for different commands. For example, to modify the file and save it with a different name, write something in the first line, press ctlr + x and edit the name of the file into ```test_nano.txt```. Hit enter and the file will be saved.
+Now, let's remove this file with
+```
+rm test_nano.txt
+```
+WARNING!!! ```rm``` removes files and folders for good, and they can't be retrieved. So please keep that in mind!
+
+## Step 3: Getting from raw data to mapped data
+The data we'll be working on are from capelin (Mallotus villosus), a small marine fish, from Cayuela et al. 2020, Molecular Ecology. They were generated on the IonTorrent platform but all the preprocessing (demultiplexing, adapter removal, read trimming, quality filtering) has already been done. You can find example script for these preliminary steps in the scripts folder of day 1.
+
+As we're analyzing a large dataset that would take many hours to align to the reference genome, we also did the mapping for you using this script ```physalia_adaptation_course/01_day1/01_scripts/utilities/04_bwa_mem_align_ionproton.sh```. 
+Here I will provide you with a step-by-step breakdown of that script.
+The file starts with the line
 ```
 #!/bin/bash
+```
+We will write your scripts in bash, and that is the line that tell the server in what language the script is written in.
+A few lines starting with ```#SBATCH``` follow. We won't need these lines because we won't use a job scheduler, but this is a good example for the people that have SLURM on their institution's servers.
 
+We set a few variables as shown below, These are very handy to make this script easy to follow and more customizable. For example, the number of CPUs is not hard-coded in the script and can be conveniently changed when submitting the script.
+```
+# Global variables
+GENOMEFOLDER="02_genome"
+GENOME="genome_mallotus_dummy.fasta"
+DATAFOLDER="03_raw_reads"
+ALIGNEDFOLDER="04_aligned_files"
+NCPU=$4
+```
 
-setsid nohup serve.js &
-nohup ./model >outfile.txt &
-
-Mapping is our computational bottleneck we have done it for you using this script here https://github.com/enormandeau/stacks_workflow/blob/master/00-scripts/bwa_mem_align_reads.sh
-
-Here I will provide yua step-by-step breakdown of that script.
 First, it uses a for loop in bash to loop through the list of fastq files to map to the reference genome
 ```
 for file in $(ls -1 "$DATAFOLDER"/*.fq.gz)
@@ -138,6 +147,29 @@ and the intermediate files are deleted with
 ```
 rm "$DATAFOLDER"/"${name%.fq.gz}".bam
 ```
+
+
+
+mkdir scripts
+--> here go scripts and popmaps
+cp ~/Share/physalia_adaptation_course/01_day1/01_scripts/\*.sh scripts/
+cp ~/Share/physalia_adaptation_course/00_documents/* scripts/
+
+
+## Step 1 : Mapping short reads to the capelin (dummy) reference genome
+The data we'll be working on are from capelin (Mallotus villosus), a small marine fish, from Cayuela et al. 2020, Molecular Ecology. They were generated on the IonTorrent platform but all the preprocessing (demultiplexing, adapter removal, read trimming, quality filtering) has already been done. You can find example script for these preliminary steps here and here.
+
+To run analysis that take some time we will submit jobs through bash scripts. Below is an example of a short bash scripts
+```
+#!/bin/bash
+
+
+setsid nohup serve.js &
+nohup ./model >outfile.txt &
+
+Mapping is our computational bottleneck we have done it for you using this script here https://github.com/enormandeau/stacks_workflow/blob/master/00-scripts/bwa_mem_align_reads.sh
+
+
         
 To run analysis that take some time we will submit jobs through bash scripts.
 To map the filtered data to the capelin reference genome, make the script ```bowtie_mapping.sh``` in folder xxx executable and submit it with
