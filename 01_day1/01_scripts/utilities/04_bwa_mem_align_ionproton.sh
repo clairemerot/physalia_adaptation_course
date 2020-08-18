@@ -19,7 +19,7 @@ GENOMEFOLDER="02_genome"
 GENOME="genome_mallotus_dummy.fasta"
 DATAFOLDER="03_raw_reads"
 ALIGNEDFOLDER="04_aligned_files"
-NCPU=$1
+NCPU=$4
 
 # Test if user specified a number of CPUs
 if [[ -z "$NCPU" ]]
@@ -43,7 +43,7 @@ do
     ID="@RG\tID:ind\tSM:ind\tPL:IonProton"
 
     # Align reads 1 step
-    bwa mem -t "$NCPU" -k 19 -c 500 -T 0 -E 2,2 \
+    bwa mem -t "$NCPU" -k 19 -c 500 -O 0,0 -E 2,2 -T 0 \
         -R "$ID" \
         "$GENOMEFOLDER"/"$GENOME" "$DATAFOLDER"/"$name" 2> /dev/null |
         samtools view -Sb -q 1 -F 4 -F 256 -F 2048 \
