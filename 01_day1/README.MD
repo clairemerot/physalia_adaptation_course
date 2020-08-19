@@ -149,5 +149,10 @@ bash physalia_adaptation_course/01_day1/01_scripts/bowtie_mapping.sh physalia_ad
 ``` 
 without making it executable.
 
+## Step 3: Call variants in STACKS
+STACKS (http://catchenlab.life.illinois.edu/stacks/) is a software pipeline for building loci from short-read data and for calling variants for population genomics, phylogenmics and linkage maps. STACKS includes two main pipelines: ```denovo_map.pl``` to build a catalog of loci de novo, i.e. it assembles loci from short-read data in absence of a reference genome, and ```ref_map.pl``` to call variants from data mapped to a reference genome. Each of the two pipelines includes several steps.
 
+```denovo_map.pl``` --> ```ustacks``` --> ```cstacks``` --> ```sstacks``` --> ```tsv2bam``` --> ```gstacks``` --> ```populations```
+```ref_map.pl``` --> ```gstacks``` --> ```populations```
 
+As you might have guessed already, the first 4 steps in ```denovo_map.pl``` are to assemble loci from short reads for each individual and to and create a catalog of all loci across the population. The next two steps are shared between the two pipeline. ```gstacks``` call SNPs in each sample and ```populations``` generates population-level summary statistics and input files for a variety of software for downstream analyses.
