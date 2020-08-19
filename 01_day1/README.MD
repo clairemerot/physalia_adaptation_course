@@ -156,4 +156,11 @@ STACKS (http://catchenlab.life.illinois.edu/stacks/) is a software pipeline for 
 
 ```ref_map.pl``` = ```gstacks``` --> ```populations```
 
-As you might have guessed already, the first 4 steps in ```denovo_map.pl``` are to assemble loci from short reads for each individual and to and create a catalog of all loci across the population. The next two steps are shared between the two pipeline. ```gstacks``` call SNPs in each sample and ```populations``` generates population-level summary statistics and input files for a variety of software for downstream analyses.
+As you might have guessed already, the first 4 steps in ```denovo_map.pl``` are to assemble loci from short reads for each individual and to and create a catalog of all loci across the population when you don't have a refernce genome. The next two steps are shared between the two pipeline. ```gstacks``` calls SNPs in each sample and ```populations``` generates population-level summary statistics and input files for a variety of software for downstream analyses.
+
+As most of you have at least a draft refernce genome, we'll focus on the ```ref_map.pl``` pipeline. For those interested in the ```denovo_map.pl``` pipeline, this article is a great resource to pick the most appropriate combination of parameters 
+```
+Paris, J. R., Stevens, J. R., & Catchen, J. M. (2017). 
+Lost in parameter space: a road map for stacks. 
+Methods in Ecology and Evolution, 8(10), 1360-1373.
+```
