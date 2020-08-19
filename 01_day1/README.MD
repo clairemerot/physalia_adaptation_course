@@ -10,6 +10,7 @@ Then copy some of the files we will need today in a new folder
 mkdir scripts
 cd scripts
 cp ~/Share/physalia_adaptation_course/00_documents/* ./ ###this command copies all the files in the folder 00_documents into the folder you're currently in
+cp ~/Share/physalia_adaptation_course/01_day1/01_scripts/* ./
 ```
 Use ```ls``` to get a list of the files we have copied over, and look at the content of one of those files with
 ```
@@ -167,3 +168,27 @@ Methods in Ecology and Evolution, 8(10), 1360-1373.
 
 Although the modules ```gastacks``` and ```populations``` can be run in one go with the ```ref_map.pl``` pipeline, we generally call variants in ```gstacks``` once, and then run ```populations``` several times to tune variant filtering, to print variants for different subsets of samples and to generate F-statistics for each of these subsets.
 
+You should already have all the scripts in your ```~/scripts``` folder.
+Let's have a look at the ```stacks_gstacks.sh``` script.
+```
+#!/bin/bash
+###stacks_gstacks.sh
+cd
+mkdir -p stacks
+cd stacks
+mkdir -p gstacks
+gstacks -I ~/mapped/bamfiles -M ~/scripts/popmap_all.txt -O gstacks -t 3
+```
+This is simple and self explanatory: we tell the server that we are writing in bash, create a couple of folders (but only if they are nt already present with the ```-p``` flag) and run gstacks.
+
+To run this job, we can either use the command ```bash``` before the script or make it executable before running it
+```
+nohup bash ~/scripts/stacks_gstacks.sh >& gstacks.log &
+```
+or
+```
+chmod +x ~/scripts/stacks_gstacks.sh ### notice that the script name has turned green?
+nohup ~/scripts/stacks_gstacks.sh >& gstacks.log &
+```
+
+Note that we use ```nohup``` to send the job to the background, so that we have the terminal free for us to do other things and can save the stdout for a file of our choice.
