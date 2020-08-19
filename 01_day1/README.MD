@@ -177,7 +177,7 @@ cd
 mkdir -p stacks
 cd stacks
 mkdir -p gstacks
-gstacks -I ~/mapped/bamfiles -M ~/scripts/popmap_all.txt -O gstacks -t 3
+gstacks -I ~/bamfiles -M ~/scripts/popmap_all.txt -O ~/stacks/gstacks -t 3
 ```
 This is simple and self explanatory: we tell the server that we are writing in bash, create a couple of folders (but only if they are nt already present with the ```-p``` flag) and run gstacks.
 
@@ -192,5 +192,7 @@ nohup ~/scripts/stacks_gstacks.sh >& gstacks.log &
 ```
 
 Note that we use ```nohup``` to send the job to the background, so that we have the terminal free for us to do other things and can save the stdout for a file of our choice.
+
+When the job starts you can start checking how it is ging from the gstacks.log file (you can use ```cat```, ```less```, ```more```, etc)
 
 
