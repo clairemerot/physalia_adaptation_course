@@ -193,6 +193,18 @@ nohup ~/scripts/stacks_gstacks.sh >& gstacks.log &
 
 Note that we use ```nohup``` to send the job to the background, so that we have the terminal free for us to do other things and can save the stdout for a file of our choice.
 
-When the job starts you can start checking how it is ging from the gstacks.log file (you can use ```cat```, ```less```, ```more```, etc)
+When the job starts you can start checking how it is going from the ```gstacks.log``` file (you can use ```cat```, ```less```, ```more```, etc)
 
+Note 
+```
+Model: marukilow (var_alpha: 0.01, gt_alpha: 0.05)
+```
+For most datasets, the authors recommend the default 'marukilow' model, as it takes a Bayesian approach (incorporating information about allele frequencies of the population at each site) and works quite well. The 'marukihigh' model can call more than two alleles per site, but does not use a Bayesian approach. The 'snp' model is the model by Hohenlohe and collaborators and it was the default model in Stacks v1. Below is Maruki + Lynch's paper to fully understand the new models:
+```
+Maruki, T., & Lynch, M. (2017). 
+Genotype Calling from Population-Genomic Sequencing Data. 
+G3: Genes|Genomes|Genetics, 7(5), 1393–1404. 
+```
+
+populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin -p 2 -r 0.8 --fstats --vcf --genepop --structure 
 
