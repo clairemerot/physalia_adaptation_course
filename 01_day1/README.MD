@@ -119,10 +119,10 @@ rm "$DATAFOLDER"/"${name%.fq.gz}".bam
 
 Now, move to your home folder, make a new folder for the alignment files and create a symbolic link to the bamfiles stored in the```~/Share``` folder
 ```
-cd ~/Anna
+cd 
 mkdir bamfiles
-cd bamfile
-ln -l ~/Share/bamfiles/* ./
+cd bamfiles
+ln -s ~/Share/physalia_adaptation_course/01_day1/04_aligned_files/*.bam .
 ```
 
 #### SAM/BAM
@@ -151,7 +151,7 @@ bash physalia_adaptation_course/01_day1/01_scripts/bowtie_mapping.sh physalia_ad
 without making it executable.
 
 ## Step 3: Call variants in STACKS
-STACKS (http://catchenlab.life.illinois.edu/stacks/) is a software pipeline for building loci from short-read data and for calling variants for population genomics, phylogenmics and linkage maps. STACKS includes two main pipelines: ```denovo_map.pl``` to build a catalog of loci de novo, i.e. it assembles loci from short-read data in absence of a reference genome, and ```ref_map.pl``` to call variants from data mapped to a reference genome. Each of the two pipelines includes several steps.
+###STACKS (http://catchenlab.life.illinois.edu/stacks/) is a software pipeline for building loci from short-read data and for calling variants for population genomics, phylogenmics and linkage maps. STACKS includes two main pipelines: ```denovo_map.pl``` to build a catalog of loci de novo, i.e. it assembles loci from short-read data in absence of a reference genome, and ```ref_map.pl``` to call variants from data mapped to a reference genome. Each of the two pipelines includes several steps.
 
 ```denovo_map.pl``` = ```ustacks``` --> ```cstacks``` --> ```sstacks``` --> ```tsv2bam``` --> ```gstacks``` --> ```populations```
 
@@ -181,7 +181,7 @@ gstacks -I ~/mapped/bamfiles -M ~/scripts/popmap_all.txt -O gstacks -t 3
 ```
 This is simple and self explanatory: we tell the server that we are writing in bash, create a couple of folders (but only if they are nt already present with the ```-p``` flag) and run gstacks.
 
-To run this job, we can either use the command ```bash``` before the script or make it executable before running it
+To run this job, we can either use the command ```bash``` before the script or make it executable before running it:
 ```
 nohup bash ~/scripts/stacks_gstacks.sh >& gstacks.log &
 ```
@@ -192,3 +192,5 @@ nohup ~/scripts/stacks_gstacks.sh >& gstacks.log &
 ```
 
 Note that we use ```nohup``` to send the job to the background, so that we have the terminal free for us to do other things and can save the stdout for a file of our choice.
+
+
