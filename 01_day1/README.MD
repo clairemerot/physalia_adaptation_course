@@ -179,7 +179,7 @@ cd stacks
 mkdir -p gstacks
 gstacks -I ~/bamfiles -M ~/scripts/popmap_all.txt -O ~/stacks/gstacks -t 3
 ```
-This is simple and self explanatory: we tell the server that we are writing in bash, create a couple of folders (but only if they are nt already present with the ```-p``` flag) and run gstacks.
+This is simple and self explanatory: we tell the server that we are writing in bash, create a couple of folders (but only if they are not already present with the ```-p``` flag) and run gstacks.
 
 To run this job, we can either use the command ```bash``` before the script or make it executable before running it:
 ```
@@ -205,6 +205,10 @@ Maruki, T., & Lynch, M. (2017).
 Genotype Calling from Population-Genomic Sequencing Data. 
 G3: Genes|Genomes|Genetics, 7(5), 1393–1404. 
 ```
+To expedite things (and while the first gstacks script runs), we can focus on a smaller dataset. This includes only 80 individuals, 40 from two populations in Canada and 40 from 2 populations in Greenland
 
+
+mkdir populations_all
+populations -P ~/stacks/gstacks/ -M ~/scripts/popmap_all.txt -O populations_all -p 14 -r 0.8 --fstats --vcf --genepop --structure 
 populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin -p 2 -r 0.8 --fstats --vcf --genepop --structure 
-
+~/scripts/filter_vcf_fast.py populations.snps.vcf 4 70 0 2 populations.snps.filter.vcf
