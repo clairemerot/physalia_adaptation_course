@@ -205,10 +205,42 @@ Maruki, T., & Lynch, M. (2017).
 Genotype Calling from Population-Genomic Sequencing Data. 
 G3: Genes|Genomes|Genetics, 7(5), 1393–1404. 
 ```
-To expedite things (and while the first gstacks script runs), we can focus on a smaller dataset. This includes only 80 individuals, 40 from two populations in Canada and 40 from 2 populations in Greenland
+To expedite things (and while the first gstacks script runs), we can focus on a smaller dataset. This includes only 80 individuals, 40 from two populations in Canada and 40 from 2 populations in Greenland. Run
+```
+nohup bash ~/scripts/stacks_gstacks_2lin.sh >& gstacks_2lin.log &
+```
+Once we have our catalog of variants in the ```gstacks_2lin``` folder we can run populations to apply filters and print variant files in different formats. As ```populations``` is very fast for this small dataset, we can run it from the terminal. But first you make the folder where you want your results to be saved.
+```
+mkdir populations_2lin_random
+populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
+```
+Let's break the scripts down to understand what ```populations``` is doing here.
+
+-P path to the directory containing the Stacks files.
+
+-M path to a population map
+
+-0 path to a directory where to write the output files
+
+-p minimum number of populations a locus must be present in to process a locus
+
+-r minimum percentage of individuals in a population required to process a locus for that population
+
+--fstats --vcf --genepop --structure for the file formats and stats
+
+--write-random-snp restrict data analysis to one random SNP per locus. This deserves a little mre explanation. Most population genetics analyses work under the assumption that your markers are in linkage equilibrium. As you will have multiple SNPs for each locus, and linkage disequilibrium (LD) decays with increasing distance, we select one random SNP for each locus to minimize LD among SNPs. 
+It's important that you familiarize with software manuals. Go to https://catchenlab.life.illinois.edu/stacks/comp/populations.php and look at the complete list of settings/ You can get it also from the terminal if you type ```populations``` (or the program command in general) without additional settings (sometimes ```-h``` or ```--help``` is required to visualize the complete list of settings). 
+
+Also note that the files within each folders have pretty standardized names (check with ```ls -lrth populations_2lin_random```). Pro: we don't need to taylor all our scripts to the individual file names, BUT if you don't specify the right folder you're gonna overwrite the existing files causing a lot of confusion on what setting and samples you used for a particular run.
+
+Finally, we apply additional filters with the script ```~/scripts/filter_vcf_fast.py```. 
+```
+chmod +x ~/scripts/filter_vcf_fast.py ### to make it executable
+~/scripts/filter_vcf_fast.py ### to check for usage instructions
+~/scripts/filter_vcf_fast.py populations.snps.vcf 4 70 0 2 populations.snps.filter.vcf ### you can use this command line for all the different vcf that you generate, as long as you cd to the right folder
+```
 
 
-mkdir populations_all
 populations -P ~/stacks/gstacks/ -M ~/scripts/popmap_all.txt -O populations_all -p 14 -r 0.8 --fstats --vcf --genepop --structure 
 populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin -p 2 -r 0.8 --fstats --vcf --genepop --structure 
 ~/scripts/filter_vcf_fast.py populations.snps.vcf 4 70 0 2 populations.snps.filter.vcf
