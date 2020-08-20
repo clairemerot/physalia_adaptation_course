@@ -237,8 +237,17 @@ Finally, we apply additional filters with the script ```~/scripts/filter_vcf_fas
 ```
 chmod +x ~/scripts/filter_vcf_fast.py ### to make it executable
 ~/scripts/filter_vcf_fast.py ### to check for usage instructions
+cd ~/stacks/populations_2lin_random
 ~/scripts/filter_vcf_fast.py populations.snps.vcf 4 70 0 2 populations.snps.filter.vcf ### you can use this command line for all the different vcf that you generate, as long as you cd to the right folder
 ```
+*** not tested yet
+To extract list of SNPs from vcf file for whitelist
+cd ~/stacks
+bcftools query -f '%CHROM %POS\n' populations_2lin_random/populations.snps.filter.vcf > whitelist_2lin_random.txt
+
+rerun populations to get the updated files with the filetred SNPs
+cd ~/stacks
+populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random_white --fstats --vcf --genepop --structure --whitelist whitelist_2lin_random.txt
 
 
 populations -P ~/stacks/gstacks/ -M ~/scripts/popmap_all.txt -O populations_all -p 14 -r 0.8 --fstats --vcf --genepop --structure 
