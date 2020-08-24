@@ -44,3 +44,17 @@ Usage: python distruct.py
 
 ### DAPC
 A Discrimant Analysis of Principal Components is a multivariate approach that merges a Pricipal Component Analysis (PCA) and a Discriminant Analysis (DA). A PCA aims to summarize the variation among individuals and it runs very fast, also on large datasets. However, it is not powerful at discriminating groups because it doesn't use any a priori information on grouping and intra-group variation can overwhelm inter-group variation. A DA, on the other hand, tries to summarize the variation among groups, while minimizing the variatin within groups. Thus, a DAPC takes the best of the two analyses to 
+
+Download file ```populations_all_random_white/populations.snps.filter.p.structure``` onto your desktop. Change extension ```.structure```to ```.str``` and open R Studio.
+```
+### load adegenet package
+library(adegenet)
+### set working directory
+setwd("~/Desktop")
+### load dataset and convert it from structure to genind format
+all_random<-import2genind("populations.snps.filter.p.str")
+### This command will prompt questions about the structure of the files
+```
+![convert4dapc](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/adegenet_loaddata.png)
+
+    
