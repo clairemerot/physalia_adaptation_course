@@ -55,6 +55,6 @@ setwd("~/Desktop")
 all_random<-import2genind("populations.snps.filter.p.str")
 ### This command will prompt questions about the structure of the files
 ```
-![convert4dapc](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/adegenet_loaddata.png){:height="50%" width="50%"}
+![convert4dapc](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/adegenet_loaddata.png)
 
     
