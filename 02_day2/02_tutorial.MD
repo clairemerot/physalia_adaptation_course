@@ -38,9 +38,7 @@ Usage: python distruct.py
      --output=<file>   (/path/to/output/file)
      --popfile=<file>  (file with known categorical labels; optional)
      --title=<figure title>  (a title for the figure; optional)
-```     
-![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
-
+```
 
 ### DAPC
 A Discrimant Analysis of Principal Components is a multivariate approach that merges a Pricipal Component Analysis (PCA) and a Discriminant Analysis (DA). A PCA aims to summarize the variation among individuals and it runs very fast, also on large datasets. However, it is not powerful at discriminating groups because it doesn't use any a priori information on grouping and intra-group variation can overwhelm inter-group variation. A DA, on the other hand, tries to summarize the variation among groups, while minimizing the variatin within groups. Thus, a DAPC takes the best of the two analyses to 
@@ -57,4 +55,10 @@ all_random<-import2genind("populations.snps.filter.p.str")
 ```
 ![convert4dapc](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/adegenet_loaddata.png)
 
-    
+Now we can run the DAPC
+```
+dapc_all<-dapc(all_random)
+scatter(dapc_all)
+compoplot(dapc_all)
+```
+You can change pretty much everything in your plot and the authors of adegenet have put together a great tutorial <https://adegenet.r-forge.r-project.org/files/tutorial-dapc.pdf>
