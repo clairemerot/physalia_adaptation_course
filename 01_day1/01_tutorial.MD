@@ -36,7 +36,7 @@ WARNING!!! ```rm``` removes files and folders for good, and they can't be retrie
 
 ## Step 2: Getting from raw data to mapped data
 ### Pre-processing of raw data
-The data we'll be working on are from capelin (Mallotus villosus), a small marine fish, from Cayuela et al. 2020, Molecular Ecology. They were generated on the IonTorrent platform but all the preprocessing (demultiplexing, adapter removal, read trimming, quality filtering) has already been done. You can find example script for these preliminary steps in the scripts folder of day 1.
+The data we'll be working on are from capelin (*Mallotus villosus*), a small marine fish, from Cayuela et al. 2020, Molecular Ecology. They were generated on the IonTorrent platform but all the preprocessing (demultiplexing, adapter removal, read trimming, quality filtering) has already been done. You can find example script for these preliminary steps in the scripts folder of day 1.
 
 The data, raw or cleaned, are stored in .fastq files and here is what they look like.
 
