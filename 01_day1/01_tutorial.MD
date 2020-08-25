@@ -1,11 +1,6 @@
 # Day1: Handling NGS data: From raw reads to SNPs matrix
 ## Step 1: Getting familiar with the UNIX environment
-Although you should have familiarized with working on a UNIX environment before the beginning of the course, here below are the commands that we will use most commonly. After you have logged in, create your own folder and move in it. You will run all your scripts from here
-```
-mkdir yourname
-cd yourname
-```
-Then copy some of the files we will need today in a new folder
+Although you should have familiarized with working on a UNIX environment before the beginning of the course, here below are the commands that we will use most commonly. When you log in, you're in your home folder. First, we'll create a folder and copy some of the files we will need today in this new folder
 ```
 mkdir scripts
 cd scripts
