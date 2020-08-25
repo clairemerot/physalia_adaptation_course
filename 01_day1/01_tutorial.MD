@@ -135,21 +135,8 @@ samtools view -h xxx.bam | less
 With the pipe sign ```|```, we pipe the output of the first command into the second command.
 The first few lines starting with ```@``` is the header. If you have a lot of scaffolds in your reference the header can be very long. If you want to see the first few alignments remove ```-h``` from the command above.
         
-To run analysis that take some time we will submit jobs through bash scripts like the one above.
-There are two ways to submit bash scripts. 
-You can make the script ```script_example.sh``` executable and submit it with
-```
-chmod +x script_example.sh
-./script_example.sh
-```
-or type
-```
-bash script_example.sh
-``` 
-without making it executable.
-
 ## Step 3: Call variants in STACKS
-STACKS <http://catchenlab.life.illinois.edu/stacks/> is a bioinformatic pipeline for building loci from short-read data from GBS/RADseq libraries and for calling variants for population genomics, phylogenomics and linkage maps. STACKS includes two main pipelines: ```denovo_map.pl``` to build a catalog of loci *de novo*, i.e. it assembles loci from short-read data in absence of a reference genome, and ```ref_map.pl``` to call variants from data mapped to a reference genome. Each of the two pipelines includes several steps. Note that everything here is based on the latest version of STACKS (v.2.5.3)
+STACKS <http://catchenlab.life.illinois.edu/stacks/> is a bioinformatic pipeline for building loci from short-read data from GBS/RADseq libraries and calling variants for population genomics, phylogenomics and linkage maps. STACKS includes two main pipelines: ```denovo_map.pl``` to build a catalog of loci *de novo*, i.e. it assembles loci from short-read data in absence of a reference genome, and ```ref_map.pl``` to call variants from data mapped to a reference genome. Each of the two pipelines includes several steps. Note that everything here is based on the latest version of STACKS (v.2.5.3)
 
 ```denovo_map.pl``` = ```ustacks``` --> ```cstacks``` --> ```sstacks``` --> ```tsv2bam``` --> ```gstacks``` --> ```populations```
 
@@ -231,7 +218,7 @@ It's important that you familiarize with software manuals. Go to <https://catche
 
 Also note that the files within each folders have pretty standardized names (check with ```ls -lrth populations_2lin_random```). Pro: we don't need to taylor all our scripts to the individual file names, BUT if you don't specify the right folder you're gonna overwrite the existing files causing a lot of confusion on what setting and samples you used for a particular run.
 
-Although we applied stringent filters to minimize the amount of missing data, these are applied at the SNP level and we could have single individuals that for a variety of reasons (poor DNA quality, low DNA concentration, pipetting errors). We can check the amount of missing data for each individuals with
+Although we applied stringent filters to minimize the amount of missing data, these are applied at the SNP level and we could have single individuals that for a variety of reasons (e.g., poor DNA quality, low DNA concentration, pipetting errors) have a high proportion of missing data. We can check the amount of missing data for each individuals with
 ```
 vcftools --vcf populations.snps.vcf --missing-indv --out missing
 sort -kr5,5 missing.imiss 
@@ -242,12 +229,12 @@ In this case % of missing data are below 5%, so we don't need to discard any ind
 
 Here you've executed the pipeline on 80 individuals. Before we wrap up today, you need to create the same input files for the full dataset (280 individuals listed in popmap_all.txt) and the Canada dataset (240 individuals listed in popmap_canada.txt). 
 You should have already run the script ```~/scripts/gstacks_stacks.sh```. 
-Then, run ```populations``` on the new catalog twice, once for all individuals, and once for just the Canadian samples. What do you need to modify here?
+Now, run ```populations``` on the new catalog twice, once for all individuals, and once for just the Canadian samples. What do you need to modify here?
 ```
 mkdir populations_2lin_random
 populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-
 ```
  
-Make sure you print this outpits in each of two folders names ```populations_all_random``` and ```populations_canada_random```.
+Make sure you print these outputs in each of these two folders ```populations_all_random``` and ```populations_canada_random```.
 
 ### The end.
