@@ -212,7 +212,7 @@ nohup bash ~/scripts/stacks_gstacks_2lin.sh >& gstacks_2lin.log &
 Once we have our catalog of variants in the ```gstacks_2lin``` folder we can run populations to apply filters and print variant files in different formats. As ```populations``` is very fast for this small dataset, we can run it from the terminal. But first you make the folder where you want your results to be saved.
 ```
 mkdir populations_2lin_random
-populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
+populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
 ```
 Let's break the scripts down to understand what ```populations``` is doing here.
 
@@ -239,9 +239,19 @@ vcftools --vcf populations.snps.vcf --missing-indv --out missing
 sort -kr5,5 missing.imiss 
 ```
 In this case % of missing data are below 5%, so we don't need to discard any individual.
-Congratulations! You have all the input files ready for downstream analyses!
 
-Here you've executed the pipeline on 80 individuals. Before we wrap up today, you need to rerun the pipeline on the full dataset (280 individuals listed in popmap_all.txt) and the Canada datset (240 individuals listed in popmap_canada.txt)
+#### Congratulations! You have all the input files ready for downstream analyses (plus a bunch of statistics)!
+
+Here you've executed the pipeline on 80 individuals. Before we wrap up today, you need to create the same input files for the full dataset (280 individuals listed in popmap_all.txt) and the Canada dataset (240 individuals listed in popmap_canada.txt). 
+First we need to create the catlog of loci from all 280 individuals. Create a new bash script from ```~/scripts/stacks_gstacks_2lin.sh```. What do you need to modify? 
+Then, run populations on the new catalog twice, once for all individuals, and once for just the Canadian samples. What do you need to modify here
+```
+mkdir populations_2lin_random
+populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-
+```
+  
+
+
 
 
 
