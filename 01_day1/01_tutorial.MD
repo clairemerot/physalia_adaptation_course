@@ -239,6 +239,13 @@ vcftools --vcf populations.snps.vcf --missing-indv --out missing
 sort -kr5,5 missing.imiss 
 ```
 In this case % of missing data are below 5%, so we don't need to discard any individual.
+Congratulations! You have all the input files ready for downstream analyses!
+
+Here you've executed the pipeline on 80 individuals. Before we wrap up today, you need to rerun the pipeline on the full dataset (280 individuals listed in popmap_all.txt) and the Canada datset (240 individuals listed in popmap_canada.txt)
+
+
+
+Now, you can run the same analysis on the
 
 
 Finally, we apply additional filters with the script ```~/scripts/filter_vcf_fast.py```. 
