@@ -66,6 +66,11 @@ Knowing this, we can calculate the number of reads in a file by counting the num
 wc -l file.fastq
 ```
 and divide by 4.
+Or 
+```
+zcat -f IND.fastq.gz | sed -n '2~4p' | wc -l
+```
+directly from compressed fastq files.
 
 When we have paired reads, they are generally stored in two separate files and are paired by position: the first read in ```read1.fastq``` is paired with the first read in ```read2.fastq```, the second read in ```read1.fastq``` is paired with the second read in ```read2.fastq```, and so on. One way to check if your files are intact is to ensure that the two read files have the same amount of lines/reads.
 
@@ -76,7 +81,7 @@ The file starts with the line
 ```
 #!/bin/bash
 ```
-We will write your scripts in bash, and that is the line that tell the server in what language the script is written in.
+We will write your scripts in bash, and that is the line that tells the server in what language the script is written in.
 A few lines starting with ```#SBATCH``` follow. We won't need these lines because we won't use a job scheduler, but this is a good example for the people that have SLURM on their institution's servers.
 
 We set a few variables as shown below, These are very handy to make this script easy to follow and more customizable. For example, the number of CPUs is not hard-coded in the script and can be conveniently changed when submitting the script.
@@ -114,7 +119,7 @@ and the intermediate files are deleted with
 rm "$DATAFOLDER"/"${name%.fq.gz}".bam
 ```
 
-Now, move to your home folder, make a new folder for the alignment files and create a symbolic link to the bamfiles stored in the```~/Share``` folder
+Now, move to your home folder, make a new folder for the alignment files and create a symbolic link to the bamfiles stored in the```~/Share``` folder. With a symbolic link, you add the files to a path of your choice, but because they are not physically there you're not taking up the space.
 ```
 cd 
 mkdir bamfiles
@@ -129,26 +134,22 @@ samtools view -h xxx.bam | less
 ```
 With the pipe sign ```|```, we pipe the output of the first command into the second command.
 The first few lines starting with ```@``` is the header. If you have a lot of scaffolds in your reference the header can be very long. If you want to see the first few alignments remove ```-h``` from the command above.
-
-nohup ./model >outfile.txt &
-
-
-
         
-To run analysis that take some time we will submit jobs through bash scripts.
-To map the filtered data to the capelin reference genome, make the script ```bowtie_mapping.sh``` in folder xxx executable and submit it with
+To run analysis that take some time we will submit jobs through bash scripts like the one above.
+There are two ways to submit bash scripts. 
+You can make the script ```script_example.sh``` executable and submit it with
 ```
-chmod +x physalia_adaptation_course/01_day1/01_scripts/bowtie_mapping.sh
-physalia_adaptation_course/01_day1/01_scripts/bowtie_mapping.sh physalia_adaptation_course/00_documents/samplelist_all.txt
+chmod +x script_example.sh
+./script_example.sh
 ```
-To run a bash script like this you can also type
+or type
 ```
-bash physalia_adaptation_course/01_day1/01_scripts/bowtie_mapping.sh physalia_adaptation_course/00_documents/samplelist_all.txt
+bash script_example.sh
 ``` 
 without making it executable.
 
 ## Step 3: Call variants in STACKS
-###STACKS (http://catchenlab.life.illinois.edu/stacks/) is a software pipeline for building loci from short-read data and for calling variants for population genomics, phylogenmics and linkage maps. STACKS includes two main pipelines: ```denovo_map.pl``` to build a catalog of loci de novo, i.e. it assembles loci from short-read data in absence of a reference genome, and ```ref_map.pl``` to call variants from data mapped to a reference genome. Each of the two pipelines includes several steps.
+STACKS (http://catchenlab.life.illinois.edu/stacks/) is a software pipeline for building loci from short-read data and for calling variants for population genomics, phylogenmics and linkage maps. STACKS includes two main pipelines: ```denovo_map.pl``` to build a catalog of loci de novo, i.e. it assembles loci from short-read data in absence of a reference genome, and ```ref_map.pl``` to call variants from data mapped to a reference genome. Each of the two pipelines includes several steps.
 
 ```denovo_map.pl``` = ```ustacks``` --> ```cstacks``` --> ```sstacks``` --> ```tsv2bam``` --> ```gstacks``` --> ```populations```
 
