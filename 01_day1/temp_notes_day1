@@ -1,0 +1,41 @@
+Notes  
+
+
+
+
+
+Now, you can run the same analysis on the
+
+
+Finally, we apply additional filters with the script ```~/scripts/filter_vcf_fast.py```. 
+```
+chmod +x ~/scripts/filter_vcf_fast.py ### to make it executable
+~/scripts/filter_vcf_fast.py ### to check for usage instructions
+cd ~/stacks/populations_2lin_random
+~/scripts/filter_vcf_fast.py populations.snps.vcf 4 70 0 2 populations.snps.filter.vcf ### you can use this command line for all the different vcf that you generate, as long as you cd to the right folder
+```
+*** not tested yet
+To extract list of SNPs from vcf file for whitelist
+cd ~/stacks
+bcftools query -f '%CHROM %POS\n' populations_2lin_random/populations.snps.filter.vcf > whitelist_2lin_random.txt
+
+rerun populations to get the updated files with the filetred SNPs
+cd ~/stacks
+populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random_white --fstats --vcf --genepop --structure --whitelist whitelist_2lin_random.txt
+
+
+populations -P ~/stacks/gstacks/ -M ~/scripts/popmap_all.txt -O populations_all -p 14 -r 0.8 --fstats --vcf --genepop --structure 
+populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin -p 2 -r 0.8 --fstats --vcf --genepop --structure 
+~/scripts/filter_vcf_fast.py populations.snps.vcf 4 70 0 2 populations.snps.filter.vcf
+
+
+mkdir populations_canada_random
+populations -t 16 -P ~/stacks/gstacks/ -M ~/scripts/popmap_canada.txt -O populations_canada_random -p 12 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
+
+```
+#### to get a list of 1000 random SNPs
+grep -v "^#" populations.sumstats.tsv | cut -f 1,4 | sort | uniq | shuf | head -n 1000 | sort -n > whitelist.tsv
+grep -v "^#" populations.fst_L-K.tsv | sort -k7,7 | head -n 
+cat populations.fst_*.tsv | grep -v "^#" - | sort -rk8,8 | head -n 200 | cut -f 1,6 | sort | uniq | sort -n | head -n 100 > high_fst.whitelist.tsv
+mkdir populations_canada_random_white
+populations -t 16 -P ~/stacks/gstacks/ -M ~/scripts/popmap_canada.txt -O populations_canada_random_white --fstats --vcf --genepop --structure -W ~/stacks/populations_canada_random/high_fst.whitelist.tsv
