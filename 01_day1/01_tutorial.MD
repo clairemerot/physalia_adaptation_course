@@ -228,10 +228,18 @@ Let's break the scripts down to understand what ```populations``` is doing here.
 
 --fstats --vcf --genepop --structure for the file formats and stats
 
---write-random-snp restrict data analysis to one random SNP per locus. This deserves a little mre explanation. Most population genetics analyses work under the assumption that your markers are in linkage equilibrium. As you will have multiple SNPs for each locus, and linkage disequilibrium (LD) decays with increasing distance, we select one random SNP for each locus to minimize LD among SNPs. 
-It's important that you familiarize with software manuals. Go to https://catchenlab.life.illinois.edu/stacks/comp/populations.php and look at the complete list of settings/ You can get it also from the terminal if you type ```populations``` (or the program command in general) without additional settings (sometimes ```-h``` or ```--help``` is required to visualize the complete list of settings). 
+--write-random-snp restrict data analysis to one random SNP per locus. This deserves a little more explanation. Most population genetics analyses work under the assumption that your markers are in linkage equilibrium. As you will have multiple SNPs for each locus, and linkage disequilibrium (LD) decays with increasing distance, we select one random SNP for each locus to minimize LD among SNPs. 
+It's important that you familiarize with software manuals. Go to <https://catchenlab.life.illinois.edu/stacks/comp/populations.php> and look at the complete list of settings. You can get it also from the terminal if you type ```populations``` (or the program command in general) without additional settings (sometimes ```-h``` or ```--help``` are required to visualize the complete list of settings). 
 
 Also note that the files within each folders have pretty standardized names (check with ```ls -lrth populations_2lin_random```). Pro: we don't need to taylor all our scripts to the individual file names, BUT if you don't specify the right folder you're gonna overwrite the existing files causing a lot of confusion on what setting and samples you used for a particular run.
+
+Although we applied stringent filters to minimize the amount of missing data, these are applied at the SNP level and we could have single individuals that for a variety of reasons (poor DNA quality, low DNA concentration, pipetting errors). We can check the amount of missing data for each individuals with
+```
+vcftools --vcf populations.snps.vcf --missing-indv --out missing
+sort -kr5,5 missing.imiss 
+```
+In this case % of missing data are below 5%, so we don't need to discard any individual.
+
 
 Finally, we apply additional filters with the script ```~/scripts/filter_vcf_fast.py```. 
 ```
@@ -253,3 +261,15 @@ populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O population
 populations -P ~/stacks/gstacks/ -M ~/scripts/popmap_all.txt -O populations_all -p 14 -r 0.8 --fstats --vcf --genepop --structure 
 populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin -p 2 -r 0.8 --fstats --vcf --genepop --structure 
 ~/scripts/filter_vcf_fast.py populations.snps.vcf 4 70 0 2 populations.snps.filter.vcf
+
+
+mkdir populations_canada_random
+populations -t 16 -P ~/stacks/gstacks/ -M ~/scripts/popmap_canada.txt -O populations_canada_random -p 12 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
+
+```
+#### to get a list of 1000 random SNPs
+grep -v "^#" populations.sumstats.tsv | cut -f 1,4 | sort | uniq | shuf | head -n 1000 | sort -n > whitelist.tsv
+grep -v "^#" populations.fst_L-K.tsv | sort -k7,7 | head -n 
+cat populations.fst_*.tsv | grep -v "^#" - | sort -rk8,8 | head -n 200 | cut -f 1,6 | sort | uniq | sort -n | head -n 100 > high_fst.whitelist.tsv
+mkdir populations_canada_random_white
+populations -t 16 -P ~/stacks/gstacks/ -M ~/scripts/popmap_canada.txt -O populations_canada_random_white --fstats --vcf --genepop --structure -W ~/stacks/populations_canada_random/high_fst.whitelist.tsv
