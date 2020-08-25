@@ -149,13 +149,13 @@ bash script_example.sh
 without making it executable.
 
 ## Step 3: Call variants in STACKS
-STACKS (http://catchenlab.life.illinois.edu/stacks/) is a software pipeline for building loci from short-read data and for calling variants for population genomics, phylogenmics and linkage maps. STACKS includes two main pipelines: ```denovo_map.pl``` to build a catalog of loci de novo, i.e. it assembles loci from short-read data in absence of a reference genome, and ```ref_map.pl``` to call variants from data mapped to a reference genome. Each of the two pipelines includes several steps.
+STACKS <http://catchenlab.life.illinois.edu/stacks/> is a bioinformatic pipeline for building loci from short-read data from GBS/RADseq libraries and for calling variants for population genomics, phylogenomics and linkage maps. STACKS includes two main pipelines: ```denovo_map.pl``` to build a catalog of loci *de novo*, i.e. it assembles loci from short-read data in absence of a reference genome, and ```ref_map.pl``` to call variants from data mapped to a reference genome. Each of the two pipelines includes several steps. Note that everything here is based on the latest version of STACKS (v.2.5.3)
 
 ```denovo_map.pl``` = ```ustacks``` --> ```cstacks``` --> ```sstacks``` --> ```tsv2bam``` --> ```gstacks``` --> ```populations```
 
 ```ref_map.pl``` = ```gstacks``` --> ```populations```
 
-As you might have guessed already, the first 4 steps in ```denovo_map.pl``` are to assemble loci from short reads for each individual and to and create a catalog of all loci across the population when you don't have a refernce genome. The next two steps are shared between the two pipeline. ```gstacks``` calls SNPs in each sample and ```populations``` generates population-level summary statistics and input files for a variety of software for downstream analyses.
+As you might have guessed already, the first 4 steps in ```denovo_map.pl``` are for assembling loci from short reads for each individual and for creating a catalog of all loci across the population when you don't have a refernce genome. The next two steps are shared between the two pipeline. ```gstacks``` builds a catalog of loci and calls SNPs in each sample and ```populations``` generates population-level summary statistics and input files for a variety of software for downstream analyses.
 
 As most of you have at least a draft reference genome, we'll focus on the ```ref_map.pl``` pipeline. For those interested in the ```denovo_map.pl``` pipeline, this article is a great resource to pick the most appropriate combination of parameters 
 ```
@@ -207,7 +207,7 @@ To expedite things (and while the first gstacks script runs), we can focus on a 
 ```
 nohup bash ~/scripts/stacks_gstacks_2lin.sh >& gstacks_2lin.log &
 ```
-Once we have our catalog of variants in the ```gstacks_2lin``` folder we can run populations to apply filters and print variant files in different formats. As ```populations``` is very fast for this small dataset, we can run it from the terminal. But first you make the folder where you want your results to be saved.
+Once we have our catalog of variants in the ```gstacks_2lin``` folder we can run ```populations``` to apply filters and print variant files in different formats. As ```populations``` is very fast for this small dataset, we can run it from the terminal. But first you make the folder where you want your results to be saved.
 ```
 mkdir populations_2lin_random
 populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
@@ -238,16 +238,19 @@ sort -kr5,5 missing.imiss
 ```
 In this case % of missing data are below 5%, so we don't need to discard any individual.
 
-#### Congratulations! You have all the input files ready for downstream analyses (plus a bunch of statistics)!
+#### Congratulations! You have all the input files ready for downstream analyses (plus a bunch of statistics) for the reduced dataset!
 
 Here you've executed the pipeline on 80 individuals. Before we wrap up today, you need to create the same input files for the full dataset (280 individuals listed in popmap_all.txt) and the Canada dataset (240 individuals listed in popmap_canada.txt). 
-First we need to create the catlog of loci from all 280 individuals. Create a new bash script from ```~/scripts/stacks_gstacks_2lin.sh```. What do you need to modify? 
-Then, run populations on the new catalog twice, once for all individuals, and once for just the Canadian samples. What do you need to modify here
+You should have already run the script ```~/scripts/gstacks_stacks.sh```. 
+Then, run ```populations``` on the new catalog twice, once for all individuals, and once for just the Canadian samples. What do you need to modify here?
 ```
 mkdir populations_2lin_random
 populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-
 ```
-  
+ 
+Make sure you print this outpits in each of two folders names ```populations_all_random``` and ```populations_canada_random```.
+
+### The end 
 
 
 
