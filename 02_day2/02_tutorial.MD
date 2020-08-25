@@ -1,4 +1,8 @@
 # Day2: Population structure and differentiation 
+### Calculating F-statistics
+#### With VCFtools
+
+
 ```
 populations -V populations.snps.filter.vcf -M ~/scripts/popmap_2lin.txt -O ../populations_2lin_random_white --fstats --vcf --genepop --structure
 
