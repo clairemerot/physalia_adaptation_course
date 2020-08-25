@@ -1,6 +1,8 @@
 # Day1: Handling NGS data: From raw reads to SNPs matrix
 ## Step 1: Getting familiar with the UNIX environment
-Although you should have familiarized with working on a UNIX environment before the beginning of the course, here below are the commands that we will use most commonly. When you log in, you're in your home folder. First, we'll create a folder and copy some of the files we will need today in this new folder
+Although you should have familiarized with working on a UNIX environment before the beginning of the course, here below are the commands that we will use most commonly. When you log in, you're in your home folder. You can go back here any time by typing ```cd``` (and pressing return).
+
+First, we'll create a folder and copy some of the files we will need today in this new folder
 ```
 mkdir scripts
 cd scripts
@@ -11,7 +13,7 @@ Use ```ls``` to get a list of the files we have copied over, and look at the con
 ```
 less popmap_2lin.txt 
 ```
-You can stroll down by pressing the bar on your keyboard and ```q``` to exit from the screen.
+You can stroll down by pressing the bar on your keyboard and exit from the screen with ```q```.
 
 If you want to print a few lines to the screen (which won't disapper) type
 ```
@@ -19,7 +21,7 @@ head popmap_2lin.txt
 ```
 which will print the first 10 lines by default. You can specify the number of lines with ```-n 25```. Same for ```tail```, which shows the end of the file.
 
-To edit scripts and files, we'll use ```nano``` as text editor
+To edit scripts and files, we'll use ```nano``` as text editor.
 Type 
 ```
 nano popmap_2lin.txt
