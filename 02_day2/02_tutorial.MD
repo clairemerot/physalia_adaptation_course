@@ -28,9 +28,18 @@ Whitelists and blacklists are very useful to select or discard loci for analysis
 ```
 grep -v "^#" populations.sumstats.tsv | cut -f 1,4 | sort | uniq | shuf | head -n 1000 | sort -n > 1000snps_whitelist.tsv
 ```
+Note that STACKS keep into account the whole locus, rather than just the random SNP we selected in each locus, for many statistics. Open ```populations.sumstats_summary.tsv``` for example. To help visualization you can download the file and import it in excel. Additionally, STACKS provides many haplotype-based statistics. Although we won't delve into these today, these are important to obtain estimates of D<sub>xy</sub>, a measure of absolute divergence, gene and haplotype diversity, and to phase SNPs, which can provide additional important information for both evolutionary questions and conservation applications. 
 
--> explore outputs
+See following review on the use of haplotype information in conservation genomics
+```
+Leitwein, M., Duranton, M., Rougemont, Q., Gagnaire, P.A. and Bernatchez, L., 2020. 
+Using haplotype information for conservation genomics. 
+Trends in Ecology & Evolution, 35(3), pp.245-258.
+```
+(see when it estimates computes haplotype-based statistics, and 
+
 #### With VCFtools
+
 
 -> fix faststructure
 -> finish DAPC with different datasets
