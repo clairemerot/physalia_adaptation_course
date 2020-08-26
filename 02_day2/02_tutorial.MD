@@ -1,6 +1,24 @@
 # Day2: Population structure and differentiation 
 ### Calculating F-statistics
+#### With Stacks
+As you can see if you ```cd``` in one of the folders storing the output from your ```populations``` runs, STACKS produces many output files. The manual provides a thorough explanation of all the different file formats. Go to <https://catchenlab.life.illinois.edu/stacks/manual/> and scroll down to section 6.6. For each output type, open the corresponding file on the server, and take your time to explore them.
+
+One statistics we are interested in F<sub>ST</sub>, a relative measure of differentiation between populations. Let's look at one of these files in more detail
+```
+cd ~/stacks/populations_canada_random
+head -n 30 populations.fst_L-K.tsv
+```
+F<sub>ST</sub> for each locus is at the 8<sup>th</sup> column. We can look at the 20 most differentiated SNPs.
+```
+grep -v "^#" populations.fst_L-K.tsv | sort -rk8,8 | head -n 
+```
+```grep -v``` exclude lines that start with #, then you sort the file by values of F<sub>ST</sub> from the highest to the lowest (```-r```), and print to the screen the top 20 SNPs.
+
+-> explore outputs
 #### With VCFtools
+
+-> fix faststructure
+-> finish DAPC with different datasets
 
 
 ```
