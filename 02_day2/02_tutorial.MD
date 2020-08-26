@@ -1,5 +1,5 @@
 # Day2: Population structure and differentiation 
-### Calculating F-statistics
+### Step 1: Calculating F-statistics
 #### With Stacks
 As you can see if you ```cd``` in one of the folders storing the output from your ```populations``` runs, STACKS produces many output files. The manual provides a thorough explanation of all the different file formats. Go to <https://catchenlab.life.illinois.edu/stacks/manual/> and scroll down to section 6.6. For each output type, open the corresponding file on the server, and take your time to explore them.
 
@@ -8,9 +8,9 @@ One statistics we are interested in F<sub>ST</sub>, a relative measure of differ
 cd ~/stacks/populations_canada_random
 head -n 30 populations.fst_L-K.tsv
 ```
-F<sub>ST</sub> for each locus is at the 8<sup>th</sup> column. We can look at the 20 most differentiated SNPs.
+F<sub>ST</sub> for each locus is at the 8<sup>th</sup> column. We can look at the 20 most differentiated SNPs with
 ```
-grep -v "^#" populations.fst_L-K.tsv | sort -rk8,8 | head -n 
+grep -v "^#" populations.fst_L-K.tsv | sort -rk8,8 | head -n 20
 ```
 ```grep -v``` exclude lines that start with #, then you sort the file by values of F<sub>ST</sub> from the highest to the lowest (```-r```), and print to the screen the top 20 SNPs.
 
@@ -24,7 +24,10 @@ cd ~/stacks
 mkdir 
 populations -t 16 -P ~/stacks/gstacks/ -M ~/scripts/popmap_canada.txt -O populations_canada_random_white --fstats --vcf --genepop --structure -W ~/stacks/populations_canada_random/high_fst.whitelist.tsv
 ```
-Whitelists and blacklists are very useful to select 
+Whitelists and blacklists are very useful to select or discard loci for analysis. For quick data exploration, or for analysis that don't require, or can't handle, large datasets, you can use a similar code to create a whitelist with a random subset of SNPs. For 1000 SNPs for example
+```
+grep -v "^#" populations.sumstats.tsv | cut -f 1,4 | sort | uniq | shuf | head -n 1000 | sort -n > 1000snps_whitelist.tsv
+```
 
 -> explore outputs
 #### With VCFtools
