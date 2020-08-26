@@ -36,9 +36,38 @@ Leitwein, M., Duranton, M., Rougemont, Q., Gagnaire, P.A. and Bernatchez, L., 20
 Using haplotype information for conservation genomics. 
 Trends in Ecology & Evolution, 35(3), pp.245-258.
 ```
-(see when it estimates computes haplotype-based statistics, and 
 
 #### With VCFtools
+To calculate F<sub>ST</sub> in VCFtools you need to provide the list of samples for each population to include in the calculation. For the redeuced dataset, including only 80 individuals from Greenland and Canada, you will find the list of samples for each of the two lineages in the ```~/scripts``` folder
+```
+vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop ~/scripts/pop_canada.txt --weir-fst-pop ~/scripts/pop_greenland.txt  --out fst_2lin
+```
+If you have a reference genome and panel of SNPs dense enough (or whole genome resequencing data) you can calculate window estimates with 
+```
+vcftools --vcf populations_2lin_random/populations.snps.filter.vcf --weir-fst-pop ~/scripts/pop_canada.txt --weir-fst-pop ~/scripts/pop_greenland.txt  --out fst_2lin_win --fst-window-size 100000 --fst-window-step 100000
+```
+As stdout you get 
+```
+VCFtools - 0.1.16
+(C) Adam Auton and Anthony Marcketta 2009
+
+Parameters as interpreted:
+	--vcf populations_2lin_random/populations.snps.vcf
+	--weir-fst-pop /home/ubuntu/scripts/pop_canada.txt
+	--weir-fst-pop /home/ubuntu/scripts/pop_greenland.txt
+	--keep /home/ubuntu/scripts/pop_canada.txt
+	--keep /home/ubuntu/scripts/pop_greenland.txt
+	--out fst_2lin
+
+Keeping individuals in 'keep' list
+After filtering, kept 80 out of 80 Individuals
+Outputting Weir and Cockerham Fst estimates.
+Weir and Cockerham mean Fst estimate: 0.032662
+Weir and Cockerham weighted Fst estimate: 0.23741
+After filtering, kept 8530 out of a possible 8530 Sites
+Run Time = 0.00 seconds
+```
+The calculation is very fast, and in addition to per-site estimates you get mean and weighted F<sub>ST</sub> estimates in the stdout, which you could save in a separate file by adding ```> fst_2lin.log``` at the end of the previous command.
 
 
 -> fix faststructure
