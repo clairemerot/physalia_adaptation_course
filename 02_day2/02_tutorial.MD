@@ -36,6 +36,23 @@ Leitwein, M., Duranton, M., Rougemont, Q., Gagnaire, P.A. and Bernatchez, L., 20
 Using haplotype information for conservation genomics. 
 Trends in Ecology & Evolution, 35(3), pp.245-258.
 ```
+~/stacks/populations_2lin/populations.log
+```
+Population summary statistics (more detail in populations.sumstats_summary.tsv):
+  NWA: 39.172 samples per locus; pi: 0.054733; all/variant/polymorphic sites: 770730/45238/25848; private alleles: 18011
+  GRE: 39.138 samples per locus; pi: 0.054095; all/variant/polymorphic sites: 770730/45238/27188; private alleles: 19351
+
+Population pair divergence statistics (more in populations.fst_summary.tsv and populations.phistats_summary.tsv):
+  NWA-GRE: mean Fst: 0.024875; mean Phi_st: 0.077792; mean Fst': 0.074473; mean Dxy: 0.0049455
+```
+~/stacks/populations_2lin_random/populations.log
+```
+Population summary statistics (more detail in populations.sumstats_summary.tsv):
+  NWA: 39.161 samples per locus; pi: 0.051743; all/variant/polymorphic sites: 770730/8530/4634; private alleles: 3345
+  GRE: 39.12 samples per locus; pi: 0.054156; all/variant/polymorphic sites: 770730/8530/5171; private alleles: 3882
+
+Population pair divergence statistics (more in populations.fst_summary.tsv and populations.phistats_summary.tsv):
+  NWA-GRE: mean Fst: 0.028809; mean Phi_st: 0.033052; mean Fst': 0.020139; mean Dxy: 0.00092926
 
 #### With VCFtools
 To calculate F<sub>ST</sub> in VCFtools you need to provide the list of samples for each population to include in the calculation. For the redeuced dataset, including only 80 individuals from Greenland and Canada, you will find the list of samples for each of the two lineages in the ```~/scripts``` folder
@@ -71,8 +88,12 @@ vcftools --vcf populations_2lin_random/populations.snps.filter.vcf --weir-fst-po
 ```
 In fact, window estimates are a practical way to summarize data and to reduce the number of datapoints to handle, which can be problematic for visualization.
 
-
-
+We can also calculate π in VCFtools with the command
+```
+cd ~/stacks
+vcftools --vcf populations_2lin_random/populations.snps.vcf --site-pi --keep ~/scripts/pop_canada.txt --out pi_canada
+```
+However, these single-site estimates of π are not very meaningful. 
 
 -> fix faststructure
 -> finish DAPC with different datasets
@@ -86,7 +107,7 @@ populations -V populations.snps.filter.vcf -M ~/scripts/popmap_all.txt -O ../pop
 
 vcftools --vcf populations_2lin_random/populations.snps.filter.vcf --weir-fst-pop ~/scripts/pop_canada.txt --weir-fst-pop ~/scripts/pop_greenland.txt  --out fst_2lin
 vcftools --vcf populations_2lin_random/populations.snps.filter.vcf --weir-fst-pop ~/scripts/pop_canada.txt --weir-fst-pop ~/scripts/pop_greenland.txt  --out fst_2lin_win --fst-window-size 10000 --fst-window-step 10000
-vcftools --vcf populations_2lin_random/populations.snps.filter.vcf --site-pi --keep ~/scripts/pop_canada.txt --out pi_canada
+vcftools --vcf populations_2lin_random/populations.snps.vcf --site-pi --keep ~/scripts/pop_canada.txt --out pi_canada
 vcftools --vcf populations_2lin_random/populations.snps.filter.vcf --site-pi --keep ~/scripts/pop_greenland.txt --out pi_greenland
 ```
 ### Structure with faststructure
