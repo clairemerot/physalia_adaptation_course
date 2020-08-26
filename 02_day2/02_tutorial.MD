@@ -5,12 +5,12 @@ As you can see if you ```cd``` in one of the folders storing the output from you
 
 One statistics we are interested in F<sub>ST</sub>, a relative measure of differentiation between populations. Let's look at one of these files in more detail
 ```
-cd ~/stacks/populations_canada_random
-head -n 30 populations.fst_L-K.tsv
+cd ~/stacks/populations_2lin_random
+head -n 30 populations.fst_NWA-GRE.tsv
 ```
 F<sub>ST</sub> for each locus is at the 8<sup>th</sup> column. We can look at the 20 most differentiated SNPs with
 ```
-grep -v "^#" populations.fst_L-K.tsv | sort -rk8,8 | head -n 20
+grep -v "^#" populations.fst_NWA-GRE.tsv | sort -rk8,8 | head -n 20
 ```
 ```grep -v``` exclude lines that start with #, then you sort the file by values of F<sub>ST</sub> from the highest to the lowest (```-r```), and print to the screen the top 20 SNPs.
 
@@ -42,10 +42,6 @@ To calculate F<sub>ST</sub> in VCFtools you need to provide the list of samples 
 ```
 vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop ~/scripts/pop_canada.txt --weir-fst-pop ~/scripts/pop_greenland.txt  --out fst_2lin
 ```
-If you have a reference genome and panel of SNPs dense enough (or whole genome resequencing data) you can calculate window estimates with 
-```
-vcftools --vcf populations_2lin_random/populations.snps.filter.vcf --weir-fst-pop ~/scripts/pop_canada.txt --weir-fst-pop ~/scripts/pop_greenland.txt  --out fst_2lin_win --fst-window-size 100000 --fst-window-step 100000
-```
 As stdout you get 
 ```
 VCFtools - 0.1.16
@@ -68,6 +64,14 @@ After filtering, kept 8530 out of a possible 8530 Sites
 Run Time = 0.00 seconds
 ```
 The calculation is very fast, and in addition to per-site estimates you get mean and weighted F<sub>ST</sub> estimates in the stdout, which you could save in a separate file by adding ```> fst_2lin.log``` at the end of the previous command.
+
+If you have a reference genome and panel of SNPs dense enough (or whole genome resequencing data) you can calculate window estimates with 
+```
+vcftools --vcf populations_2lin_random/populations.snps.filter.vcf --weir-fst-pop ~/scripts/pop_canada.txt --weir-fst-pop ~/scripts/pop_greenland.txt  --out fst_2lin_win --fst-window-size 100000 --fst-window-step 100000
+```
+In fact, window estimates are a practical way to summarize data and to reduce the number of datapoints to handle, which can be problematic for visualization.
+
+
 
 
 -> fix faststructure
