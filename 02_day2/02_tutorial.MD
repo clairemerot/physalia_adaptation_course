@@ -18,12 +18,13 @@ We can also create a list of the 100 most differentiated SNPs among all populati
 ```
 cat populations.fst_*.tsv | grep -v "^#" - | sort -rk8,8 | head -n 200 | cut -f 1,6 | sort | uniq | sort -n | head -n 100 > high_fst.whitelist.tsv
 ```
-that is mosyly based on commands that we've just used above, with the difference that you merge all files containing population pairwise information and print only the SNP information. Note that even though the data are mapped to a reference genome, STACKS has built a catalog of loci and uses locus ID and position within the locus (stored in columns 1 and 6 in this file) to retrieve information on these SNPs. Now that we have created a 'whitelist', we can rerun populations and generate F-statistics and input files for these 100 highly differentiated SNPs only.
+that is mosyly based on commands that we've just used above, with the difference that you merge all files containing population pairwise information and print only the SNP information. Note that even though the data are mapped to a reference genome, STACKS has built a catalog of loci and uses locus ID and position within the locus (stored in columns 1 and 6 in this file) to retrieve information on these SNPs (i.e. STACKS can't use chromosome and position to identify SNPs). Now that we have created a 'whitelist', we can rerun populations and generate F-statistics and input files for these 100 highly differentiated SNPs only.
 ```
 cd ~/stacks
 mkdir 
 populations -t 16 -P ~/stacks/gstacks/ -M ~/scripts/popmap_canada.txt -O populations_canada_random_white --fstats --vcf --genepop --structure -W ~/stacks/populations_canada_random/high_fst.whitelist.tsv
 ```
+Whitelists and blacklists are very useful to select 
 
 -> explore outputs
 #### With VCFtools
