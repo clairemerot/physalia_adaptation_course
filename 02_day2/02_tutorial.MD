@@ -24,6 +24,8 @@ cd ~/stacks
 mkdir populations_canada_random_highfst
 populations -t 16 -P ~/stacks/gstacks/ -M ~/scripts/popmap_canada.txt -O populations_canada_random_highfst --fstats --vcf --genepop --structure -W ~/stacks/populations_canada_random/high_fst.whitelist.tsv
 ```
+Have a look at this list. Are these SNPs randomly distributed across the 5 chromosomes?
+
 Whitelists and blacklists are very useful to select or discard loci for analysis. For quick data exploration, or for analysis that don't require, or can't handle, large datasets, you can use a similar code to create a whitelist with a random subset of SNPs. For 1000 SNPs for example
 ```
 grep -v "^#" populations.sumstats.tsv | cut -f 1,4 | sort | uniq | shuf | head -n 1000 | sort -n > 1000snps_whitelist.tsv
@@ -36,7 +38,9 @@ Leitwein, M., Duranton, M., Rougemont, Q., Gagnaire, P.A. and Bernatchez, L., 20
 Using haplotype information for conservation genomics. 
 Trends in Ecology & Evolution, 35(3), pp.245-258.
 ```
-~/stacks/populations_2lin/populations.log
+
+Note also that statistics will be different depending on whether you look at all SNPs in one locus or only one random SNP. See below
+Statistics from ~/stacks/populations_2lin/populations.log, which includes all SNPs
 ```
 Population summary statistics (more detail in populations.sumstats_summary.tsv):
   NWA: 39.172 samples per locus; pi: 0.054733; all/variant/polymorphic sites: 770730/45238/25848; private alleles: 18011
@@ -45,7 +49,7 @@ Population summary statistics (more detail in populations.sumstats_summary.tsv):
 Population pair divergence statistics (more in populations.fst_summary.tsv and populations.phistats_summary.tsv):
   NWA-GRE: mean Fst: 0.024875; mean Phi_st: 0.077792; mean Fst': 0.074473; mean Dxy: 0.0049455
 ```
-~/stacks/populations_2lin_random/populations.log
+Statistics from ~/stacks/populations_2lin_random/populations.log, which includes only one random SNP/locus.
 ```
 Population summary statistics (more detail in populations.sumstats_summary.tsv):
   NWA: 39.161 samples per locus; pi: 0.051743; all/variant/polymorphic sites: 770730/8530/4634; private alleles: 3345
@@ -54,6 +58,10 @@ Population summary statistics (more detail in populations.sumstats_summary.tsv):
 Population pair divergence statistics (more in populations.fst_summary.tsv and populations.phistats_summary.tsv):
   NWA-GRE: mean Fst: 0.028809; mean Phi_st: 0.033052; mean Fst': 0.020139; mean Dxy: 0.00092926
 ```
+
+Here, the value of π are not very different because they are averaged over only the polymorphic sites (which is NOT how we should estimate π anyway). Same for F<sub>ST</sub>. Do you see how different the haplotype-based estimates are? They are all lower in the random-SNP dataset because STACKS computes these statistics as if there was only one polymorphic site in each of these loci.
+
+
 #### With VCFtools
 To calculate F<sub>ST</sub> in VCFtools you need to provide the list of samples for each population to include in the calculation. For the redeuced dataset, including only 80 individuals from Greenland and Canada, you will find the list of samples for each of the two lineages in the ```~/scripts``` folder
 ```
