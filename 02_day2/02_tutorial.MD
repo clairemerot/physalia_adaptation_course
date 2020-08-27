@@ -108,9 +108,6 @@ vcftools --vcf populations_2lin_random/populations.snps.vcf --site-pi --keep ~/s
 ```
 However, these single-site estimates of π are not very meaningful. π is defined as the average number of nucleotide differences per site between two DNA sequences in all possible pairs in the sample population. That is the same reason why π averaged across polymorphic sites in STACKS is not meaningful either. π must be averaged across the whole length of the sequence you are analyzing, whether it is a collection of RAD loci or whole chromosomes.
 
--> fix faststructure
--> finish DAPC with different datasets
-
 ## Step 2. Assessing population structure
 ### Structure with faststructure
 STRUCTURE has been the most popular software for detecting and describing population structure since it was published 20 years ago. However, it was developed before we started genotyping thousands of markers at a time and it is therefore slow for large genomic datasets. fastSTRUCTURE (Raj eet al. 2014, Genetics) provides a much faster alternative for these datasets while it is based on a similar Bayesian framework. 
