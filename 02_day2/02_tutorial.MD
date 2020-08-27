@@ -185,17 +185,17 @@ scatter(dapc_canada2)
 ```
 ![dapc_canada2](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/plot_dapc_canada_200_4.png)
 
-
+```
 dapc_all<-dapc(all_random)
 scatter(dapc_all)
 compoplot(dapc_all)
 ```
-You can change pretty much everything in your plot and the authors of adegenet have put together a great tutorial <https://adegenet.r-forge.r-project.org/files/tutorial-dapc.pdf>
 
- If too few PCs (with respect
-to the number of individuals) are retained, useful information will be excluded from the
+If too few PCs (with respect to the number of individuals) are retained, useful information will be excluded from the
 analysis, and the resultant model will not be informative enough to accurately discriminate
 between groups. By contrast, if too many PCs are retained, this will have a destabilising
 effect on the coefficients extimated, leading to problems of overfit. In such cases, the
 model is able to describe all of the data in such detail that it becomes flexible enough
 to discriminate almost perfectly between any possible clusters. 
+
+You can change pretty much everything in your plot and the authors of adegenet have put together a great tutorial <https://adegenet.r-forge.r-project.org/files/tutorial-dapc.pdf>
