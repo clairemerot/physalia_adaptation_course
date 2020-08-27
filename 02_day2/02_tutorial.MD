@@ -179,11 +179,13 @@ dapc_canada1<-dapc(canada, n.da=4, n.pca=100)
 dapc_canada2<-dapc(canada, n.da=4, n.pca=200)
 scatter(dapc_canada1)
 ```
-![convert4dapc](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/plot_dapc_canada_100_4.png)
+![dapc_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/plot_dapc_canada_100_4.png)
 ```
 scatter(dapc_canada2)
 ```
-![convert4dapc](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/plot_dapc_canada_200_4.png)
+![dapc_canada2](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/plot_dapc_canada_200_4.png)
+
+
 dapc_all<-dapc(all_random)
 scatter(dapc_all)
 compoplot(dapc_all)
