@@ -1,6 +1,6 @@
 # Day2: Population structure and differentiation 
-### Step 1: Calculating F-statistics
-#### With Stacks
+## Step 1: Calculating F-statistics
+### With Stacks
 As you can see if you ```cd``` in one of the folders storing the output from your ```populations``` runs, STACKS produces many output files. The manual provides a thorough explanation of all the different file formats. Go to <https://catchenlab.life.illinois.edu/stacks/manual/> and scroll down to section 6.6. For each output type, open the corresponding file on the server, and take your time to explore them.
 
 One statistics we are interested in F<sub>ST</sub>, a relative measure of differentiation between populations. Let's look at one of these files in more detail
@@ -62,7 +62,7 @@ Population pair divergence statistics (more in populations.fst_summary.tsv and p
 Here, the value of π are not very different because they are averaged over only the polymorphic sites (which is NOT how we should estimate π anyway). Same for F<sub>ST</sub>. Do you see how different the haplotype-based estimates are? They are all lower in the random-SNP dataset because STACKS computes these statistics as if there was only one polymorphic site in each of these loci.
 
 
-#### With VCFtools
+### With VCFtools
 To calculate F<sub>ST</sub> in VCFtools you need to provide the list of samples for each population to include in the calculation. For the redeuced dataset, including only 80 individuals from Greenland and Canada, you will find the list of samples for each of the two lineages in the ```~/scripts``` folder
 ```
 vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop ~/scripts/pop_canada.txt --weir-fst-pop ~/scripts/pop_greenland.txt  --out fst_2lin
@@ -118,6 +118,7 @@ vcftools --vcf populations_2lin_random/populations.snps.filter.vcf --weir-fst-po
 vcftools --vcf populations_2lin_random/populations.snps.vcf --site-pi --keep ~/scripts/pop_canada.txt --out pi_canada
 vcftools --vcf populations_2lin_random/populations.snps.filter.vcf --site-pi --keep ~/scripts/pop_greenland.txt --out pi_greenland
 ```
+## Step 2. Assess population structure
 ### Structure with faststructure
 STRUCTURE has been the most popular software for detecting and describing population structure since it was published 20 years ago. However, it was developed before we started genotyping thousands of markers at a time and it is therefore slow for large genomic datasets. fastSTRUCTURE (Raj eet al. 2014, Genetics) provides a much faster alternative for these datasets while it is based on a similar Bayesian framework. 
 
@@ -148,6 +149,10 @@ Usage: python distruct.py
      --title=<figure title>  (a title for the figure; optional)
 ```
 ### PCA (Yann)
+
+
+
+
 
 ### DAPC
 A Discrimant Analysis of Principal Components is a multivariate approach that merges a Pricipal Component Analysis (PCA) and a Discriminant Analysis (DA). A PCA aims to summarize the variation among individuals and it runs very fast, also on large datasets. However, it is not powerful at discriminating groups because it doesn't use any a priori information on grouping and intra-group variation can overwhelm inter-group variation. A DA, on the other hand, tries to summarize the variation among groups, while minimizing the variatin within groups. Thus, a DAPC takes the best of the two analyses to describe population structure. Also, compared to structure-like analysis it is not based on strict model assumptions and is more powerful at describing isolation-by-distance and hierarchical structure that the Bayesian approaches implemented in STRUCTRURE, fastSTRUCTURE, or ADMIXTURE.
