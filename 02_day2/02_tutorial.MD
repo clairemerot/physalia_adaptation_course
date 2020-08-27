@@ -198,4 +198,8 @@ effect on the coefficients extimated, leading to problems of overfit. In such ca
 model is able to describe all of the data in such detail that it becomes flexible enough
 to discriminate almost perfectly between any possible clusters. 
 
+However, we can assess the trade-off between power of discrimination and over-fitting by calculating the "\\mathrm{A}"-score, which is simply the difference between the proportion of successful reassignment of
+the analysis (observed discrimination) and values obtained using random groups (random
+discrimination).
+
 You can change pretty much everything in your plot and the authors of adegenet have put together a great tutorial <https://adegenet.r-forge.r-project.org/files/tutorial-dapc.pdf>
