@@ -236,3 +236,4 @@ You can change pretty much everything in your plot and the authors of adegenet h
 ## Step 3. Assessing population structure heterogeneity acorss the genome
 ### Sliding PCA (Claire)
 ### Repeat analyses on different genomic regions/chromosomes
+### Manhattan plots for sex and inversion
