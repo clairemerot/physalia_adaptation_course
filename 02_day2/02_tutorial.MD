@@ -14,17 +14,21 @@ grep -v "^#" populations.fst_NWA-GRE.tsv | sort -rk8,8 | head -n 20
 ```
 ```grep -v``` exclude lines that start with #, then you sort the file by values of F<sub>ST</sub> from the highest to the lowest (```-r```), and print to the screen the top 20 SNPs.
 
-If you have more than two populations, STACKS will print out ```populations.fst_*.tsv``` for each unique combination of populations. Look into the ```populations_canada_random``` folder. Here we can create a list of the 100 most differentiated SNPs among all populations with this one-liner 
+If you have more than two populations, STACKS will print out ```populations.fst_POP1-POP2.tsv``` for each unique combination of populations. Look into the ```populations_canada_random``` folder. Here we can create a list of the 100 most differentiated SNPs among all populations with this one-liner 
 ```
 cat populations.fst_*.tsv | grep -v "^#" - | sort -rk8,8 | head -n 1000 | sort -un -k1,1 -k2,2 -s | sort -rk8,8 | cut -f 1,6 | tail -n +2 | head -n 100 | sort -n > high_fst.whitelist.tsv
 ```
-which is mostly based on commands that we've just used above, with the difference that you merge all files containing population pairwise information and print only the SNP information. Note that even though the data are mapped to a reference genome, STACKS has built a catalog of loci and uses locus ID and position within the locus (stored in columns 1 and 6 in this file) to retrieve information on these SNPs (i.e. STACKS doesn't use chromosome and position to identify SNPs). Now that we have created a 'whitelist', we can rerun populations and generate F-statistics and input files for these 100 highly differentiated SNPs only.
+which is mostly based on commands that we've just used above, with the difference that you merge all files containing population pairwise information and print only the SNP information. Note that even though the data are mapped to a reference genome, STACKS has built a catalog of loci and uses locus ID and position within the locus (stored in columns 1 and 6 in this file) to retrieve information on these SNPs (i.e. STACKS doesn't use chromosome and position to identify SNPs). 
+
+Have a look at this list. Are these SNPs randomly distributed across the 5 chromosomes?
+
+Now that we have created a 'whitelist', we can rerun populations and generate F-statistics and input files for these 100 highly differentiated SNPs only.
 ```
 cd ~/stacks
 mkdir populations_canada_random_highfst
 populations -t 16 -P ~/stacks/gstacks/ -M ~/scripts/popmap_canada.txt -O populations_canada_random_highfst --fstats --vcf --genepop --structure -W ~/stacks/populations_canada_random/high_fst.whitelist.tsv
 ```
-Have a look at this list. Are these SNPs randomly distributed across the 5 chromosomes?
+
 
 Whitelists and blacklists are very useful to select or discard loci for analysis. For quick data exploration, or for analysis that don't require, or can't handle, large datasets, you can use a similar code to create a whitelist with a random subset of SNPs. For 1000 SNPs for example
 ```
@@ -40,6 +44,7 @@ Trends in Ecology & Evolution, 35(3), pp.245-258.
 ```
 
 Note also that statistics will be different depending on whether you look at all SNPs in one locus or only one random SNP. See below
+
 Statistics from ~/stacks/populations_2lin/populations.log, which includes all SNPs
 ```
 Population summary statistics (more detail in populations.sumstats_summary.tsv):
@@ -63,7 +68,7 @@ Here, the value of π are not very different because they are averaged over only
 
 
 ### With VCFtools
-To calculate F<sub>ST</sub> in VCFtools you need to provide the list of samples for each population to include in the calculation. For the redeuced dataset, including only 80 individuals from Greenland and Canada, you will find the list of samples for each of the two lineages in the ```~/scripts``` folder
+To calculate F<sub>ST</sub> in VCFtools you need to provide the list of samples for each population to include in the calculation. For the reduced dataset, including only 80 individuals from Greenland and Canada, you will find the list of samples for each of the two lineages in the ```~/scripts``` folder
 ```
 vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop ~/scripts/pop_canada.txt --weir-fst-pop ~/scripts/pop_greenland.txt  --out fst_2lin
 ```
@@ -88,7 +93,7 @@ Weir and Cockerham weighted Fst estimate: 0.23741
 After filtering, kept 8530 out of a possible 8530 Sites
 Run Time = 0.00 seconds
 ```
-The calculation is very fast, and in addition to per-site estimates you get mean and weighted F<sub>ST</sub> estimates in the stdout, which you could save in a separate file by adding ```> fst_2lin.log``` at the end of the previous command.
+The calculation is very fast, and in addition to per-site estimates you get mean and weighted F<sub>ST</sub> estimates, which you could save in a separate file by adding ```> fst_2lin.log``` at the end of the previous command.
 
 If you have a reference genome and panel of SNPs dense enough (or whole genome resequencing data) you can calculate window estimates with 
 ```
@@ -101,7 +106,7 @@ We can also calculate π in VCFtools with the command
 cd ~/stacks
 vcftools --vcf populations_2lin_random/populations.snps.vcf --site-pi --keep ~/scripts/pop_canada.txt --out pi_canada
 ```
-However, these single-site estimates of π are not very meaningful. 
+However, these single-site estimates of π are not very meaningful. π is defined as the average number of nucleotide differences per site between two DNA sequences in all possible pairs in the sample population. That is the same reason why π averaged across polymorphic sites in STACKS is not meaningful either. π must be averaged across the whole length of the sequence you are analyzing, whether it is a collection of RAD loci or whole chromosomes.
 
 -> fix faststructure
 -> finish DAPC with different datasets
