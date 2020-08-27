@@ -198,8 +198,22 @@ effect on the coefficients extimated, leading to problems of overfit. In such ca
 model is able to describe all of the data in such detail that it becomes flexible enough
 to discriminate almost perfectly between any possible clusters. 
 
-However, we can assess the trade-off between power of discrimination and over-fitting by calculating the "\\mathrm{A}"-score, which is simply the difference between the proportion of successful reassignment of
-the analysis (observed discrimination) and values obtained using random groups (random
+However, we can assess the trade-off between power of discrimination and over-fitting by calculating the alpha-score, which is  the difference between the proportion of successful reassignment ofthe analysis (observed discrimination) and values obtained using random groups (random
 discrimination).
+```
+temp1 <- optim.a.score(dapc_canada1)
+temp2 <- optim.a.score(dapc_canada2)
+```
+These analyses suggest I should use fewer PCs, around 50. 
+```
+dapc_canada1<-dapc(canada, n.da=4, n.pca=50)
+```
+You can see the effect well from stucture-like plots made with the function ```compoplot```, which plot the assignemnt proportions of each individual.
+```
+compoplot(dapc_canada1)
+compoplot(dapc_canada2)
+compoplot(dapc_canada3)
+```
+Although 200 PCs discriminate population well, we know from low pairwise population F<sub>ST</sub> that differentiation is very low, which lead us to conclude that these high population assignemnt are the consequence of data over-fitting. 
 
 You can change pretty much everything in your plot and the authors of adegenet have put together a great tutorial <https://adegenet.r-forge.r-project.org/files/tutorial-dapc.pdf>
