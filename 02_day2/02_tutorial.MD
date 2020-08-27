@@ -214,9 +214,18 @@ dapc_canada1<-dapc(canada, n.da=4, n.pca=50)
 You can nicely see the effect of the number of PCs selected from stucture-like plots made with the function ```compoplot```, which plots the assignemnt proportions of each individual.
 ```
 compoplot(dapc_canada1)
+```
+![compoplot1_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/compoplot_dapc_canada1.pdf)
+```
 compoplot(dapc_canada2)
+```
+![compoplot1_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/compoplot_dapc_canada2.pdf)
+```
 compoplot(dapc_canada3)
 ```
+![compoplot1_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/compoplot_dapc_canada3.pdf)
+
+
 Although 200 PCs discriminate populations well, we know from low pairwise population F<sub>ST</sub> that differentiation is very low, which lead us to conclude that these high population assignments are the consequence of data over-fitting. On the other hand, the poor population assignemnt you obtain from 50 PCs is indicative of the weak population structure among the Canadian populations.
 
 You can change pretty much everything in your plot and the authors of adegenet have put together a great tutorial <https://adegenet.r-forge.r-project.org/files/tutorial-dapc.pdf>
