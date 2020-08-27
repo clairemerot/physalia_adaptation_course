@@ -230,7 +230,7 @@ Although 200 PCs discriminate populations well, we know from low pairwise popula
 
 You can change pretty much everything in your plot and the authors of adegenet have put together a great tutorial <https://adegenet.r-forge.r-project.org/files/tutorial-dapc.pdf>
 
-## Step 3. Assessing population structure heterogeneity acorss the genome
+## Step 3. Assessing population structure heterogeneity across the genome
 ### Sliding PCA (Claire)
 ### Repeat analyses on different genomic regions/chromosomes
 ### Manhattan plots for sex and inversion
