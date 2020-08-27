@@ -118,7 +118,7 @@ vcftools --vcf populations_2lin_random/populations.snps.filter.vcf --weir-fst-po
 vcftools --vcf populations_2lin_random/populations.snps.vcf --site-pi --keep ~/scripts/pop_canada.txt --out pi_canada
 vcftools --vcf populations_2lin_random/populations.snps.filter.vcf --site-pi --keep ~/scripts/pop_greenland.txt --out pi_greenland
 ```
-## Step 2. Assess population structure
+## Step 2. Assessing population structure
 ### Structure with faststructure
 STRUCTURE has been the most popular software for detecting and describing population structure since it was published 20 years ago. However, it was developed before we started genotyping thousands of markers at a time and it is therefore slow for large genomic datasets. fastSTRUCTURE (Raj eet al. 2014, Genetics) provides a much faster alternative for these datasets while it is based on a similar Bayesian framework. 
 
@@ -227,6 +227,10 @@ compoplot(dapc_canada1)
 compoplot(dapc_canada2)
 compoplot(dapc_canada3)
 ```
-Although 200 PCs discriminate population well, we know from low pairwise population F<sub>ST</sub> that differentiation is very low, which lead us to conclude that these high population assignemnt are the consequence of data over-fitting. 
+Although 200 PCs discriminate population well, we know from low pairwise population F<sub>ST</sub> that differentiation is very low, which lead us to conclude that these high population assignemnt are the consequence of data over-fitting. On the other hand, the poor population assignemnt you obtain from 50 PCs is indicative of the weak population structure among the Canadian populations.
 
 You can change pretty much everything in your plot and the authors of adegenet have put together a great tutorial <https://adegenet.r-forge.r-project.org/files/tutorial-dapc.pdf>
+
+## Step 3. Assessing population structure heterogeneity acorss the genome
+### Sliding PCA (Claire)
+### Repeat analyses on different genomic regions/chromosomes
