@@ -169,7 +169,7 @@ dapc_twolin<-dapc(twolin) ### choose 50 PCs and 1 distriminant function, as you 
 ###To plot results
 scatter(dapc_twolin)
 ```
-Because our data set contains only two groups, NWA (Canada) and GRE (Greenland), we have only one discriminant function available. For this reason, we can plot our results across only one axis of variation. However, you can see that that's enough to sharply and unequivocally separate the Canadian and Greenlandic lineages.
+Because our dataset contains only two groups, NWA (Canada) and GRE (Greenland), we have only one discriminant function available. For this reason, we can plot our results across only one axis of variation. However, you can see that that's enough to sharply and unequivocally separate the Canadian and Greenlandic lineages.
 
 You can repeat this analysis with the full dataset ```populations_all_random/populations.str```. 
 ```
@@ -193,11 +193,6 @@ scatter(dapc_canada2)
 ```
 ![dapc_canada2](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/plot_dapc_canada_200_4.png)
 
-```
-dapc_all<-dapc(all_random)
-scatter(dapc_all)
-compoplot(dapc_all)
-```
 
 If too few PCs (with respect to the number of individuals) are retained, useful information will be excluded from the
 analysis, and the resultant model will not be informative enough to accurately discriminate
@@ -206,7 +201,7 @@ effect on the coefficients extimated, leading to problems of overfit. In such ca
 model is able to describe all of the data in such detail that it becomes flexible enough
 to discriminate almost perfectly between any possible clusters. 
 
-However, we can assess the trade-off between power of discrimination and over-fitting by calculating the alpha-score, which is  the difference between the proportion of successful reassignment ofthe analysis (observed discrimination) and values obtained using random groups (random
+However, we can assess the trade-off between power of discrimination and over-fitting by calculating the alpha-score, which is the difference between the proportion of successful reassignment of the analysis (observed discrimination) and values obtained using random groups (random
 discrimination).
 ```
 temp1 <- optim.a.score(dapc_canada1)
