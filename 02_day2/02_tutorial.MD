@@ -211,7 +211,10 @@ These analyses suggest I should use fewer PCs, around 50.
 ```
 dapc_canada1<-dapc(canada, n.da=4, n.pca=50)
 ```
-You can nicely see the effect of the number of PCs selected from stucture-like plots made with the function ```compoplot```, which plots the assignemnt proportions of each individual.
+![dapc_canada2](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/plot_dapc_canada_50_4.png)
+
+
+Another way to see the effect of the choice of the number of PCs is from stucture-like plots made with the function ```compoplot```, which plots the assignemnt proportions of each individual.
 ```
 compoplot(dapc_canada1)
 ```
