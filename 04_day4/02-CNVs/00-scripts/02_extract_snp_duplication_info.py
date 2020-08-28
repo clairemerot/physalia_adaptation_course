@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+#Author : Eric Normandeau (Louis Bernatchez' Lab)
+#This script is available at https://github.com/enormandeau/stacks_workflow
 """Get informations about overmerged / CNV loci
 Usage:
     <program> input_vcf output_file

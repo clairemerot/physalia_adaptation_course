@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+#Author : Eric Normandeau (Louis Bernatchez' Lab)
+#This script is available at https://github.com/enormandeau/stacks_workflow
 """Filtering SNPs in VCF file output by STACKS1 or STACKS2 minimaly
 Usage:
     <program> input_vcf min_cov percent_genotypes max_pop_fail min_mas output_vcf

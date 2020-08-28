@@ -1,4 +1,6 @@
 #!/usr/bin/env Rscript
+#Author : Eric Normandeau (Louis Bernatchez' Lab)
+#This script is available at https://github.com/enormandeau/stacks_workflow
 # Parse user input
 rm(list=ls())
 args = commandArgs(trailingOnly=TRUE)

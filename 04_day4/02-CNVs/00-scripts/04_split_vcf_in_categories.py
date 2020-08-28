@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+#Author : Eric Normandeau (Louis Bernatchez' Lab)
+#This script is available at https://github.com/enormandeau/stacks_workflow
 """Split VCF into singleton vs other duplicated categories
 Usage:
     <program> input_vcf input_categories
