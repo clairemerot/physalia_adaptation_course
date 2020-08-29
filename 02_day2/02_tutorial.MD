@@ -406,5 +406,11 @@ You can change pretty much everything in your plot and the authors of adegenet h
 
 ## Step 3. Assessing population structure heterogeneity across the genome
 ### Sliding PCA (Claire)
+As you saw earlier, the PCA we obtained is very unexpected and it looks like some portion of the genome are overwhelmingly driving the structure.
+To get a better sense of what's going on, we will be doing PCA again, but along the genome by window of X SNPs.
+For this we will use a R package available here https://github.com/petrelharp/local_pca 
+And presented in this publication https://www.genetics.org/content/211/1/289
+
+
 ### Repeat analyses on different genomic regions/chromosomes
 ### Manhattan plots for sex and inversion
