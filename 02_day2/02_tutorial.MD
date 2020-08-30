@@ -443,7 +443,7 @@ library(lostruct)
 options(datatable.fread.input.cmd.message=FALSE)  #disable a useless message
 snps <- vcf_windower("capelin_NWA_sorted.bcf",size=100,type='snp', sites= vcf_positions("capelin_NWA_sorted.bcf"))
 ```
-This function makes windows out of the given data file of your chosen size. You can choose the size of the window with "size" and on which variable you want to split ('snp' or 'bp'). We suggest to use window of 100 snp since we are not very dense (RAD data) and we don't have a lot of snps.Typically with whole genome you may first run by windows of 1000 or 5000 snps for a first look, and then refine with smaller windows.
+This function makes windows out of the given data file of your chosen size. You can choose the size of the window with "size" and on which variable you want to split ('snp' or 'bp'). We suggest to use window of 100 snp since we are not very dense (RAD data) and we don't have a lot of snps.Typically with whole genome you may first run by windows of 1000 or 5000 snps for a first look, and then refine with smaller windows. The analysis can be run chromosome by chromosome (as in the paper) or on the entire genome. Here, we are going for the entire genome.
 
 You can display for instance the 5th window and know its location by doing
 ```
@@ -555,17 +555,42 @@ ggplot(pca_correlation, aes(x=midpos, y=corr_vector, colour=chrom))+
 ```
 
 What do you see?  Which windows correlate with PC1? What do you think?
-```
-![correlation_PC1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/local_pca_corr_PC1.jpg)
-```
-Try for PC2 (of the global PCA) 
+!(https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/local_pca_corr_PC1.png)
 
-For PCa 2 you will ahve something like:
+Now you can have a look at correlation between local PC1s and the global PC2...
 
 #### Step 3 Using the MDS
-Here that was easy, because we knew there was something weird on PC1 and PC2
+Here that was easy, because we knew there was something weird on PC1 and PC2. But please keep in mind that, even if on the global PCA, no region is driving a specific clustering, there may still be, on some chromosome, or some regions, similar clustering of individuals that reveal population structure, chromosomal rearragements, sex, non recombining haploblocks, etc. Exploring the MDS is a way to detect such heterogeneity in the genome.
+
+Let's load the mds and plot the first axes 
+```
+mds_matrix<-read.table("mds_matrix.txt", header=TRUE)
+head(mds_matrix)
+mds_matrix$midpos<-(mds_matrix$start+mds_matrix$end)/2
+
+#for ggplot you need to rename the columns
+colnames(mds_matrix)<-c("chrom","start","end","mds1","mds2","mds3","mds4","mds5","mds6","mds7","mds8","mds9","mds10")
+
+ggplot(mds_matrix, aes(x=mds1, y=mds2, colour=chrom))+ 
+  geom_point()+
+  theme_classic()
+ggplot(mds_matrix, aes(x=mds3, y=mds4, colour=chrom))+ 
+  geom_point()+
+  theme_classic()
+```
+![https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/mds1_2.png]
+
+As you see, MDS 1 and 2 are largely driven by Chr 4 and Chr5. Let's look at mds scores along the genome to pinpoint those regions
+Building on what we did before, you can probably make a Manhattan plot with a midposition as x, and mds1 or mds2 as y. 
+
+This is the output for MDS2
+! [https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/mds2_position.png]
+
+To follow-up, You can try to find approximately the breakpoints of those areas that appear outliers
+We will come back to those regions later (on day 4) to analyse them. In the meantime to look at the geographic structure of the populations, we suggest that you remove them from your analyses.
+
 #### A note about running R into a terminal or on a server
-Instead of running R frontally, can also write a whole script and run it with 
+Instead of running R frontally, as we did at the beginning for lostruct, we could have written a whole script and run it with 
 ```
 Rscript my_fancy_script.R "option1" "option2"
 ```
@@ -576,7 +601,5 @@ option1 <- argv[1]
 option2 <- argv[2]
 ```
 
+### Repeat analyses for geographic structure on different genomic regions/chromosomes
 
-
-### Repeat analyses on different genomic regions/chromosomes
-### Manhattan plots for sex and inversion
