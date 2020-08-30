@@ -406,10 +406,97 @@ You can change pretty much everything in your plot and the authors of adegenet h
 
 ## Step 3. Assessing population structure heterogeneity across the genome
 ### Sliding PCA (Claire)
-As you saw earlier, the PCA we obtained is very unexpected and it looks like some portion of the genome are overwhelmingly driving the structure.
-To get a better sense of what's going on, we will be doing PCA again, but along the genome by window of X SNPs.
-For this we will use a R package available here https://github.com/petrelharp/local_pca 
-And presented in this publication https://www.genetics.org/content/211/1/289
+As you saw earlier, the PCA performed on the 240 samples from North America display a very unexpected pattern. The loadings indicate that some portion of the genome are overwhelmingly driving the structure.We suspect there may be sex-linked markers and/or chromosomal rearrangements
+To get a better sense of what's going on, we will be doing PCA again, but along the genome by window of X SNPs.For this we will use  R package * lostruct* available here https://github.com/petrelharp/local_pca and presented in this publication https://www.genetics.org/content/211/1/289
+
+This analysis is more powerful if we keep all SNPs including those in LD so we will come back to the vcf unfiltered
+Please make a folder called 05_localPCA in your 02_day2 folder, and copy there the unsorted vcf.
+We will use several programms to convert this vcf into a bcf, sort it and index it. 
+The package lostruct can also take a vcf but it is heavy to laoad the whole file. Instead they made function that is able to cut the vcf window by window to avoid overloading the memory (but this requires a sorted, indexed bcf)
+```
+mkdir 05_localPCA
+cp "the path where it is..."/capelin_NWA.vcf 05_localPCA/
+
+cd 05_localPCA
+#we need to sort the vcf
+(grep ^"#" capelin_NWA.vcf; grep -v ^"#" capelin_NWA.vcf | sort -k1,1 -k2,2n) > capelin_NWA_sorted.vcf
+
+#then compress it and index it
+bgzip -c capelin_NWA_sorted.vcf > capelin_NWA_sorted.vcf.gz
+tabix -fp vcf capelin_NWA_sorted.vcf.gz
+
+#then convert it to a bcf and sort it
+bcftools convert -O b capelin_NWA_sorted.vcf.gz > capelin_NWA_sorted.bcf
+bcftools index capelin_NWA_sorted.bcf
+```
+
+Now we are good to work in R with the library. This requires some computational power and memory, so we suggest to make the initial steps in R command lines on the server and then copy the output files to visualise on your local Rstudio
+
+To start R in command line, just do "R".
+In the future you can also write a whole script and run it with 
+```
+Rscript my_fancy_script.R "option1" "option2"
+```
+The first lines my_fancy_script.R would be:
+```
+argv <- commandArgs(T)
+option1 <- argv[1]
+option2 <- argv[2]
+```
+Now you have a R console and we wil run the lostruct procedure
+
+```
+#open library
+library(lostruct)
+options(datatable.fread.input.cmd.message=FALSE)  #disable a useless message
+snps <- vcf_windower("capelin_NWA_sorted.bcf",size=100,type='snp', sites= vcf_positions("capelin_NWA_sorted.bcf"))
+```
+This function makes windows out of the given data file of your chosen size. You can choose the size of the window with "size" and on which variable you want to split ('snp' or 'bp'). We suggest to use window of 100 snp since we are not very dense (RAD data) and we don't have a lot of snps.Typically with whole genome you may first run by windows of 1000 or 5000 snps for a first look, and then refine with smaller windows.
+
+You can display for instance the 5th window and know its location by doing
+```
+snps(5)
+region(snps) (5)
+```
+We can now run the PCA on all windows. Here we choose to consider k=npc=2 because they usually capture most variance for each local PCA
+```
+pcs <- eigen_windows(snps,k=2)
+dim(pcs) #check dimension
+head (pcs[,1:10]) #look at the first 10 columns
+pcs_noNA<-pcs[-which(is.na(pcs[,1])),] #because of NA, some windows were not computed by pca. we will remove them
+```
+In the matrix pcs, each rows give the first k eigenvalues and k eigenvectors for each window. This gives you a matrix with 483 columns (3 columns of info, 240 columns with PC1 score for each individual, and 240 column with PC2 score for each individual). It has as many rows as windows (1016 with windows of 100 SNPs)
+
+As you see we don't know the position of each window, we will get it with the function regions, remove the NA windows and exapnd the pca matrix to include the position information we retrieve before and export the file
+```
+#retrieve positions
+window_pos<-region(snps)()
+head(window_pos)
+
+#keep windows without NA
+window_pos_noNA<- window_pos[-which(is.na(pcs[,1])),]
+#merge
+pca_matrix_noNA<-cbind(window_pos_noNA, pcs_noNA)
+head (pca_matrix_noNA[,1:10])
+
+#save the file
+write.table(pca_matrix_noNA, "pca_matrix.txt", sep="\t", row.names=FALSE, quote=FALSE)
+```
+Now the lostruct procedure proposes to compute pairwise distances between those windows and visualise it with a MDS (multidimensional scaling). Our goal is to identify groups of windows which display similar PCA pattern.This is done with the following functions (we uses 2 PC per window as above, and will look at the 1st 10 axes of the MDS)
+```
+pcdist <- pc_dist(pcs_noNA,npc=2)
+mds_axe<-cmdscale(pcdist, k=10)
+head(mds_axe)
+
+#again the mds file is missing position information so:
+mds_matrix<-cbind(window_pos_noNA, mds_axe)
+write.table(mds_matrix, "mds_matrix.txt", sep="\t", row.names=FALSE, quote=FALSE)
+```
+Since this is a little long , we will let it run and explore on your local computer with Rstudio some of the local pca. Let's download pca_matrix.txt locally and we will play in R studio to look at some of those local PCA
+
+
+
+
 
 
 ### Repeat analyses on different genomic regions/chromosomes
