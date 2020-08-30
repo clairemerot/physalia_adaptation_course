@@ -410,7 +410,9 @@ As you saw earlier, the PCA performed on the 240 samples from North America disp
 To get a better sense of what's going on, we will be doing PCA again, but along the genome by window of X SNPs.For this we will use  R package * lostruct* available here https://github.com/petrelharp/local_pca and presented in this publication https://www.genetics.org/content/211/1/289
 
 This analysis is more powerful if we keep all SNPs including those in LD so we will come back to the vcf unfiltered
-Please make a folder called 05_localPCA in your 02_day2 folder, and copy there the unsorted vcf.
+
+#### step 0: prepare the vcf
+Please make a folder called 05_localPCA in your 02_day2 folder, and copy there the unfiltered vcf for the 12 NWA populations.
 We will use several programms to convert this vcf into a bcf, sort it and index it. 
 The package lostruct can also take a vcf but it is heavy to laoad the whole file. Instead they made function that is able to cut the vcf window by window to avoid overloading the memory (but this requires a sorted, indexed bcf)
 ```
@@ -432,18 +434,8 @@ bcftools index capelin_NWA_sorted.bcf
 
 Now we are good to work in R with the library. This requires some computational power and memory, so we suggest to make the initial steps in R command lines on the server and then copy the output files to visualise on your local Rstudio
 
-To start R in command line, just do "R".
-In the future you can also write a whole script and run it with 
-```
-Rscript my_fancy_script.R "option1" "option2"
-```
-The first lines my_fancy_script.R would be:
-```
-argv <- commandArgs(T)
-option1 <- argv[1]
-option2 <- argv[2]
-```
-Now you have a R console and we wil run the lostruct procedure
+#### Step 1: run lostruct
+To start R in command line, just type "R". Now you have a R console and we wil run the lostruct procedure
 
 ```
 #open library
@@ -494,8 +486,95 @@ write.table(mds_matrix, "mds_matrix.txt", sep="\t", row.names=FALSE, quote=FALSE
 ```
 Since this is a little long , we will let it run and explore on your local computer with Rstudio some of the local pca. Let's download pca_matrix.txt locally and we will play in R studio to look at some of those local PCA
 
+#### Step 2 Visualising the local PCA outputs
+Back on our local computer in R studio, we will look at all those local PCA.
+First let's go in R, set the working directory, load useful libraries (ggplot2) and the matrix of pca
 
+```
+pca_matrix<-read.table("pca_matrix.txt", header=TRUE)
+pca_matrix[1:10,1:10]
+n_windows<-dim(pca_matrix)[1] # the number of windows we have
+```
 
+We may want to simply plot the pca for some windows. This is not the most easy because remember the format is a bit tricky
+Look at the format. We have 3 columns for position, total eigen values, eigvalue of PC1, of PC2 and then 240 values for PC1 scores of all our samples, and 240 values for PC2 scores of all samples
+```
+   chrom   start     end      total    lam_1     lam_2   PC_1_L_01    PC_1_L_02    PC_1_L_03    PC_1_L_04
+1   Chr1    4598  102627 11.2676700 2.237855 1.2467539  0.04757381  0.003211281  0.048236420 -0.029799279
+2   Chr1  102627  298945  5.4675252 1.664517 1.1009505  0.05177397 -0.066433281  0.056306263  0.057187867
+3   Chr1  298949  557448 20.3195707 3.514855 2.5803417 -0.07997331 -0.014285140 -0.077618567  0.061921540
+4   Chr1  557463  664701  7.9826780 1.707709 1.4688195  0.00317093 -0.027442327 -0.003586276 -0.025939893
+```
+
+So to get information for a window we can fo something like:
+```
+Nind<-240
+
+pc1_i<-t(pca_matrix[i, 7:(Nind+6)]) #scores along PC1
+pc2_i<-t(pca_matrix[i, (Nind+7):(2*Nind+6)]) #scores along PC2
+var1<-round(pca_matrix[i, 5]/pca_matrix[i, 4],2)*100 # % of variance explained by PC1
+var2<-round(pca_matrix[i, 6]/pca_matrix[i, 4],2)*100 # % of variance explained by PC2
+midpos_i<-(pca_matrix[i, 2]+pca_matrix[i, 3])/2 #average position of the window
+window_i<-paste(pca_matrix[i, 1], midpos_i , sep="_") #paste the name of CHR and the midposition
+
+plot(pc1_i, pc2_i, pch=20, xlab=paste("PC1", var1 , "%"), ylab=paste("PC2", var2, "%"), main=window_i)
+```
+
+Not super clean but it works. Building on  that you can do anything to reformat your matrix of PC, eigen values, etc...
+
+Now what do we want to know, we want to look which windows explain the pattern observed in the global pca. We can look at correlation between global PCs and PC1 of each local PCA. I propose to take the PCA you did earlier on the 12 NWA populations, and look at the correlation between PC1 of the global PCA and PC1 of each local PCA. (then you can do the same with PC2 of the global PCA and PC1 of each local PCA...
+I suggest below a very basic loop to store the correlation by windows. You can probably do something more fancy :-)
+Please note here that we could also have used the genotype correlation, for instance call 0/1 or 0/1/2 the cluster observed on the global pca and then look for each snps at the correlation between genotypes and gneotype for the cluster identified.
+
+```
+#read your global pca file that you did earlier today on the 12 NWA populations (and saved?)
+global_pca<-read.table("where you saved the global pca")
+PC_of_interest<-global_pca[,1] #if you want to look at correlation with PC1
+
+#initialise the vector
+corr_vector<- vector(length=n_windows)
+#loop over windows to store correlation factor
+for (i in 1 : n_windows)
+{
+  pc1_i<-t(pca_matrix[i, 7:(Nind+6)]) #scores along PC1
+  corr_vector[i]<-abs(cor(PC_of_interest, pc1_i)[1,1])
+}
+
+```
+Now let's merge correlation and position to do a Manhattan plot of correlation along the genome. We need to take a midposition for each window.
+I suggest that we use ggplot to visualize and facet_grid is a useful way to make quick Manhattan plot with chromosome side by side
+```
+pca_correlation<-cbind(pca_matrix[,1:3], corr_vector)
+pca_correlation$midpos<-(pca_correlation$start+pca_correlation$end)/2
+head(pca_correlation)
+
+ggplot(pca_correlation, aes(x=midpos, y=corr_vector, colour=chrom))+ 
+  geom_point()+
+  theme_classic()+
+  facet_grid(cols = vars(chrom), scales = "free_x", space="free_x")
+```
+
+What do you see?  Which windows correlate with PC1? What do you think?
+```
+![correlation_PC1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/local_pca_corr_PC1.jpg)
+```
+Try for PC2 (of the global PCA) 
+
+For PCa 2 you will ahve something like:
+
+#### Step 3 Using the MDS
+Here that was easy, because we knew there was something weird on PC1 and PC2
+#### A note about running R into a terminal or on a server
+Instead of running R frontally, can also write a whole script and run it with 
+```
+Rscript my_fancy_script.R "option1" "option2"
+```
+The first lines my_fancy_script.R would be:
+```
+argv <- commandArgs(T)
+option1 <- argv[1]
+option2 <- argv[2]
+```
 
 
 
