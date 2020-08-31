@@ -266,7 +266,27 @@ Next, we are ready to perform the PCA. The code is very simple. Only one line !
 ```
 pca.2lin <- prcomp(geno.012_2lin.imp.MAS2, scale=T)
 ```
-**(YANN) talk about PCA summary stats...**
+Now, we will look at some interesting stats from the PCA object. First we will plot the variances against the number of the principal component.
+```
+screeplot(pca.2lin)
+```
+![img](../images_tutorial/02-day2_screeplot_PCA_2lin.png)
+
+From the screeplot we can see that the amount of variation explained drops dramatically after the first component. This suggests that just one component may be sufficient to summarise the data.
+Next, we will check for the proportion of variance explained by each PC axis.
+```
+#get stats info from the pca
+sum.pca <- summary(pca.2lin)
+#print stats info
+sum.pca$importance[,1:5]
+```
+```
+                          PC1      PC2      PC3      PC4      PC5
+Standard deviation     17.66092 7.271187 7.180096 7.033057 6.972352
+Proportion of Variance  0.09911 0.016800 0.016380 0.015720 0.015450
+Cumulative Proportion   0.09911 0.115910 0.132290 0.148010 0.163460
+```
+Here you can see that the first PC axis (PC1), explain 9.91% of the total variance. Others PC axes explain about 1.5% of the variance.
 
 OK ! now we are ready to make a plot of our PCA. To do this, there is so many ways and R libraries.
 I will present you my own with the R library ggplot2, which is a highly modulable way.
@@ -275,14 +295,14 @@ First, we have to make a synthetic dataframe which incorporate various features:
 * Number of PCs that we want to examine. Usually I keep the first four PCs, but you can keep more.
 * Sample ids
 * Popupations info
-* any other caracteristic that you want related to the samples (e.g. size, color, sex...)
+* any other caracteristics that you want, which are related to the samples (e.g. size, color, sex...)
 
 So how we do that ?
 ```
 #prepare dataset to plot PCAs
 pca.2lin.sub <- pca.2lin$x[,1:4] %>% #retain the first four PCs
   as.data.frame(.) %>% #transform to dataframe object
-  tibble::rownames_to_column(., var='id') %>% #set rownames to column samples ids
+  tibble::rownames_to_column(., var='id') %>% #set rownames to a new column for samples ids
   dplyr::left_join(., popmap, by='id') #Here we use the left_join function
                                        #from dplyr to wrap the population vector
                                        #of our samples.
@@ -293,7 +313,7 @@ ggplot(pca.2lin.sub) + aes(x=PC1, y=PC2, col=pop) +
   geom_hline(yintercept = 0, lty=2, col='grey50') + #add horiz line at y=0
   geom_vline(xintercept = 0, lty=2,col='grey50') +  #add vertical line at x=0
   geom_point() + #add the samples
-  scale_color_manual(values=c('#cab2d6','purple','royalblue', 'cyan')) + #define a new color scale
+  scale_color_manual(values=c('orange','purple','royalblue', 'cyan')) + #define a new color scale
   theme_bw() + #use  classic dark-on-light ggplot2 theme
   theme(panel.background = element_rect(fill='white'), #set some theme options
         panel.grid = element_blank())
@@ -302,18 +322,15 @@ ggplot(pca.2lin.sub) + aes(x=PC1, y=PC2, col=pop) +
 ggsave("03-analyses/02-PCA/PCA_biplpot_2lin_capelin.png", width = 6, height = 5)
 ```
 Done ! Good job.
-![PCA_img](04-readme_img/PCA_1_tutorial_capelin.png)
-
+![PCA_img](../images_tutorial/02-day2_PCA_1_tutorial_capelin.png)
 Now, the question is what do you see ?
 
-* **NOte:** Don't forget to save your script in your own local folder ``02_day2/00-scripts/``
+* **Note:** Don't forget to save your script in your own local folder ``02_day2/00-scripts/``
 
 Ok, that was easy no ? Well, I'm sure that you are able to do the same work for the other dataset composed by the 12 populations.
 Test it and tell us what are your conclusions about it ?
 
 I think you should be able to do this in <20 minutes.
-
-
 
 
 ### DAPC
@@ -329,7 +346,7 @@ setwd("~/Desktop")
 twolin<-import2genind("populations_2lin_random/populations.str") # 80 ind and 8530 SNPs in my case, check your populations.log file to get the right number of SNPs
 ### This command will prompt questions about the structure of the file
 ```
-![convert4dapc](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/adegenet_loaddata.png)
+![convert4dapc](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_adegenet_loaddata.png)
 ```
 ### Once the dataset is loaded, you can proceed with the DAPC
 dapc_twolin<-dapc(twolin) ### choose 50 PCs and 1 distriminant function, as you did have a choice...
@@ -354,11 +371,11 @@ dapc_canada1<-dapc(canada, n.da=4, n.pca=100)
 dapc_canada2<-dapc(canada, n.da=4, n.pca=200)
 scatter(dapc_canada1)
 ```
-![dapc_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/plot_dapc_canada_100_4.png)
+![dapc_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_plot_dapc_canada_100_4.png)
 ```
 scatter(dapc_canada2)
 ```
-![dapc_canada2](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/plot_dapc_canada_200_4.png)
+![dapc_canada2](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_plot_dapc_canada_200_4.png)
 
 
 If too few PCs (with respect to the number of individuals) are retained, useful information will be excluded from the
@@ -378,22 +395,22 @@ These analyses suggest I should use fewer PCs, around 50.
 ```
 dapc_canada1<-dapc(canada, n.da=4, n.pca=50)
 ```
-![dapc_canada2](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/plot_dapc_canada_50_4.png)
+![dapc_canada2](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_plot_dapc_canada_50_4.png)
 
 
 Another way to see the effect of the choice of the number of PCs is from stucture-like plots made with the function ```compoplot```, which plots the assignemnt proportions of each individual.
 ```
 compoplot(dapc_canada1)
 ```
-![compoplot1_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/compoplot_dapc_canada1.png)
+![compoplot1_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_compoplot_dapc_canada1.png)
 ```
 compoplot(dapc_canada2)
 ```
-![compoplot1_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/compoplot_dapc_canada2.png)
+![compoplot1_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_compoplot_dapc_canada2.png)
 ```
 compoplot(dapc_canada3)
 ```
-![compoplot1_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/compoplot_dapc_canada3.png)
+![compoplot1_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_compoplot_dapc_canada3.png)
 
 
 Although 200 PCs discriminate populations well, we know from low pairwise population F<sub>ST</sub> that differentiation is very low, which lead us to conclude that these high population assignments are the consequence of data over-fitting. On the other hand, the poor population assignemnt you obtain from 50 PCs is indicative of the weak population structure among the Canadian populations.
@@ -409,7 +426,7 @@ This analysis is more powerful if we keep all SNPs including those in LD so we w
 
 #### step 0: prepare the vcf
 Please make a folder called 05_localPCA in your 02_day2 folder, and copy there the unfiltered vcf for the 12 NWA populations.
-We will use several programms to convert this vcf into a bcf, sort it and index it. 
+We will use several programms to convert this vcf into a bcf, sort it and index it.
 The package lostruct can also take a vcf but it is heavy to laoad the whole file. Instead they made function that is able to cut the vcf window by window to avoid overloading the memory (but this requires a sorted, indexed bcf)
 ```
 mkdir 05_localPCA
@@ -544,7 +561,7 @@ pca_correlation<-cbind(pca_matrix[,1:3], corr_vector)
 pca_correlation$midpos<-(pca_correlation$start+pca_correlation$end)/2
 head(pca_correlation)
 
-ggplot(pca_correlation, aes(x=midpos, y=corr_vector, colour=chrom))+ 
+ggplot(pca_correlation, aes(x=midpos, y=corr_vector, colour=chrom))+
   geom_point()+
   theme_classic()+
   facet_grid(cols = vars(chrom), scales = "free_x", space="free_x")
@@ -558,7 +575,7 @@ Now you can have a look at correlation between local PC1s and the global PC2...
 #### Step 3 Using the MDS
 Here that was easy, because we knew there was something weird on PC1 and PC2. But please keep in mind that, even if on the global PCA, no region is driving a specific clustering, there may still be, on some chromosome, or some regions, similar clustering of individuals that reveal population structure, chromosomal rearragements, sex, non recombining haploblocks, etc. Exploring the MDS is a way to detect such heterogeneity in the genome.
 
-Let's load the mds and plot the first axes 
+Let's load the mds and plot the first axes
 ```
 mds_matrix<-read.table("mds_matrix.txt", header=TRUE)
 head(mds_matrix)
@@ -567,17 +584,17 @@ mds_matrix$midpos<-(mds_matrix$start+mds_matrix$end)/2
 #for ggplot you need to rename the columns
 colnames(mds_matrix)<-c("chrom","start","end","mds1","mds2","mds3","mds4","mds5","mds6","mds7","mds8","mds9","mds10")
 
-ggplot(mds_matrix, aes(x=mds1, y=mds2, colour=chrom))+ 
+ggplot(mds_matrix, aes(x=mds1, y=mds2, colour=chrom))+
   geom_point()+
   theme_classic()
-ggplot(mds_matrix, aes(x=mds3, y=mds4, colour=chrom))+ 
+ggplot(mds_matrix, aes(x=mds3, y=mds4, colour=chrom))+
   geom_point()+
   theme_classic()
 ```
 ![mds1_2](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/mds1_2.png)
 
 As you see, MDS 1 and 2 are largely driven by Chr 4 and Chr5. Let's look at mds scores along the genome to pinpoint those regions
-Building on what we did before, you can probably make a Manhattan plot with a midposition as x, and mds1 or mds2 as y. 
+Building on what we did before, you can probably make a Manhattan plot with a midposition as x, and mds1 or mds2 as y.
 
 This is the output for MDS2
 ![mds2_manhattan_plot](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/mds2_position.png)
@@ -586,7 +603,7 @@ To follow-up, You can try to find approximately the breakpoints of those areas t
 We will come back to those regions later (on day 4) to analyse them. In the meantime to look at the geographic structure of the populations, we suggest that you remove them from your analyses.
 
 #### A note about running R into a terminal or on a server
-Instead of running R frontally, as we did at the beginning for lostruct, we could have written a whole script and run it with 
+Instead of running R frontally, as we did at the beginning for lostruct, we could have written a whole script and run it with
 ```
 Rscript my_fancy_script.R "option1" "option2"
 ```
@@ -598,4 +615,3 @@ option2 <- argv[2]
 ```
 
 ### Repeat analyses for geographic structure on different genomic regions/chromosomes
-
