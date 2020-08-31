@@ -9,6 +9,7 @@ library(dplyr)
 library(magrittr)
 library(tibble)
 library(ggplot2)
+library(reshape2)
 # --------------
 
 # Set working dir -------------------------
@@ -102,3 +103,22 @@ ggplot(pca.2lin.sub) + aes(x=PC1, y=PC2, col=pop) +
 
 #Print it !
 ggsave("PCA_biplpot_2lin_capelin.png", width = 6, height = 5)
+
+# |---------|
+# | Step 4  | ================> Expolore PCA loadings
+# |---------|
+
+#prepare dataset
+loadings.melt <- reshape2::melt(abs(pca.2lin$rotation[,1:4])) %>% #get absolu teloadings values
+  set_colnames(., c('SNPs','PC','loading')) %>% #set the colnames of the new dataframe
+  mutate(., CHR=substr(SNPs,1,4)) #create a new column to inform about chromosome
+
+#plot the data
+ggplot(data=loadings.melt) +
+  geom_bar(aes(x=SNPs, y=loading, fill=CHR), stat='identity') +
+  facet_wrap(~PC) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+
+#Print it !
+ggsave("PCA_loadings.png", height = 4, width = 15)

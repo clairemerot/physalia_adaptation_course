@@ -158,16 +158,16 @@ vcftools --vcf stacks/populations_2lin_random/populations.snps.vcf --012 --out p
 vcftools --vcf stacks/populations_can_random/populations.snps.vcf --012 --out populations_can_random
 
 ```
-One this is done, you will see via the cmd line `ls` (for listing all files in the directory), that six new files have been generated.
-* files ending with only `.012` contain genotypess information (0 for Ref homo, 1 for het, 2 for Alt homo and -1 for misisng data)
-* files ending with `.012.pos` contain a list of SNP ids (Chromosme and Position) from the vcf file
-* files ending with `.012.indv` contain a list of samples ids from the vcf file
+Once this is done, you will see via the cmd line `ls` (for listing all files in the directory), that six new files have been generated.
+* Two files ending with only `.012` contain genotypes information (0 for Ref homozygous, 1 for heterozygous, 2 for Alt homozygous and -1 for misisng data)
+* Two files ending with `.012.pos` contain a list of SNP ids (Chromosme and Position) from the vcf file
+* Two files ending with `.012.indv` contain a list of samples ids from the vcf file
 
 So to work with this files, we will return in your local computer and download them.
 Before downloading these files in your local computer, open a new terminal and move into your current working folder for this course ``PATH/physalia/``.
 Then, you can download these files via the following command line :
 ```
-scp -i ./boh.pem username@xx.xx.xx.xx:./*.012* ./02_day2/02-data/
+scp -i PATH/boh.pem username@xx.xx.xx.xx:./*.012* ./02_day2/02-data/
 ```
 
 Once the six files have been downloaded, open R studio and set your working directory to ``PATH/physalia/02_day2/``
@@ -179,7 +179,10 @@ Once the six files have been downloaded, open R studio and set your working dire
   library(magrittr)
   library(tibble)
   library(ggplot2)
+  library(reshape2)
 ```
+During the PCA tutorial, I will use the awesome ``%>%``. This code feature is a pipe, which  take the output from one function and feed it to the first argument of the next function. You may have encountered the Unix pipe | before.
+
 #### Step 1: load initial required data files
 ```
 #1. load population map
@@ -323,7 +326,33 @@ ggsave("03-analyses/02-PCA/PCA_biplpot_2lin_capelin.png", width = 6, height = 5)
 ```
 Done ! Good job.
 ![PCA_img](../images_tutorial/02-day2_PCA_1_tutorial_capelin.png)
+
 Now, the question is what do you see ?
+
+Ultimately, we will plot the PCA loadings of each SNPs among the main PC axies.
+```
+# |---------|
+# | Step 4  | ================> Expolore PCA loadings
+# |---------|
+
+#prepare dataset
+loadings.melt <- reshape2::melt(abs(pca.2lin$rotation[,1:4])) %>% #get absolu teloadings values
+  set_colnames(., c('SNPs','PC','loading')) %>% #set the colnames of the new dataframe
+  mutate(., CHR=substr(SNPs,1,4)) #create a new column to inform about chromosome
+
+#plot the data
+ggplot(data=loadings.melt) +
+  geom_bar(aes(x=SNPs, y=loading, fill=CHR), stat='identity') +
+  facet_wrap(~PC) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+
+#Print it !
+ggsave("PCA_loadings.png", height = 4, width = 15)
+```
+![img_loadings](../images_tutorial/02-day2_PCA_loadings.png)
+
+Here we can observe that many SNPs account for an elevated loading which explain the structure of the PCA display above. Interestingly, we can observe that these SNPs with large loadings are spread over all the genome.
 
 * **Note:** Don't forget to save your script in your own local folder ``02_day2/00-scripts/``
 
