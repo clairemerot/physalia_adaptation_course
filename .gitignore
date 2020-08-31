@@ -10,3 +10,8 @@
 *.fasta*
 *.bai
 *log_*
+*.vcf
+*.bcf
+*.vcf*
+*.bcf*
+
