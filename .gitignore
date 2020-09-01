@@ -1,5 +1,4 @@
 *.fq.gz
-*.gz
 *.sam
 *.bam
 *.fa
@@ -12,6 +11,6 @@
 *log_*
 *.vcf
 *.bcf
-*.vcf*
+#*.vcf*
 *.bcf*
 
