@@ -1,6 +1,8 @@
 On server
 #day software library name
 02  vcftools  NA  yann
+02  bcftools  NA  claire
+02  tabix NA  claire
 02  R dplyr yann
 02  R magrittr yann
 02  R tibble yann
@@ -10,6 +12,9 @@ On server
 03  R Baypass yann
 04  R edgeR yann
 04  R vegan yann
+02  R lostruct  claire
+03  R OutFLANK  claire
+03  R vcfR  claire
 04  Python3 NA yann
 04  Python3 PANDAS yann
 
@@ -34,3 +39,4 @@ reshape2
 StAMPP
 Baypass
 edgeR
+SoDA
