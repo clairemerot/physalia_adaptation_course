@@ -1,16 +1,16 @@
 # Day3: Detecting putatively adaptive loci
 Today, we will restrain our analysis on the Canadian 12 populations which belong to the same lineage and for which we have environmental data.
 
-To start, please copy the folder Day 3 into your home directory. We have put inside the folder 01_data your two vcf from yesterday:
+To start, please copy the folder Day 3 into your home directory. We have put inside the folder 02_data your two vcf from yesterday:
 - the vcf of the 12 populations filtered at 1 SNP per locus 
 - the vcf of the 12 populations filtered at 1 SNP per locus without chr 5 (sex linked) and without the putative rearranged regions on chr4
 - an info file including sex, as well as population, latitude, longitude and temperature for the resticted dataset of 240 samples
 - an info file about the 12 populations
 
-you can have a look at the files with the command 'head 01-data/file' (or less 01_data/file)
-To see the beginning of the vcf file it may be useful to use 'less -S 01_data/file', which cut the right part of the file to fit your window, or 'head -n 25 01_data/file' to look at the first 25 lines
+you can have a look at the files with the command 'head 01-data/file' (or less 02_data/file)
+To see the beginning of the vcf file it may be useful to use 'less -S 02_data/file', which cut the right part of the file to fit your window, or 'head -n 25 02_data/file' to look at the first 25 lines
 
-We will work from the 03_day3 folder and try to open our data within their folder (for instance 'head 01_data/file') and ouput in the folder of the analysis for instance (> 02_fst/output)
+We will work from the 03_day3 folder and try to open our data within their folder (for instance 'head 02_data/file') and ouput in the folder of the analysis for instance (> 03_fst/output)
 
 ## 3A Investigate F-statistics in relation with geography
 ### Pairwise differentiation between populations
@@ -37,7 +37,7 @@ To explore whether this is linked to distance between population, we will do a I
 ```
 library(SoDA)
 #import information about populations
-info_pop<-read.table("01_data/info_pop_geo_eco.txt", header=T)
+info_pop<-read.table("02_data/info_pop_geo_eco.txt", header=T)
 head(info_pop)
 #calculate geogrpahic (euclidian) distances between all pairs of populations
 distance<-dist(geoXY(info_pop$latitude, info_pop$longitude))
@@ -67,7 +67,7 @@ Can we look at the FSt landscape along the genome for one pair of pop? Let's say
 
 Let's look at the sex ratio in our data.
 ```
-info_ind<-read.table("01_data/info_samples_canada.txt", header=T)
+info_ind<-read.table("02_data/info_samples_canada.txt", header=T)
 head(info_ind)
 table (info_ind$pop,info_ind$sex)
 ```
