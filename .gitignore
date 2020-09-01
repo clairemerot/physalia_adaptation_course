@@ -11,6 +11,6 @@
 *log_*
 *.vcf
 *.bcf
-#*.vcf*
+*.vcf*
 *.bcf*
-
+*.gz
