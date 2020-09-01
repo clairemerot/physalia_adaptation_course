@@ -52,7 +52,7 @@ Let's re-run the steps above on the vcf in which we removed the chr5 and half of
 Let's look at the pairwise FST matrix and the IBD stats
 What do you see now?
 
-#### Making a LD-pruned vcf
+### Making a LD-pruned vcf
 Another way to get rid of SNPs in LD due to the inversion or sex (?) would be to use a LD-pruned set of SNPs. For this we can use PLINK which will compute LD between SNPs by windows along the genome and keep one SNP out of several SNPs in linkage. Here we are interested in long distance LD (since we have already removed short-distance LD by keepin only one SNP per RAD locus) so I have set the window quite large.
 
 Claire add plink code
@@ -62,6 +62,14 @@ plink
 
 ## 3B Investigate outliers of differentiation
 ### With OutFLANK
+ OutFLANK is an R package that implements the method developed by Whitlock and Lotterhos (https://www.journals.uchicago.edu/doi/10.1086/682949) to use likelihood on a trimmed distribution of FST values to infer the distribution of FST for neutral markers. This distribution is then used to assign q-values to each locus to detect outliers that may be due to spatially heterogeneous selection.
+https://github.com/whitlock/OutFLANK
+
+Whitlock, M. C., and K. J. Lotterhos. 2015. Reliable detection of loci responsible for local adaptation: Inference of a neutral model through trimming the distribution of FST. The American Naturalist. 186:S24–S36.
+
+It has a super good vignette here: https://htmlpreview.github.io/?https://github.com/whitlock/OutFLANK/blob/master/inst/doc/OutFLANKAnalysis.html
+We will more or less follow it today.
+
 #### Step 0 prepare the data
 Let's first convert our vcf to the outflank format:
 ```
