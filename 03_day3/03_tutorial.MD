@@ -7,8 +7,8 @@ To start, please copy the folder Day 3 into your home directory. We have put ins
 - an info file including sex, as well as population, latitude, longitude and temperature for the resticted dataset of 240 samples
 - an info file about the 12 populations
 
-you can have a look at the files with head (or less)
-to see the beginning of the vcf file it may be useful to use less -S, which cut the right part of the file to fit your window, or head -n 25 to look at the first 25 lines
+you can have a look at the files with the command 'head 01-data/file' (or less 01-data/file)
+To see the beginning of the vcf file it may be useful to use 'less -S 01-data/file', which cut the right part of the file to fit your window, or 'head -n 25 01-data/file' to look at the first 25 lines
 
 ## 3A Investigate F-statistics in relation with geography
 ### Pairwise differentiation between populations
