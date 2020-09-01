@@ -3,13 +3,14 @@ On server
 02  vcftools  NA  yann
 02  bcftools  NA  claire
 02  tabix NA  claire
+03  Baypass NA claire
+03  PLINK NA Claire
 02  R dplyr yann
 02  R magrittr yann
 02  R tibble yann
 02  R ggplot2 yann
 02  R reshape2 yann
 03  R StAMPP yann
-03  R Baypass yann
 04  R edgeR yann
 04  R vegan yann
 02  R lostruct  claire
