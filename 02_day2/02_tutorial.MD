@@ -649,10 +649,10 @@ option2 <- argv[2]
 We can use the filtering options of vcftools to exclude the chromosomes 4 and 5:
 
 ```
-vcftools --vcf population.can.random.snp.vcf --not-chr Chr4 --not-chr Chr5 --out population.can.random.snp.without45.vcf
+vcftools --vcf population.can.random.snp.vcf --not-chr Chr4 --not-chr Chr5 --recode --out population.can.random.snp.without45.vcf
 ```
 
 If you want to play or if you finish early, you can look at how excluding just a region of Chr4...
 
 #### RE-run the geographic structure analysis for Canadian population on the reduced vcf
-Time to apply what you learnt before!
+Time to apply what you learnt earlier today!
