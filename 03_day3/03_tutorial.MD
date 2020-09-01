@@ -7,7 +7,9 @@ To start, please copy the folder Day 3 into your home directory. We have put ins
 - an info file including sex, as well as population, latitude, longitude and temperature for the resticted dataset of 240 samples
 - an info file about the 12 populations
 
-you can have a look at the files with the command 'head 01-data/file' (or less 02_data/file)
+Those files were all generated (by you!) on the previous days but to make you start more easily, we decided to prepare them here.
+You can have a look at the files with the command 'head 01-data/file' (or less 02_data/file)
+vcf files will need to be unzipped wiht the 'gunzip' command. 
 To see the beginning of the vcf file it may be useful to use 'less -S 02_data/file', which cut the right part of the file to fit your window, or 'head -n 25 02_data/file' to look at the first 25 lines
 
 We will work from the 03_day3 folder and try to open our data within their folder (for instance 'head 02_data/file') and ouput in the folder of the analysis for instance (> 03_fst/output)
