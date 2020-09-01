@@ -1,4 +1,4 @@
 
-#day package name
-02  vcftools  yann
-02  dplyr yann
+#day software librarie name
+02  vcftools  NA  yann
+02  R dplyr yann
