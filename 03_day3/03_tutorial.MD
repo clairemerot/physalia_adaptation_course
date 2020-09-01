@@ -1,14 +1,16 @@
 # Day3: Detecting putatively adaptive loci
 Today, we will restrain our analysis on the Canadian 12 populations which belong to the same lineage and for which we have environmental data.
 
-To start, please copy the folder Day 3 into your home directory. We have put inside the folder 01-data your two vcf from yesterday:
+To start, please copy the folder Day 3 into your home directory. We have put inside the folder 01_data your two vcf from yesterday:
 - the vcf of the 12 populations filtered at 1 SNP per locus 
 - the vcf of the 12 populations filtered at 1 SNP per locus without chr 5 (sex linked) and without the putative rearranged regions on chr4
 - an info file including sex, as well as population, latitude, longitude and temperature for the resticted dataset of 240 samples
 - an info file about the 12 populations
 
-you can have a look at the files with the command 'head 01-data/file' (or less 01-data/file)
-To see the beginning of the vcf file it may be useful to use 'less -S 01-data/file', which cut the right part of the file to fit your window, or 'head -n 25 01-data/file' to look at the first 25 lines
+you can have a look at the files with the command 'head 01-data/file' (or less 01_data/file)
+To see the beginning of the vcf file it may be useful to use 'less -S 01_data/file', which cut the right part of the file to fit your window, or 'head -n 25 01_data/file' to look at the first 25 lines
+
+We will work from the 03_day3 folder and try to open our data within their folder (for instance 'head 01_data/file') and ouput in the folder of the analysis for instance (> 02_fst/output)
 
 ## 3A Investigate F-statistics in relation with geography
 ### Pairwise differentiation between populations
@@ -20,9 +22,12 @@ to get pairwise FSt, we will use STAMP with a toolbox developped by Yann
 Now you can export the pairwise FST matrix on your local computer to make a few visualisations in R
 Please export the info files about populations too
 
+We are now in Rstudio on your computer.
 We keep it simple and do a simple numeric matrix but you can imagine more fancy ways, with heatmaps or so.
 
 ```
+library(corrplot)
+corrplot?
 ```
 
 What do you notice? Is it heterogeneous? Do some population look more differentiated than other?
@@ -30,22 +35,45 @@ What do you notice? Is it heterogeneous? Do some population look more differenti
 ### Isolation by distance
 To explore whether this is linked to distance between population, we will do a IBD test (Isolation by distance)
 ```
-info_pop<-read.table()
-gps
-dist
-etc
+library(SoDA)
+#import information about populations
+info_pop<-read.table("01_data/info_pop_geo_eco.txt", header=T)
+head(info_pop)
+#calculate geogrpahic (euclidian) distances between all pairs of populations
+distance<-dist(geoXY(info_pop$latitude, info_pop$longitude))
+distance_matrix<-as.matrix(distance) #make a triangular matrix
+colnames(distance_matrix)<-gps$pop
+rownames(distance_matrix)<-gps$pop
+distance_matrix
+
+#make a tabular matrix
+dist_tab<-vector(length=0)
+for (i in 1:12)
+{
+  dist_tab<-c(dist_tab, distance_matrix[i, (i+1):13])
+}
+
+#test association with FST
+
+#plot IBD
+
 ```
 
 does it make sense? 
 -> I hope it does not. 
 If populations that have only males looks closer we can make them think about sex-linked markers and the importance of sampling bias. 
-Can we look at the FSt landscape along the genome for one pair of pop? Let's say for the most differentiated pop?
+Can we look at the FSt landscape along the genome for one pair of pop? Let's say for the most differentiated pop?If peaks in chr5 -> need to pay attention to sex
 
 
 Let's look at the sex ratio in our data.
 ```
-table (sex)
+info_ind<-read.table("01_data/info_samples_canada.txt", header=T)
+head(info_ind)
+table (info_ind$pop,info_ind$sex)
 ```
+It seems that the field sampling has not been very good at balancing sex-ratio between populations... We should be worried about sex-linked markers driving the signal!
+(note: we intentionnaly subsetted the dataset to create this bias which was not in the original publication ;-) but it may happen easily for some species or low sample size)
+
 ### Getting rid of LD spurious effects?
 Yesterday, we saw that a region of chromosome 4 and sex-linked markers on chr 5 were overwhelming the structure. Will that influence our pairwise estimates? Possibly
 Let's re-run the steps above on the vcf in which we removed the chr5 and half of the chr4.
