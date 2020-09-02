@@ -1,1 +1,1 @@
-Folder to run the outflank outlier analysis
+In which we calcualte pairwise FSt between pop in NWA 
