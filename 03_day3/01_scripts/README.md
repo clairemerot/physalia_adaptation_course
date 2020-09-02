@@ -1,2 +1,3 @@
-Folder to store vcf, pop data and env data
+Scripts for looking at population differentiation, putative outliers and environmental associations
+
 
