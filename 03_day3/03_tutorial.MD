@@ -507,8 +507,9 @@ ggplot(xtx_pos, aes(x=position, y=M_XtX, colour=chromosome))+
 xtx_pos[xtx_pos$M_XtX>= threshold_fdr0.05,]
 ```
 
-![xtx_uncontrolled]()
 Now you may want to do the same for the analysis controlled by population structure. Compare the results. What do you think? 
+![xtx_uncontrolled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/06_img_readme/xtx_uncontrolled.png)
+![xtx_controlled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/06_img_readme/xtx_controlled.png)
 
 ## 3C Environmental association
 ### With Baypass (locus by locus)
@@ -562,6 +563,7 @@ We can do similar Mahattan plots and find the threshold from the run on simulate
 
 What do you observe? 
 
-![bf_uncontrolled]()
+![bf_uncontrolled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/06_img_readme/bf_uncontrolled.png)
+![bf_controlled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/06_img_readme/bf_controlled.png)
 
 ### With redundancy analysis (multi-loci)
