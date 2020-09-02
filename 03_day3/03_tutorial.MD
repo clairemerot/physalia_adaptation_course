@@ -114,7 +114,7 @@ gplots::heatmap.2(fst.all.mat, trace = 'none',
                   key.xlab='FST')
 ```
 Note that values goes up to FST = 0.02 ! but most of them are very low
-![img_fst_all](06_img_readme/Fst_heatmap_all_snps.png)
+![img_fst_all](07_img_readme/Fst_heatmap_all_snps.png)
 
 What do you notice? Is it heterogeneous? Do some population look more differentiated than other?
 Why do you think A and J are so different? 
@@ -162,7 +162,7 @@ ggplot(IBD.df) + aes(x=log(distance), y=FST/(1-FST)) +
   geom_smooth(method='lm', formula= y~x) +
   theme_bw()
 ```
-![img_IBD](06_img_readme/IBD_plot_all_snps.png)
+![img_IBD](07_img_readme/IBD_plot_all_snps.png)
 
 So Isolation by distance is not significant and it does not seem that geography can explain the genetic distances very well with this full dataset.
 If we come back to our heatmap, we can notice the cluster of populations C, F, I. How do you interpret it?
@@ -325,8 +325,8 @@ hist(out_trim$results$pvaluesRightTail)
 dev.off()
 ```
 
-![outflank_trim1](06_img_readme/outflank_prunedSNP_fst.jpeg)
-![outflank_trim1](06_img_readme/outflank_prunedSNP_pvalues.jpeg)
+![outflank_trim1](07_img_readme/outflank_prunedSNP_fst.jpeg)
+![outflank_trim1](07_img_readme/outflank_prunedSNP_pvalues.jpeg)
 The p-value should be more or less flat and the distribution of FST about normal
 
 ####Step 2 We now run OutFLANK on all SNPs, corrected by the trim dataset
@@ -360,8 +360,8 @@ ggplot(P1_pos, aes(x=position/1000000, y=FST, colour=OutlierFlag))+
 #It may also be easier to export the matrix and play in Rstudio
 write.table(P1_pos, "04_outflank/outflank_fst_outliers.txt", sep="\t", row.names=F, quote=F)
 ```
-![outflank_he](06_img_readme/outflank_outlier_fst_He.jpeg)
-![outflank_along genome](06_img_readme/outflank_outlier_fst.jpeg)
+![outflank_he](07_img_readme/outflank_outlier_fst_He.jpeg)
+![outflank_along genome](07_img_readme/outflank_outlier_fst.jpeg)
 
 What do you see? 
 Lots of outliers are in chr5, and/or chr4... Are we really suprised?
@@ -508,8 +508,8 @@ xtx_pos[xtx_pos$M_XtX>= threshold_fdr0.05,]
 ```
 
 Now you may want to do the same for the analysis controlled by population structure. Compare the results. What do you think? 
-![xtx_uncontrolled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/06_img_readme/xtx_uncontrolled.png)
-![xtx_controlled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/06_img_readme/xtx_controlled.png)
+![xtx_uncontrolled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/xtx_uncontrolled.png)
+![xtx_controlled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/xtx_controlled.png)
 
 ## 3C Environmental association
 ### With Baypass (locus by locus)
@@ -559,11 +559,32 @@ $PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 #### Visualising results on Rstudio on your local computer
 Like we did before we can plot the xtx but we will mostly be interested in the BF value (Bayesian factor of association with an environmental variable)
 You will find it in the betai_reg.out in the column BF.dB.
-We can do similar Mahattan plots and find the threshold from the run on simulated data, re-using the same code as before.
+"the Bayes Factor (column BF(dB)) in dB units (i.e., 10 × log10(BF)) measuring the support of the association of each SNP with each population covariable and the corresponding regression coefficients βi (column Beta_is)"
+BF can be informative in itself, good candidate are usually above 20. We can also d find the threshold from the run on simulated data.
+We will let you have a look at those data and plot BF along the genome re-using the same code as before.
 
 What do you observe? 
+Uncontrolled model
+![bf_uncontrolled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/bf_uncontrolled.png)
 
-![bf_uncontrolled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/06_img_readme/bf_uncontrolled.png)
-![bf_controlled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/06_img_readme/bf_controlled.png)
+Controlled model
+![bf_controlled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/bf_controlled.png)
+
+So on the data we have today, we find very few putative outlier SNPs associated with temperature. It may be that we don't have the power to detect some, we have only 12 populations and a reduced representation of the genome. It may be that given the high gene flow, very few regions of the genome are under strong enough selection to show detectable differences in allelic frequencies.
 
 ### With redundancy analysis (multi-loci)
+So until now we have look at signatrue of adaptation locus by locus. This is a design that is more likely to point strong selective sweep, large-effect locus and large islands of divergence. Yet, most adaptation is expected to be polygenic and genome-scan are possibly not the best option to tackle this problem... Yet, doing RDa analysis which consider the whole genetic variance together with the geographic variation or ecological variation may be one of the first step in that direction.
+
+Again, we can also used the RDA to identify putative candidate.
+Today we will follow a tutorial inspired by this paper https://onlinelibrary.wiley.com/doi/abs/10.1111/mec.14584 
+Forester, BR, Lasky, JR, Wagner, HH, Urban, DL. Comparing methods for detecting multilocus adaptation with multivariate genotype–environment associations. Mol Ecol. 2018; 27: 2215– 2233. https://doi.org/10.1111/mec.14584
+
+Which has a super nice vignette that you can check here https://popgen.nescent.org/2018-03-27_RDA_GEA.html
+
+We will follow most steps with our dataset.
+#### Step 0 Prepare data on the server
+
+RDA takes a matrix of genotypes (0,1,2) that we know how to obtain (we did yesterday)
+
+vcftools --vcf 02_data/populations_can_random.vcf --012 --out 06_rda/populations_can_random
+
