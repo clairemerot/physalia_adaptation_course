@@ -246,14 +246,19 @@ library(vcfR)
 lirabry(ggplot2)
 obj.vcfR <- read.vcfR("02_data/population.can.random.snp.vcf")
 
-#extract useful informations
+#extract useful informations about snp id and position
 position <- getPOS(obj.vcfR) # Positions in bp
 chromosome <- getCHROM(obj.vcfR) # Chromosome information
 id_snp <- getID(obj.vcfR) # ID of the SNP
+
+#gather this info in a dataframe
 chr_pos<-as.data.frame(cbind(id_snp, chromosome, position)) # save info about id, chr, position
 #R is sometimes not good at categorizing columns and here i had a problem that position was a factor... 
 #this is an easy way to transform into a numeric
 chr_pos$position<-as.numeric(as.character(chr_pos$position)) 
+
+#we expect that it will be useful for subsequent analysis to have a file with snp id and position so let's write it in our folder 02_data
+write.table(chr_pos, "02_data/SNP_pos.txt", sep="\t", quote=F, row.names=F)
 
 #extract and format genotype matrix
 geno <- extract.gt(obj.vcfR) # Character matrix containing the genotypes
@@ -435,7 +440,10 @@ simu.bta <- simulate.baypass(omega.mat=omega, nsnp=2000,beta.pi=pi.beta.coef, su
 You can now quit R, mv the simulated file into the folder baypass and run baypass on the simulated data 
 ```
 mv G.simulates_pods 05_baypass/
-$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods -omegafile 05_baypass/prunedsnps.output_mat_omega.out -outprefix 05_baypass/simulate.output -nthreads 3
+$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods  -outprefix 05_baypass/simulate.output -nthreads 3
+$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods -omegafile 05_baypass/prunedsnps.output_mat_omega.out -outprefix 05_baypass/simulate_controlled.output -nthreads 3
+
+
 ```
 Please copy the output on the simulated dataset on your local computer.
 
@@ -451,6 +459,54 @@ echo "$seed"
 g_baypass -npop $N_pop -gfile $geno -efile $env -omegafile $omega_mat -outprefix output"$i" -nthreads $N_CPU -npilot 25 -burnin 5000 -seed $seed
 done
 ```
+
+#### Visualising results on Rstudio on your local computer
+If you are curious, you cna explore the different file, look at the omega matrix, etc, which will be more or less like the pairwise fst matrix that we look at earlier
+We will focus on xtx values
+```
+#load xtx values
+xtx_allsnps<-read.table("05_baypass/allsnps.output_summary_pi_xtx.out", header = T)
+head(xtx_allsnps)
+#we will mostly work with M_WtX
+
+#load position info about the SNPs.
+SNP_pos<-read.table("02_data/SNP_pos.txt", header=T)
+#should be same nb of rows
+dim(xtx_allsnps)
+dim(SNP_pos)
+
+xtx_pos<-cbind(SNP_pos, xtx_allsnps)
+
+ggplot(xtx_pos, aes(x=position, y=M_XtX, colour=chromosome))+ 
+  geom_point()+
+  theme_classic()+
+  facet_grid(cols = vars(chromosome), scales = "free_x", space="free_x")
+```
+Now we realised that we really need to know at which value we put the threshold
+```
+#load xtx values from simulatd data
+xtx_simu<-read.table("05_baypass/simulate.output_summary_pi_xtx.out", header=T)
+head(xtx_simu)
+
+#calculate the threshold
+threshold_fdr0.01 = quantile(xtx_simu$M_XtX,probs=0.99)
+threshold_fdr0.05 = quantile(xtx_simu$M_XtX,probs=0.95)
+
+#add it on the plot
+ggplot(xtx_pos, aes(x=position, y=M_XtX, colour=chromosome))+ 
+  geom_point()+
+  theme_classic()+
+  facet_grid(cols = vars(chromosome), scales = "free_x", space="free_x")+
+  geom_hline(aes(yintercept =threshold_fdr0.05), linetype="dotted", size=1, col="red", show.legend = FALSE)+
+  geom_hline(aes(yintercept =threshold_fdr0.01), linetype="dotted", size=1, show.legend = FALSE)
+
+#output outliers
+xtx_pos[xtx_pos$M_XtX>= threshold_fdr0.05,]
+```
+
+![xtx_uncontrolled]()
+Now you may want to do the same for the analysis controlled by population structure. Compare the results. What do you think? 
+
 ## 3C Environmental association
 ### With Baypass (locus by locus)
 Baypass can also integrate environmental matrix or phenotypic matrix to run associations.
@@ -458,11 +514,33 @@ This means that we will no longer look at overall average differentiation betwee
 
 It is exactly the same procedure as before, except that we add the -efile option
 
-#### step 0 format env file or pehno file
-Baypass wants the environment 
+#### step 0 format env file 
+Baypass wants the environment as one line per env variable and one column per population. no header.
+We can use our file 02_data/info_pop_geo_eco.txt to extract that. We will be interested in the temperature variable today.
+As I did not pay attention to order the population alphabetically at the beginning of STACKS (sorry), we need to make really sure that our env file is exactly in the same order as the population are in the geno file. This is why there is a "order" column...
+
+So please just go in R and try to output the env file well formatted for baypass.
+R
 ```
-$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods -efile $env -omegafile 05_baypass/prunedsnps.output_mat_omega.out -outprefix 05_baypass/simulate_env.output -nthreads 3
-"$PATH_BP"/sources/g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass -efile $env -omegafile 05_baypass/prunedsnps.output_mat_omega.out -outprefix 05_baypass/allsnps.controlled_env.output -nthreads 2
+#read file
+info_pop<-read.table("02_data/info_pop_geo_eco.txt", header =T)
+head(info_pop)
+#env vector and its transpose form
+info_pop$temperature
+t(info_pop$temperature)
+write.table (t(info_pop$temperature), "05_baypass/env.txt", sep="\t", quote=F, row.names=F, col.names=F)
+quit()
+```
+Now we can run baypass with the environment file on both the real dataset and the simulated dataset.
+Here is the example with adn without the covariate matrix controlling for a possible underlying structure but depending on your system you may want to control or not, or do both to compare
+```
+$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods -efile 05_baypass/env.txt  -outprefix 05_baypass/simulate_env.uncontrolled.output -nthreads 3
+
+"$PATH_BP"/sources/g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass -efile 05_baypass/env.txt  -outprefix 05_baypass/allsnps.uncontrolled_env.output -nthreads 2
+
+$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods -efile 05_baypass/env.txt -omegafile 05_baypass/prunedsnps.output_mat_omega.out -outprefix 05_baypass/simulate_env.controlled.output -nthreads 3
+
+"$PATH_BP"/sources/g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass -efile 05_baypass/env.txt -omegafile 05_baypass/prunedsnps.output_mat_omega.out -outprefix 05_baypass/allsnps.controlled_env.output -nthreads 2
 ```
 
 
