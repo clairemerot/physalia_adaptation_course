@@ -199,6 +199,7 @@ Let's look at the pairwise FST matrix and the IBD stats
 ![img_fst_all](06_img_readme/Fst_heatmap_no_chr4-5.png)
 
 What do you see now?
+pay attention to the absolute value of FST, to the clustering and IBD (or the absence of)?
 
 ### Making a LD-pruned vcf
 Another way to get rid of SNPs in LD due to the inversion or sex (?) would be to use a LD-pruned set of SNPs. For this we can use PLINK which will compute LD between SNPs by windows along the genome and keep one SNP out of several SNPs in linkage. Here we are interested in long distance LD (since we have already removed short-distance LD by keepin only one SNP per RAD locus) so I have set the window quite large.
