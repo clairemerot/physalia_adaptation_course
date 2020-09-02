@@ -1,1 +1,3 @@
-In which we calcualte pairwise FSt between pop in NWA
+Folder to store vcf, pop data and env data.
+Output from plink will also be put here.
+
