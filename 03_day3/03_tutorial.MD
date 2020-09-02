@@ -357,6 +357,7 @@ write.table(P1_pos, "04_outflank/outflank_fst_outliers.txt", sep="\t", row.names
 ```
 ![outflank_he](06_img_readme/outflank_outlier_fst_He.jpeg)
 ![outflank_along genome](06_img_readme/outflank_outlier_fst.jpeg)
+
 What do you see? 
 Lots of outliers are in chr5, and/or chr4... Are we really suprised?
 Let's remember here that we are in a species with extremely high gene flow.  Moreover, we are looking here at outliers FST accross all populations (without giving any geographic or envrionmental information)
@@ -370,9 +371,100 @@ There is accumulating litterature suggesting that recombination is a very import
 You may want to re-run on the SNP subset without chr4/chr5 to get a sense of what that says.
 
 ### With Baypass
+To look at adaptive differentiation and environmental asssociations, we wil use Baypass http://www1.montpellier.inra.fr/CBGP/software/baypass/
+The publication is here https://www.genetics.org/content/201/4/1555
+Mathieu Gautier
+GENETICS December 1, 2015 vol. 201 no. 4 1555-1579; https://doi.org/10.1534/genetics.115.181453
+And there is a good manual here : http://www1.montpellier.inra.fr/CBGP/software/baypass/files/BayPass_manual_2.2.pdf
+
+This package is an extension of Bayenv. It may be a little long to run so you will have time to skim the manual for more details. There are different underlying bayesian modle, and we will just run the default mode but you may want to explore a bit further in the future
 
 
+#### Step 0: prepare files
+We will use again scripts prepared by Yann Dorant in his toolbox:
+```
+python Toolbox/reshaper_baypass.py 02_data/population.can.random.snp.vcf 02_data/popmap_canada.txt 05_baypass/population.can.random.baypass
+python Toolbox/reshaper_baypass.py 02_data/population.can.random.snp.pruned.recode.vcf 02_data/popmap_canada.txt 05_baypass/population.can.random.pruned.baypass
+```
+
+#### Step 1: run baypass basic
+
+```
+PATH_BP="your_path_to_the_source_of_baypass"
+$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass \
+-outprefix 05_baypass/allsnps.output -nthreads 3
+```
+We can have a look at the output. the most importnat are the omega matrix, which is covariance between populations and the xtx value which represent a kind of value associated to each SNP. the higher it gets, the more this snps differentiate the populations.
+Please copy those files so that we can look at them in Rstudio on your local computer while the next step will run on the server
+
+#### Step 2: run baypass controlled for population structure
+We want again to pinpoint the outlier that differ from the basic structure of the population. This is not a big deal in our example but it may be in other system. 
+Best practices suggest to first run baypass on the LD-pruned vcf and to extract the covariance matrix between population (mat_omega), and then use it as a covariate in the baypass model
+
+```
+$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/population.can.random.pruned.baypass \
+-outprefix 05_baypass/prunedsnps.output -nthreads 3
+
+"$PATH_BP"/sources/g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass \
+-omegafile 05_baypass/prunedsnps.output_mat_omega.out \
+-outprefix 05_baypass/allsnps.controlled.output -nthreads 2
+```
+Please copy the controlled output on your local computer.
+
+#### Step 3: Have a threshold for the xtx value
+
+While this runs, we can prepare our subsequent analysis. We need to know above which xtx threhold value we can consider a locus to be an outlier of population differentiation
+To look for that, the authors suggest to simulate a neutral distribution with a small R function, run baypass on the simulated genotypes, and extract the distribution of XtX values. We can then chose a threshold of the 95% quantile, 99% quantile, etc... 
+
+Open R in your terminal and let's simulate genotypes
+```
+args = commandArgs(trailingOnly=TRUE)
+
+#source functions from Gautier file
+source("$PATH_BP/utils/baypass_utils.R")
+
+#load omega matrix
+omega = as.matrix(read.table("05_baypass/prunedsnps.output_mat_omega.out"))
+
+#load beta parameters
+pi.beta.coef=read.table("05_baypass/allsnps.output_summary_beta_params.out", h=T)$Mean
+
+#create the POD - simulate - don't forget to change suffix name
+simu.bta <- simulate.baypass(omega.mat=omega, nsnp=2000,beta.pi=pi.beta.coef, suffix="simulates_pods")
+```
+You can now quit R, mv the simulated file into the folder baypass and run baypass on the simulated data 
+```
+mv G.simulates_pods 05_baypass/
+$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods -omegafile 05_baypass/prunedsnps.output_mat_omega.out -outprefix 05_baypass/simulate.output -nthreads 3
+```
+Please copy the output on the simulated dataset on your local computer.
+
+#### A note
+For best results, it is recommended to make several independant runs and take the median value for xtx or BF.
+We dont have time and resource to do that today but you can try for your data with a loop and random starting seed
+```
+# run model for 5 repetitions
+for i in 1 2 3 4 5 
+do
+seed=$((1000 + RANDOM % 9999)) #set random seed
+echo "$seed"
+g_baypass -npop $N_pop -gfile $geno -efile $env -omegafile $omega_mat -outprefix output"$i" -nthreads $N_CPU -npilot 25 -burnin 5000 -seed $seed
+done
+```
 ## 3C Environmental association
 ### With Baypass (locus by locus)
+Baypass can also integrate environmental matrix or phenotypic matrix to run associations.
+This means that we will no longer look at overall average differentiation between populations, but really ask which SNPs co-vary in frequency with environmental variables, in other words makes sens of differentiation between population along ecological gradients or look for phenotype/genotype association.
+
+It is exactly the same procedure as before, except that we add the -efile option
+
+#### step 0 format env file or pehno file
+Baypass wants the environment 
+```
+$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods -efile $env -omegafile 05_baypass/prunedsnps.output_mat_omega.out -outprefix 05_baypass/simulate_env.output -nthreads 3
+"$PATH_BP"/sources/g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass -efile $env -omegafile 05_baypass/prunedsnps.output_mat_omega.out -outprefix 05_baypass/allsnps.controlled_env.output -nthreads 2
+```
+
+
 
 ### With redundancy analysis (multi-loci)
