@@ -1,5 +1,4 @@
 *.fq.gz
-*.gz
 *.sam
 *.bam
 *.fa
@@ -14,4 +13,4 @@
 *.bcf
 *.vcf*
 *.bcf*
-
+*.gz
