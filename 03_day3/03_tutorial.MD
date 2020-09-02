@@ -158,7 +158,7 @@ IBD.df <- left_join(dist.melt, fst.melt, by=c('pop1','pop2')) %>%
 head(IBD.df)
 
 #test association with FST
-cor.test(log(test$distance), test$FST/(1-test$FST))
+cor.test(log(IBD.df$distance), test$FST/(1-IBD.df$FST))
 
 #plot IBD
 ggplot(IBD.df) + aes(x=log(distance), y=FST/(1-FST)) +
