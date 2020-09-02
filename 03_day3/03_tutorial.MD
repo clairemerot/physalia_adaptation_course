@@ -60,8 +60,8 @@ You can explore each of one with the cmd line ``less -S file.txt``. However, tod
 
 So, now you can export the pairwise FST matrix (file suffix ``_fst_matrix.txt``) on your local computer to make a few visualisations in R
 Please also export the info files about populations too
-> 02_data/info_pop_geo_eco.txt
-> 02_data/info_samples_canada.txt
+* 02_data/info_pop_geo_eco.txt
+* 02_data/info_samples_canada.txt
 
 **[On your local computer]**
 We are now in Rstudio on your computer.
@@ -109,7 +109,6 @@ gplots::heatmap.2(fst.all.mat, trace = 'none',
                   key.xlab='FST')
 ```
 ![img_fst_all](06_img_readme/Fst_heatmap_all_snps.png)
-
 ```
 #------------ fst matrix from dataset without Chr 4 and Chr5 -----------------
 fst_no_chr4_5.mat <- read.table("population.can.random.snp.without45_fst_matrix.txt") %>%
@@ -138,12 +137,12 @@ library(tibble)
 library(ggplot2)
 
 #import information about populations
-info_pop<-read.table("02_data/info_pop_geo_eco.txt", header=T)
+info_pop <- read.table("02_data/info_pop_geo_eco.txt", header=T)
 head(info_pop)
 #calculate geogrpahic (euclidian) distances between all pairs of populations
-distance<-dist(SoDA::geoXY(info.pop$latitude, info.pop$longitude)) %>%
+distance <- dist(SoDA::geoXY(info.pop$latitude, info.pop$longitude)) %>%
   as.matrix(.)
-dimnames(distance_matrix)<- list(info.df$pop,info.df$pop)
+dimnames(distance_matrix) <- list(info.df$pop,info.df$pop)
 distance_matrix
 
 #prepare datasets
