@@ -319,6 +319,9 @@ jpeg("04_outflank/outflank_prunedSNP_pvalues.jpeg")
 hist(out_trim$results$pvaluesRightTail)
 dev.off()
 ```
+
+![outflank_trim1](06_img_readme/outflank_prunedSNP_fst.jpeg)
+![outflank_trim1](06_img_readme/outflank_prunedSNP_pvalues.jpeg)
 The p-value should be more or less flat and the distribution of FST about normal
 
 ####Step 2 We now run OutFLANK on all SNPs, corrected by the trim dataset
@@ -352,6 +355,8 @@ ggplot(P1_pos, aes(x=position/1000000, y=FST, colour=OutlierFlag))+
 #It may also be easier to export the matrix and play in Rstudio
 write.table(P1_pos, "04_outflank/outflank_fst_outliers.txt", sep="\t", row.names=F, quote=F)
 ```
+![outflank_he](06_img_readme/outflank_outlier_fst_He.jpeg)
+![outflank_along genome](06_img_readme/outflank_outlier_fst.jpeg)
 What do you see? 
 Lots of outliers are in chr5, and/or chr4... Are we really suprised?
 Let's remember here that we are in a species with extremely high gene flow.  Moreover, we are looking here at outliers FST accross all populations (without giving any geographic or envrionmental information)
