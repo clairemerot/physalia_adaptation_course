@@ -75,6 +75,7 @@ First, load the required libraries
   library(tibble)
   library(gplots)
   library(RColorBrewer)
+  library(corrplot)
 # --------------
 ```
 Second, I give you a useful fonction to deal with the FST matrix. In fact, this is a triangular matrix and we need to fill the upper diag to use the heatmap function.
@@ -96,35 +97,27 @@ Now we can load the data, arrange it and then plot.
 
 ```
 #-------------- fst matrix for all SNPs --------------------
-fst.all.mat <- read.table("population_can_random_fst_matrix.txt") %>%
+fst.mat <- read.table("03_fst/population_can_random.snp_fst_matrix.txt")
+#use the function to fill the full matrix
+fst.all.mat<- fst.mat %>%
               as.matrix(.) %>%
               makeSymm(., 'upper')
-
 fst.all.mat[is.na(fst.all.mat)] <-  0 #replace NAs by 0 (NAs unaccepted for the heatmap function)
-fst.mat[1:10,1:10] #check the fst_matrix
+fst.all.mat[1:10,1:10] #check the fst_matrix
+              
+#visualise values
+corrplot(fst.all.mat, is.corr = FALSE, method="number", addgrid.col = FALSE, diag=F, type="lower", number.digits = 3, number.cex=0.7)
 
 #Visualize pairwise FST through a heatmap
 gplots::heatmap.2(fst.all.mat, trace = 'none',
                   col= colorRampPalette(brewer.pal(9, "Reds"))(15),
                   key.xlab='FST')
 ```
+Note that values goes up to FST = 0.02 ! but most of them are very low
 ![img_fst_all](06_img_readme/Fst_heatmap_all_snps.png)
-```
-#------------ fst matrix from dataset without Chr 4 and Chr5 -----------------
-fst_no_chr4_5.mat <- read.table("population.can.random.snp.without45_fst_matrix.txt") %>%
-  as.matrix(.) %>%
-  makeSymm(., 'upper')
-fst_no_chr4_5.mat [is.na(fst_no_chr4_5.mat)] <-  0 #replace NAs by 0 (NAs unaccepted for the heatmap function)
-fst_no_chr4_5.mat[1:10,1:10] #check the fst_matrix
-
-#Visualize pairwise FST through a heatmap
-gplots::heatmap.2(fst_no_chr4_5.mat, trace = 'none',
-                  col= colorRampPalette(brewer.pal(9, "Reds"))(15),
-                  key.xlab='FST')
-```
-![img_fst_all](06_img_readme/Fst_heatmap_no_chr4-5.png)
 
 What do you notice? Is it heterogeneous? Do some population look more differentiated than other?
+Why do you think A and J are so different? 
 
 ### Isolation by distance
 To explore whether this is linked to distance between population, we will do a IBD test (Isolation by distance)
@@ -140,19 +133,22 @@ library(ggplot2)
 info_pop <- read.table("02_data/info_pop_geo_eco.txt", header=T)
 head(info_pop)
 #calculate geogrpahic (euclidian) distances between all pairs of populations
-distance <- dist(SoDA::geoXY(info.pop$latitude, info.pop$longitude)) %>%
+distance <- dist(SoDA::geoXY(info_pop$latitude, info_pop$longitude)) %>%
   as.matrix(.)
-dimnames(distance_matrix) <- list(info.df$pop,info.df$pop)
-distance_matrix
+dimnames(distance) <- list(info_pop$pop,info_pop$pop)
+distance
 
 #prepare datasets
-dist.melt <- reshape2::melt(distance_matrix) %>%
+#linearize the distance matrix
+dist.melt <- reshape2::melt(distance) %>%
   set_colnames(., c('pop1', 'pop2','distance'))
 head(dist.melt)
 
+#linearize the fst matrix
 fst.melt <- reshape2::melt(fst.all.mat) %>%
   set_colnames(., c('pop1', 'pop2','FST'))
 
+#join the distance and fst
 IBD.df <- left_join(dist.melt, fst.melt, by=c('pop1','pop2')) %>%
   filter(., distance > 0)
 head(IBD.df)
@@ -168,13 +164,8 @@ ggplot(IBD.df) + aes(x=log(distance), y=FST/(1-FST)) +
 ```
 ![img_IBD](06_img_readme/IBD_plot_all_snps.png)
 
-Well, for the second dataset (without chr4 and chr5), I will let you to test it by yourself.
-
-does it make sense?
--> I hope it does not.
-If populations that have only males looks closer we can make them think about sex-linked markers and the importance of sampling bias.
-Can we look at the FSt landscape along the genome for one pair of pop? Let's say for the most differentiated pop?If peaks in chr5 -> need to pay attention to sex
-
+So Isolation by distance is not significant and it does not seem that geography can explain the genetic distances very well with this full dataset.
+If we come back to our heatmap, we can notice the cluster of populations C, F, I. How do you interpret it?
 
 Let's look at the sex ratio in our data.
 ```
@@ -182,22 +173,58 @@ info_ind<-read.table("02_data/info_samples_canada.txt", header=T)
 head(info_ind)
 table (info_ind$pop,info_ind$sex)
 ```
-It seems that the field sampling has not been very good at balancing sex-ratio between populations... We should be worried about sex-linked markers driving the signal!
+```
+    F  M
+  A  0 20
+  B 10 10
+  C  0 20
+  D 15  5
+  E 10 10
+  F  5 15
+  G 10 10
+  H 10 10
+  I  0 20
+  J 18  2
+  K 10 10
+  L 10 10
+ ```
+It seems that the field sampling has not been very good at balancing sex-ratio between populations... We should be worried about sex-linked markers driving the signal!It may be one of the reason why A and J are the most diferrentiated
 (note: we intentionnaly subsetted the dataset to create this bias which was not in the original publication ;-) but it may happen easily for some species or low sample size)
 
 ### Getting rid of LD spurious effects?
 Yesterday, we saw that a region of chromosome 4 and sex-linked markers on chr 5 were overwhelming the structure. Will that influence our pairwise estimates? Possibly
-Let's re-run the steps above on the vcf in which we removed the chr5 and half of the chr4.
+Let's re-run the steps above on the vcf in which we removed the chr5 and chr4.
+
 Let's look at the pairwise FST matrix and the IBD stats
+![img_fst_all](06_img_readme/Fst_heatmap_no_chr4-5.png)
+
 What do you see now?
 
 ### Making a LD-pruned vcf
 Another way to get rid of SNPs in LD due to the inversion or sex (?) would be to use a LD-pruned set of SNPs. For this we can use PLINK which will compute LD between SNPs by windows along the genome and keep one SNP out of several SNPs in linkage. Here we are interested in long distance LD (since we have already removed short-distance LD by keepin only one SNP per RAD locus) so I have set the window quite large.
 
-Claire add plink code
+Plink requires a bim file when taking a vcf input this can be created with the first line.
+Then we give our parameters. We chose to be very stringent removing SNP with a VIF>2 in windows of 100 SNPs or 100KB
+We could also have given a R² threshold with --indep-pairwise $WINDOW $SNP $R2
+
 ```
-plink
+plink --vcf 02_data/population.can.random.snp.vcf.gz --make-bed --out 02_data/population.can.random.snp
+ 
+WINDOW=100
+SNP=100
+VIF=2
+plink --bed 02_data/population.can.random.snp.bed \
+--bim 02_data/population.can.random.snp.bim \
+--fam 02_data/population.can.random.snp.fam \
+--indep $WINDOW['kb'] $SNP $VIF --allow-extra-chr \
+--out 02_data/population.can.random.snp
 ```
+You can have a look at the files 02_data/population.can.random.snp.prune.in and 02_data/population.can.random.snp.prune.outThey include a lit of SNP id as displayed in the vcf ("53:2:+") for instance. This list will be useful forour subsequent analyses in OutFLANK. For other purpose we may also want to have a vcf with only pruned marker. We are using again vcftools with the --exclude option (and recode)
+```
+vcftools --vcf 02_data/population.can.random.snp.vcf --exclude 02_data/population.can.random.snp.prune.out --recode --out 02_data/population.can.random.snp.pruned
+```
+If you have finished early, you can play at doing the pairwise FST/IBD or the population structure analysis of yesterday on the pruned dataset to check whether this removed the structure linked to sex or Chr4 rearrangement...
+
 
 ## 3B Investigate outliers of differentiation
 ### With OutFLANK
@@ -216,13 +243,19 @@ Let's first convert our vcf to the outflank format:
 library(OutFLANK)
 library(vcfR)
 lirabry(ggplot2)
-obj.vcfR <- read.vcfR("02-data/population.can.random.snp.vcf")
+obj.vcfR <- read.vcfR("02_data/population.can.random.snp.vcf")
 
-#following the tutorial
-geno <- extract.gt(obj.vcfR) # Character matrix containing the genotypes
+#extract useful informations
 position <- getPOS(obj.vcfR) # Positions in bp
 chromosome <- getCHROM(obj.vcfR) # Chromosome information
-chr_pos<-paste(chromosome, position, sep="_") # make unique locus name
+id_snp <- getID(obj.vcfR) # ID of the SNP
+chr_pos<-as.data.frame(cbind(id_snp, chromosome, position)) # save info about id, chr, position
+#R is sometimes not good at categorizing columns and here i had a problem that position was a factor... 
+#this is an easy way to transform into a numeric
+chr_pos$position<-as.numeric(as.character(chr_pos$position)) 
+
+#extract and format genotype matrix
+geno <- extract.gt(obj.vcfR) # Character matrix containing the genotypes
 
 #an empty matrix, (9 stands for missing data)
 G <- matrix(9, nrow = nrow(geno), ncol = ncol(geno))
@@ -241,12 +274,12 @@ We will now ask outFLANK to calculate FST for eech locus. It needs the informati
 For OutFLANK we will keep only the pop column. Then we will calculate a FST value for each SNP
 ```
 #import pop info
-info_samples_canada<- read.table("02-data/info_samples_canada.txt", header=T)
+info_samples_canada<- read.table("02_data/info_samples_canada.txt", header=T)
 head(info_samples_canada)
 pop_vector<- info_samples_canada$pop
 
 # FST matrix with OutFLANK
-my_fst <- MakeDiploidFSTMat(t(G), locusNames = chr_pos, popNames = pop_vector)
+my_fst <- MakeDiploidFSTMat(t(G), locusNames = id_snp, popNames = pop_vector)
 ```
 Now we are ready to run OutFlANK.
 We will follow the best practices recommended by the authors:
@@ -257,23 +290,31 @@ We will use the list of pruned SNPs extracted with PLINK earlier.
 Note that other possibilities exists such as using the package bigsnpr
 
 ####Step 1 we will run OutFLANK on the pruned SNPs and look at the distribution of FST
+We will use the prune.in file produced by plink and a few manipulation to know the position of the SNPs that are in the pruned subset and will be include 
+
 ```
 #import pruned info
-which_pruned<-read.table()
+id_snp_pruned<-read.table("02_data/population.can.random.snp.prune.in")
+
+#those are SNPs id, we need to know at which position they are
+#this can be done with the %in% function
+lines_trim<-which(id_snp %in% id_snp_pruned[,1]) 
+head(lines_trim)
+length(lines_trim)
 
 #run outFLANK on pruned SNPs
 #numberOfSamples is the number of populations
 #qthreshold is the false discovery rate
-out_trim <- OutFLANK(my_fst[which_pruned,], NumberOfSamples=20, qthreshold = 0.05, Hmin = 0.1)
+out_trim <- OutFLANK(my_fst[which(id_snp %in% id_snp_pruned[,1]),], NumberOfSamples=20, qthreshold = 0.05, Hmin = 0.1)
 str(out_trim)
 
 #have a look at the results
 #the jpeg line allow to output an image in your folder that you can later download to have a look at
-jpeg("04-outflank/outflank_prunedSNP_fst.jpeg")
+jpeg("04_outflank/outflank_prunedSNP_fst.jpeg")
 OutFLANKResultsPlotter(out_trim, withOutliers = TRUE, NoCorr = TRUE, Hmin = 0.1, binwidth = 0.001, Zoom =FALSE, RightZoomFraction = 0.05, titletext = NULL)
 dev.off()
 
-jpeg("04-outflank/outflank_prunedSNP_pvalues.jpeg")
+jpeg("04_outflank/outflank_prunedSNP_pvalues.jpeg")
 hist(out_trim$results$pvaluesRightTail)
 dev.off()
 ```
@@ -281,24 +322,41 @@ The p-value should be more or less flat and the distribution of FST about normal
 
 ####Step 2 We now run OutFLANK on all SNPs, corrected by the trim dataset
 ```
-#run OutFLANK
 P1 <- pOutlierFinderChiSqNoCorr(my_fst, Fstbar = out_trim$FSTNoCorrbar, dfInferred = out_trim$dfInferred, qthreshold = 0.05, Hmin=0.1)
 head(P1)
 
-#add the chromosome/position info
-
+#we need to add the chromosome/position info for plotting. the left_join function in dplyr is super useful to match differebnt table
+library(dplyr)
+P1_pos<-left_join(P1, chr_pos, by=c("LocusName"="id_snp"))
 
 #We can have a look at the results by exporting the figures
-jpeg("04-outflank/outflank_outlier_fst.jpeg")
-ggplot(P1, aes(x=position, y=FST, colour=OutlierFlag))+
+#we can look at the FSt as a function of heterozygosity to understand which snps have been evaluated, which one appear true or false outliers
+And we can look along the genome with our manhattan plots
+
+jpeg("04_outflank/outflank_outlier_fst_He.jpeg")
+ggplot(P1_pos, aes(x=He, y=FST, colour=OutlierFlag))+ 
   geom_point()+
-  theme_classic()+
-  facet_grid(cols = vars(chrom), scales = "free_x", space="free_x")
+  theme_classic()
  dev.off()
 
-#Or export the matrix and play in Rstudio
-write.table(P1, "04-outflank/outflank_fst_outliers.txt", sep="\t", row.names=F, quote=F)
+#note that we divide here position by 1000000 so the scale is in MB
+jpeg("04_outflank/outflank_outlier_fst.jpeg")
+ggplot(P1_pos, aes(x=position/1000000, y=FST, colour=OutlierFlag))+ 
+  geom_point()+
+  theme_classic()+
+  facet_grid(cols = vars(chromosome), scales = "free_x", space="free_x")+
+  labs(  x = "position (in MB)")
+ dev.off()
+
+#It may also be easier to export the matrix and play in Rstudio
+write.table(P1_pos, "04_outflank/outflank_fst_outliers.txt", sep="\t", row.names=F, quote=F)
 ```
+What do you see? 
+Lots of outliers are in chr5, and/or chr4... Are we really suprised?
+Let's remember here that we are in a species with extremely high gene flow. But as expected there is high differentiation between the two sexes and we have unbalanced sex-ratio in the sampling...  Moreover, we are looking here at outliers FST accross all populations (without giving any geographic or envrionmental information)
+
+You may want to re-run on the SNP subset without chr4/chr5 to get a sense of what that says. At the same time, there are possibly (likely) adaptive regions on the sex chromosome or on rearrangements on chr 4, but maybe the threhold limit to determine outlier SNPs should be different? 
+
 
 
 ### With Baypass
