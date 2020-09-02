@@ -51,10 +51,10 @@ Rscript population_can_random_CHR4-5_out.snp.StAMPP population_can_random_CHR4-5
 Allowing 3 CPU, each FST calculation should take around 5-6 minutes
 
 Once FST calculations are done, you will see that four FST output files have been generated per dataset.
-> prefix_fst_bootstrapes.txt
- prefix_fst_matrix.txt
- prefix_fst_pvalue.txt
- prefix_fst_reshape.txt
+* prefix_fst_bootstrapes.txt
+* prefix_fst_matrix.txt
+* prefix_fst_pvalue.txt
+* prefix_fst_reshape.txt
 
 You can explore each of one with the cmd line ``less -S file.txt``. However, today, we only use the FST matrix.
 
