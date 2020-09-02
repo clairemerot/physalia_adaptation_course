@@ -354,11 +354,15 @@ write.table(P1_pos, "04_outflank/outflank_fst_outliers.txt", sep="\t", row.names
 ```
 What do you see? 
 Lots of outliers are in chr5, and/or chr4... Are we really suprised?
-Let's remember here that we are in a species with extremely high gene flow. But as expected there is high differentiation between the two sexes and we have unbalanced sex-ratio in the sampling...  Moreover, we are looking here at outliers FST accross all populations (without giving any geographic or envrionmental information)
+Let's remember here that we are in a species with extremely high gene flow.  Moreover, we are looking here at outliers FST accross all populations (without giving any geographic or envrionmental information)
+There is high differentiation between the two sexes and we have unbalanced sex-ratio in the sampling: this is probably driving the signal on chr 5. But there are also possibly adaptive loci on sex chromosomes... 
 
-You may want to re-run on the SNP subset without chr4/chr5 to get a sense of what that says. At the same time, there are possibly (likely) adaptive regions on the sex chromosome or on rearrangements on chr 4, but maybe the threhold limit to determine outlier SNPs should be different? 
+What about chr 4? It may be that the rearrangement is involved in local adaptation, or it is particularly divergent, and small fluctuations of frequency between populations are driving the signal?
 
+Should we put a different threshold for FST outliers between different regions of the genome? And how to do it? This is an open question at the moment.
+There is accumulating litterature suggesting that recombination is a very important factor, which may both create spurious effects, leading even under neutrality to high FSt variance but also, biological effets by promoting cluster of adaptive loci, without mentionning the matter of linked selection or recombination...
 
+You may want to re-run on the SNP subset without chr4/chr5 to get a sense of what that says.
 
 ### With Baypass
 
