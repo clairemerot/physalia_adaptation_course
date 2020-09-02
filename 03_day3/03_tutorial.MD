@@ -16,6 +16,8 @@ We will work from the 03_day3 folder and try to open our data within their folde
 
 ## 3A Investigate F-statistics in relation with geography
 ### Pairwise differentiation between populations
+
+**[On the Amazon server]**
 We will calculate here FST between all pairs of populations. FST accross the genome are expected to be largely driven by neutral markers while peaks of FSt may be related to selection for local adaptation... So we will first try to get a sense of global pattern and then look for outliers
 
 to get pairwise FSt, we will use the R package STAMPP with a toolbox developped by Yann
@@ -33,8 +35,8 @@ Ok, now we are ready to convert our VCF files to the StAMPP file format. The too
 * -o output prefix name
 
 ```
-bash 00-VCF_Reshaper.sh -v ../02-data/population.can.random.snp.vcf -p ../popmap_canada.txt -f StAMPP -o population_can_random.snp
-bash 00-VCF_Reshaper.sh -v ../02-data/population_can_random_CHR4-5_out.snp.vcf -p ../popmap_canada.txt -f StAMPP -o population_can_random_CHR4-5_out.snp
+bash 00-VCF_Reshaper.sh -v ../02_data/population.can.random.snp.vcf -p ../popmap_canada.txt -f StAMPP -o population_can_random.snp
+bash 00-VCF_Reshaper.sh -v ../02_data/population.can.random.snp.without45.vcf.recode.vcf -p ../popmap_canada.txt -f StAMPP -o population.can.random.snp.without45
 ```
 Once is done, you will ses that two ``.StAMPP`` files have been created.
 Then, we can run the Rscript `StAMPP-fst.R` to perform pairwise FST for each dataset. This script require three args.
@@ -48,20 +50,24 @@ Rscript population_can_random_CHR4-5_out.snp.StAMPP population_can_random_CHR4-5
 ```
 Allowing 3 CPU, each FST calculation should take around 5-6 minutes
 
-Once FST calculations are done, you will see that four FST output files have been generated
+Once FST calculations are done, you will see that four FST output files have been generated per dataset.
 > prefix_fst_bootstrapes.txt
-> prefix_fst_matrix.txt
-> prefix_fst_pvalue.txt
-> prefix_fst_reshape.txt
-you can explore each of one with the cmd line ``less -S file.txt``. However, today, we only use the FST matrix.
+ prefix_fst_matrix.txt
+ prefix_fst_pvalue.txt
+ prefix_fst_reshape.txt
+
+You can explore each of one with the cmd line ``less -S file.txt``. However, today, we only use the FST matrix.
 
 So, now you can export the pairwise FST matrix (file suffix ``_fst_matrix.txt``) on your local computer to make a few visualisations in R
-Please export the info files about populations too
+Please also export the info files about populations too
+> 02_data/info_pop_geo_eco.txt
+> 02_data/info_samples_canada.txt
 
+**[On your local computer]**
 We are now in Rstudio on your computer.
 We keep it simple and do a simple numeric matrix but you can imagine more fancy ways, with heatmaps or so.
 
-First load required librearies
+First, load the required libraries
 ```
 # Libraries
   library(dplyr)
@@ -71,8 +77,8 @@ First load required librearies
   library(RColorBrewer)
 # --------------
 ```
-Second, I give you a useful fonction to deal with the fst matrix. In fact, this is a triangular matrix and we need to fill the upper diag to use the heatmap function.
-So, to do this, I give you the following function.
+Second, I give you a useful fonction to deal with the FST matrix. In fact, this is a triangular matrix and we need to fill the upper diag to use the heatmap function.
+So, to do this, I give you the following function. Add it in your Rscript.
 ```
 makeSymm <- function(m, position) {
     # Add symetrical triangle matrix (upper or lower)
@@ -93,7 +99,8 @@ Now we can load the data, arrange it and then plot.
 fst.all.mat <- read.table("population_can_random_fst_matrix.txt") %>%
               as.matrix(.) %>%
               makeSymm(., 'upper')
-fst.all.mat[is.na(fst.all.mat)] <-  0
+
+fst.all.mat[is.na(fst.all.mat)] <-  0 #replace NAs by 0 (NAs unaccepted for the heatmap function)
 fst.mat[1:10,1:10] #check the fst_matrix
 
 #Visualize pairwise FST through a heatmap
@@ -105,12 +112,13 @@ gplots::heatmap.2(fst.all.mat, trace = 'none',
 
 ```
 #------------ fst matrix from dataset without Chr 4 and Chr5 -----------------
-fst_no_chr4_5.mat <- read.table("population_can_random_CHR4-5_out_fst_matrix.txt") %>%
+fst_no_chr4_5.mat <- read.table("population.can.random.snp.without45_fst_matrix.txt") %>%
   as.matrix(.) %>%
   makeSymm(., 'upper')
-fst_no_chr4_5.mat [is.na(fst_no_chr4_5.mat)] <-  0
+fst_no_chr4_5.mat [is.na(fst_no_chr4_5.mat)] <-  0 #replace NAs by 0 (NAs unaccepted for the heatmap function)
 fst_no_chr4_5.mat[1:10,1:10] #check the fst_matrix
 
+#Visualize pairwise FST through a heatmap
 gplots::heatmap.2(fst_no_chr4_5.mat, trace = 'none',
                   col= colorRampPalette(brewer.pal(9, "Reds"))(15),
                   key.xlab='FST')
@@ -123,28 +131,45 @@ What do you notice? Is it heterogeneous? Do some population look more differenti
 To explore whether this is linked to distance between population, we will do a IBD test (Isolation by distance)
 ```
 library(SoDA)
+library(reshape2)
+library(dplyr)
+library(magrittr)
+library(tibble)
+library(ggplot2)
+
 #import information about populations
 info_pop<-read.table("02_data/info_pop_geo_eco.txt", header=T)
 head(info_pop)
 #calculate geogrpahic (euclidian) distances between all pairs of populations
-distance<-dist(geoXY(info_pop$latitude, info_pop$longitude))
-distance_matrix<-as.matrix(distance) #make a triangular matrix
-colnames(distance_matrix)<-gps$pop
-rownames(distance_matrix)<-gps$pop
+distance<-dist(SoDA::geoXY(info.pop$latitude, info.pop$longitude)) %>%
+  as.matrix(.)
+dimnames(distance_matrix)<- list(info.df$pop,info.df$pop)
 distance_matrix
 
-#make a tabular matrix
-dist_tab<-vector(length=0)
-for (i in 1:12)
-{
-  dist_tab<-c(dist_tab, distance_matrix[i, (i+1):13])
-}
+#prepare datasets
+dist.melt <- reshape2::melt(distance_matrix) %>%
+  set_colnames(., c('pop1', 'pop2','distance'))
+head(dist.melt)
+
+fst.melt <- reshape2::melt(fst.all.mat) %>%
+  set_colnames(., c('pop1', 'pop2','FST'))
+
+IBD.df <- left_join(dist.melt, fst.melt, by=c('pop1','pop2')) %>%
+  filter(., distance > 0)
+head(IBD.df)
 
 #test association with FST
+cor.test(log(test$distance), test$FST/(1-test$FST))
 
 #plot IBD
-
+ggplot(IBD.df) + aes(x=log(distance), y=FST/(1-FST)) +
+  geom_point() +
+  geom_smooth(method='lm', formula= y~x) +
+  theme_bw()
 ```
+![img_IBD](06_img_readme/IBD_plot_all_snps.png)
+
+Well, for the second dataset (without chr4 and chr5), I will let you to test it by yourself.
 
 does it make sense?
 -> I hope it does not.
