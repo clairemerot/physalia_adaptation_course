@@ -20,14 +20,15 @@ We will work from the 03_day3 folder and try to open our data within their folde
 **[On the Amazon server]**
 We will calculate here FST between all pairs of populations. FST accross the genome are expected to be largely driven by neutral markers while peaks of FSt may be related to selection for local adaptation... So we will first try to get a sense of global pattern and then look for outliers
 
-to get pairwise FSt, we will use the R package STAMPP with a toolbox developped by Yann
+To get pairwise FSt, we will use the R package STAMPP.
+to save time today, we will use a toolbox developped by Yann Dorant. You may be interested in looking at the scripts to understand how this is done.
 This toolbox embed various useful script in order to fastly convert vcf format to common pop genomics formats (genepop, StAMPP, baypass, bayenv...). If you are interested to learn more about this toolbox, you will find the full description at https://gitlab.com/YDorant/Toolbox
 
-To download the toolbox in your current working folder on the server (day3), use the following command line:
+To download the toolbox in your current working folder on the server (03_day3), use the following command line:
 ```
 git clone https://gitlab.com/YDorant/Toolbox
 ```
-Then move inside the toolbox folder ``cd Toolbox/``
+
 Ok, now we are ready to convert our VCF files to the StAMPP file format. The toolbox have an easy way to do that with a bash script. This bash script require four args:
 * -v VCF file
 * -p population map
@@ -35,18 +36,17 @@ Ok, now we are ready to convert our VCF files to the StAMPP file format. The too
 * -o output prefix name
 
 ```
-bash 00-VCF_Reshaper.sh -v ../02_data/population.can.random.snp.vcf -p ../popmap_canada.txt -f StAMPP -o population_can_random.snp
-bash 00-VCF_Reshaper.sh -v ../02_data/population.can.random.snp.without45.vcf.recode.vcf -p ../popmap_canada.txt -f StAMPP -o population.can.random.snp.without45
+bash Toolbox/00-VCF_Reshaper.sh -v 02_data/population.can.random.snp.vcf -p 02_data/popmap_canada.txt -f StAMPP -o 03_fst/population_can_random.snp
 ```
-Once is done, you will ses that two ``.StAMPP`` files have been created.
+Then move inside the toolbox folder ``cd Toolbox/``
+Once is done, you will ses that a ``.StAMPP`` file inthe 03_fst folder.
 Then, we can run the Rscript `StAMPP-fst.R` to perform pairwise FST for each dataset. This script require three args.
 * Input StAMPP file
 * Output prefix
 * Number of CPU allowed (default CPU=1)
 
 ```
-Rscript population_can_random.snp.StAMPP population_can_random.snp 3
-Rscript population_can_random_CHR4-5_out.snp.StAMPP population_can_random_CHR4-5_out.snp 3
+Rscript Toolbox/StAMPP-fst.R 03_fst/population_can_random.snp.StAMPP 03_fst/population_can_random.snp 3
 ```
 Allowing 3 CPU, each FST calculation should take around 5-6 minutes
 
