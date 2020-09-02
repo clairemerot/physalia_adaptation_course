@@ -1,1 +1,1 @@
-In which we run baypass and store its output to to do Genotype-environment analysis
+Folder to run the outflank outlier analysis 
