@@ -564,7 +564,17 @@ $PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 Like we did before we can plot the xtx but we will mostly be interested in the BF value (Bayesian factor of association with an environmental variable)
 You will find it in the betai_reg.out in the column BF.dB.
 "the Bayes Factor (column BF(dB)) in dB units (i.e., 10 × log10(BF)) measuring the support of the association of each SNP with each population covariable and the corresponding regression coefficients βi (column Beta_is)"
-BF can be informative in itself, good candidate are usually above 20. We can also d find the threshold from the run on simulated data.
+BF can be informative in itself, good candidate are usually above 20. 
+Following the rule of Jeffrey, we can consider BF as meaning
+* < 3 nothing
+* 3 to 10 weak support
+* 10 to 20 interesting
+* >20 strong support
+
+See Jeffreys, H. (1961). Theory of probability (3rd ed.). Oxford: Oxford University Press, Clarendon Press. https://global.oup.com/academic/product/theory-of-probability-9780198503682?cc=ca&lang=en&
+ and Robert E. Kass & Adrian E. Raftery (1995): Bayes Factors, Journal of the American Statistical Association, 90:430, 773-795 http://dx.doi.org/10.1080/01621459.1995.10476572
+
+We can also find a threshold from the run on simulated data.
 We will let you have a look at those data and plot BF along the genome re-using the same code as before.
 
 What do you observe? 
@@ -574,10 +584,10 @@ Uncontrolled model
 Controlled model
 ![bf_controlled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/bf_controlled.png)
 
-So on the data we have today, we find very few putative outlier SNPs associated with temperature. It may be that we don't have the power to detect some, we have only 12 populations and a reduced representation of the genome. It may be that given the high gene flow, very few regions of the genome are under strong enough selection to show detectable differences in allelic frequencies.
+So on the data we have today, we find very few putative outlier SNPs associated with temperature. It may be that we don't have the power to detect some, we have only 12 populations and a reduced representation of the genome. It may be that given the high gene flow, very few regions of the genome are under  selection that is strong enough to show detectable differences in allelic frequencies.
 
 ### With redundancy analysis (multi-loci)
-So until now we have look at signatrue of adaptation locus by locus. This is a design that is more likely to point strong selective sweep, large-effect locus and large islands of divergence. Yet, most adaptation is expected to be polygenic and genome-scan are possibly not the best option to tackle this problem... Yet, doing RDa analysis which consider the whole genetic variance together with the geographic variation or ecological variation may be one of the first step in that direction.
+Until now we have look at signatrue of adaptation locus by locus. This is a design that is more likely to point strong selective sweep, large-effect locus and large islands of divergence. Yet, most adaptation is expected to be polygenic and genome-scan are possibly not the best option to tackle this problem... Yet, doing RDa analysis which consider the whole genetic variance together with the geographic variation or ecological variation may be one of the first step in that direction.
 
 Again, we can also used the RDA to identify putative candidate.
 Today we will follow a tutorial inspired by this paper https://onlinelibrary.wiley.com/doi/abs/10.1111/mec.14584 
