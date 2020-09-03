@@ -586,7 +586,7 @@ Forester, BR, Lasky, JR, Wagner, HH, Urban, DL. Comparing methods for detecting 
 Which has a super nice vignette that you can check here https://popgen.nescent.org/2018-03-27_RDA_GEA.html
 
 We will follow most steps with our dataset.
-We will do everything on your local computer in R and Rstudio
+We will do most of the computational aspect of the RDA on the server but you could probably also run it locally, it is usually quite fast.
 
 #### Step 0 Prepare data 
 RDA takes a matrix of genotypes (0,1,2) with as many rows as samples and as many columns as loci. No missing data.We’ll use a simple approach to imputing missing values: we will impute using the most common genotype at each SNP across all individuals 
@@ -611,20 +611,72 @@ gen.imp <- apply(gen, 2, function(x) replace(x, is.na(x), as.numeric(names(which
 sum(is.na(gen.imp)) # No NAs
 
 ```
-Let's look now at our environmental/pheno matrix. We could be interested in having temperature but also latitude and longitude.
-
+Let's look now at our environmental/pheno matrix. 
 ```
 info<-read.table("02_data/info_samples_canada.txt", header=T)
 head(info)
+```
 
+
+#### Step 1 Run rda on environmental variable and test it 
+The command lines to run a rda are quite simple:
+
+#run rda
+```
+library(vegan)
+temp.rda <- rda(gen.imp ~ info$temperature, scale=T)
+temp.rda
+```
+Since we have only one variable, only RDA1 (the 1st axis is meaningful)
+We can look at the fraction of variance explained by this RDA and its significance using permutation tests. 
+
+```
+RsquareAdj(temp.rda)
+
+signif.full <- anova.cca(temp.rda, parallel=getOption("mc.cores")) # default is permutation=999
+signif.full
+```
+so you see that temperature does not explain a large fraction of total variance (0.5%!!) but the model appear significant. It likely means that very few loci covary with temperature but this parameter does not explain a large fraction of genetic variation as a whole.
+
+
+#### Step 2 Analyse RDA output
+
+
+
+
+
+
+
+#### Step 3 environmental variation vs.geographic variation?
+#geo matrix
+coorgeo<-info[,6:7]
+dist_eucl<-daisy(coorgeo)
+geo_pcnm<-pcnm(dist_eucl)
+geo_mat<-geo_pcnm$vectors
+
+#### Repeat the analysis on phenotype?
+
+
+#### expand to multivariate?
+Another powerful aspect of the RDA is to be able to analyse together several environmental variables. 
+
+Yet, they should not be correlated. so if you include several environmental axis, it is best to first do quick correlation steps and select the most interesting variables or PC axis that summarize them. 
+
+The problème of including several variables (or worse sort of composite variables based on PCA is that it can become tricky to disentangle which outliers are associated with which environmental variable). 
+
+Today, we only included temperature but if you wish, you can use the gps points and databases (bioclim, marspec...) to retrieve more environmental data. If you are interested into that we can come back on it later or on the last day. We palso resent here a sort of dummy example with latitude and longitude as variables if you have time to run the multivariate.
+
+If you include several environmental variables (for instance rda(gen.imp~info$temperature +info$longitude), you can test of teh association between genetic variation and each variable with the model by axis, and check that the correlation between environmental variable with the VIF. It might take a bit longer to run 
+
+```
+temp_gps.rda <- rda(gen.imp ~ info$temperature+ info$latitude + info$longitude, scale=T)
+temp_gps.rda
+
+RsquareAdj(temp_gps.rda)
+
+signif.axis <- anova.cca(temp_gps.rda, by="axis", parallel=getOption("mc.cores"))
+signif.axis
+vif.cca(temp_gps.rda)
 
 ```
 
-Chr1_4669 Chr1_37123 Chr1_53559 Chr1_64218 Chr1_73377 Chr1_76193
-L_01         0          0          0          0          0          1
-L_02         0          0          0          0          0          0
-L_03         0          0          0          0          0          0
-L_04         0          0          0          0          0          0
-L_05         0          0          0          0          0         -1
-L_06         0          0          0          0          0          0
-```
