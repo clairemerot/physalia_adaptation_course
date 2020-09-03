@@ -271,9 +271,13 @@ G[geno %in% c("0/0", "0|0")] <- 0
 G[geno  %in% c("0/1", "1/0", "1|0", "0|1")] <- 1
 G[geno %in% c("1/1", "1|1")] <- 2
 
-#an overview of our data
+#an overview of our data and its first 10 rows/10 columns
 table(as.vector(G))
 dim(G)
+G[1:10,1:10]
+
+#As it will be useful later, I suggest that we export it now
+write.table(G, "02_data/geno_matrix.txt", sep="\t", col.names=F, row.names=F)
 ```
 We obtain a matrix of genotypes with 9 as missing data, 8018 rows for each SNP, and 240 columns for each individual
 We will now ask outFLANK to calculate FST for eech locus. It needs the information about populations
@@ -582,9 +586,45 @@ Forester, BR, Lasky, JR, Wagner, HH, Urban, DL. Comparing methods for detecting 
 Which has a super nice vignette that you can check here https://popgen.nescent.org/2018-03-27_RDA_GEA.html
 
 We will follow most steps with our dataset.
-#### Step 0 Prepare data on the server
+We will do everything on your local computer in R and Rstudio
 
-RDA takes a matrix of genotypes (0,1,2) that we know how to obtain (we did yesterday)
+#### Step 0 Prepare data 
+RDA takes a matrix of genotypes (0,1,2) with as many rows as samples and as many columns as loci. No missing data.We’ll use a simple approach to imputing missing values: we will impute using the most common genotype at each SNP across all individuals 
 
-vcftools --vcf 02_data/populations_can_random.vcf --012 --out 06_rda/populations_can_random
+We can obtain following the same method as we did for the PCA yesterday. 
+We can also use the geno matrix that we exported earlier from vcfR, and the associated SNP_pos file
+```
+geno<-read.table("02_data/geno_matrix.txt")
+SNP_pos<-read.table("02_data/SNP_pos.txt", header=T)
 
+#transpose data and give meaningful colnames
+gen<-t(geno)
+colnames(gen)<-paste(SNP_pos$chromosome, SNP_pos$position, sep="_")
+gen [1:10,1:10]
+
+#replace 9 by NA
+gen[which(gen=="9")]<- NA
+#evaluate % of missing
+sum(is.na(gen))/(dim(gen)[1]*dim(gen)[2]) # about 1.5% of missing data
+#impute missing with the most common geno
+gen.imp <- apply(gen, 2, function(x) replace(x, is.na(x), as.numeric(names(which.max(table(x))))))
+sum(is.na(gen.imp)) # No NAs
+
+```
+Let's look now at our environmental/pheno matrix. We could be interested in having temperature but also latitude and longitude.
+
+```
+info<-read.table("02_data/info_samples_canada.txt", header=T)
+head(info)
+
+
+```
+
+Chr1_4669 Chr1_37123 Chr1_53559 Chr1_64218 Chr1_73377 Chr1_76193
+L_01         0          0          0          0          0          1
+L_02         0          0          0          0          0          0
+L_03         0          0          0          0          0          0
+L_04         0          0          0          0          0          0
+L_05         0          0          0          0          0         -1
+L_06         0          0          0          0          0          0
+```
