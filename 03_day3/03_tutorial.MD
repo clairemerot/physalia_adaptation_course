@@ -196,7 +196,7 @@ Yesterday, we saw that a region of chromosome 4 and sex-linked markers on chr 5 
 Let's re-run the steps above on the vcf in which we removed the chr5 and chr4.
 
 Let's look at the pairwise FST matrix and the IBD stats
-![img_fst_all](06_img_readme/Fst_heatmap_no_chr4-5.png)
+![img_fst_all](04_img_readme/Fst_heatmap_no_chr4-5.png)
 
 What do you see now?
 pay attention to the absolute value of FST, to the clustering and IBD (or the absence of)?
@@ -648,11 +648,30 @@ so you see that temperature does not explain a large fraction of total variance 
 
 
 #### Step 3 environmental variation vs.geographic variation?
-#geo matrix
+With the RDA we can also ask about the relative contribution of geography and environment since the rda can be controlled by a third matrix. It is also possibel to include a previously inferred geentic structure, etc.
+
+Very simply we can use latitude and longitude
+
+```
+geo.rda <- rda(gen.imp ~ info$lat + info$longe, scale=T)
+geo.rda
+RsquareAdj(geo.rda)
+
+temp.geo.rda <- rda(gen.imp ~ info$temp, cbind(info$lat,info$longe), scale=T)
+temp.geo.rda
+RsquareAdj(temp.geo.rda)
+
+signif.axis <- anova.cca(geo.rda, by="axis", parallel=getOption("mc.cores"))
+signif.axis
+```
+
+```
+#Create a geographic matrix with dbmem
 coorgeo<-info[,6:7]
 dist_eucl<-daisy(coorgeo)
 geo_pcnm<-pcnm(dist_eucl)
 geo_mat<-geo_pcnm$vectors
+```
 
 #### Repeat the analysis on phenotype?
 
