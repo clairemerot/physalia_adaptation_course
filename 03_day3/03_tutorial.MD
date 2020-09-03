@@ -578,13 +578,32 @@ We can also find a threshold from the run on simulated data.
 We will let you have a look at those data and plot BF along the genome re-using the same code as before.
 
 What do you observe? 
+
 Uncontrolled model
+
 ![bf_uncontrolled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/bf_uncontrolled.png)
 
 Controlled model
+
 ![bf_controlled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/bf_controlled.png)
 
 So on the data we have today, we find very few putative outlier SNPs associated with temperature. It may be that we don't have the power to detect some, we have only 12 populations and a reduced representation of the genome. It may be that given the high gene flow, very few regions of the genome are under  selection that is strong enough to show detectable differences in allelic frequencies.
+
+We can export the list of outlier SNPs for subsequent analysis on day 5. Here is the code for uncontrolled models. You can do it for controlled models too.
+```
+#load bf values
+bf_allsnps<-read.table("05_baypass/allsnps_env.output_summary_betai_reg.out", header = T)
+bf_pos<-cbind(SNP_pos, bf_allsnps)
+
+#load bf values from simulatd data
+bf_simu<-read.table("05_baypass/simulate_env.output_summary_betai_reg.out", header=T)
+
+#calculate the threshold from simu (or you cna use BF = 10)
+threshold_fdr0.01 = quantile(xtx_simu$M_XtX,probs=0.99)
+
+outliers<-bf_pos[bf_pos$BF.dB>=threshold_fdr0.01,]
+write.table(outliers, "05_baypass/outlier_uncontrolled_fdr0.01.txt", row.names=F, quote=F, sep="\t")
+```
 
 ### With redundancy analysis (multi-loci)
 Until now we have look at signatrue of adaptation locus by locus. This is a design that is more likely to point strong selective sweep, large-effect locus and large islands of divergence. Yet, most adaptation is expected to be polygenic and genome-scan are possibly not the best option to tackle this problem... Yet, doing RDa analysis which consider the whole genetic variance together with the geographic variation or ecological variation may be one of the first step in that direction.
@@ -593,9 +612,8 @@ Again, we can also used the RDA to identify putative candidate.
 Today we will follow a tutorial inspired by this paper https://onlinelibrary.wiley.com/doi/abs/10.1111/mec.14584 
 Forester, BR, Lasky, JR, Wagner, HH, Urban, DL. Comparing methods for detecting multilocus adaptation with multivariate genotype–environment associations. Mol Ecol. 2018; 27: 2215– 2233. https://doi.org/10.1111/mec.14584
 
-Which has a super nice vignette that you can check here https://popgen.nescent.org/2018-03-27_RDA_GEA.html
+Which has a super nice vignette that you can check here https://popgen.nescent.org/2018-03-27_RDA_GEA.html I encourage you to read it and follow it in details as it is good and more detailled than what we will do today. We will largely follow her tutorial today, and just add a few more analysis controlling for geographical structure.
 
-We will follow most steps with our dataset.
 We will do most of the computational aspect of the RDA on the server but you could probably also run it locally, it is usually quite fast.
 
 #### Step 0 Prepare data 
@@ -643,59 +661,170 @@ We can look at the fraction of variance explained by this RDA and its significan
 ```
 RsquareAdj(temp.rda)
 
-signif.full <- anova.cca(temp.rda, parallel=getOption("mc.cores")) # default is permutation=999
-signif.full
+temp.signif.full <- anova.cca(temp.rda, parallel=getOption("mc.cores")) # default is permutation=999
+temp.signif.full
 ```
-so you see that temperature does not explain a large fraction of total variance (0.5%!!) but the model appear significant. It likely means that very few loci covary with temperature but this parameter does not explain a large fraction of genetic variation as a whole.
+so you see that temperature does not explain a large fraction of total variance (0.05%!!) but the model appear significant. It likely means that very few loci covary with temperature but this parameter does not explain a large fraction of genetic variation as a whole. This is expected as most sp will likely be neutral.
+Yet, formal test allows rejecting the null hypothesis that no linear relationship exists between the SNP data and the environmental predictor.
 
 
 #### Step 2 Analyse RDA output
+We can plot the RDA. As we have only one informative RDA1, this will not be super informative.
+We’ll start with simple triplots from vegan. Here we’ll use scaling=3 (also known as “symmetrical scaling”) for the ordination plots. This scales the SNP and individual scores by the square root of the eigenvalues.
+Here, the SNPs are in red (in the center of each plot), and the individuals are coloured by their population. The blue vectors are the environmental predictors. The relative arrangement of these items in the ordination space reflects their relationship with the ordination axes, which are linear combinations of the predictor variables.
+
+```
+jpeg("06_rda/rda1_triplot.jpeg")
+plot(temp.rda, scaling=3) 
+points(temp.rda, display="sites", pch=20, cex=1.3, col=info$pop, scaling=3)
+dev.off()
+```
+
+![rda1_triplot](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/rda1_triplot.png)
+
+RDA2 is meaningless and samples are dispersed along RDA1 which represent temperature.
+
+We can now use the loadings of the SNPs in  the ordination space to determine which SNPs are candidates for local adaptation. The SNP loadings are stored as species in the RDA object. We’ll extract the SNP loadings from rda1 (choices is for which RDA axis we want) and extract the ones that are in the tail of this distribution. We uses a cut-off of 3 * sd (standard deviation) but you can choose to be more stringent with 3.5 (fdr about 0.0005) or more inclusive with 2.5 (fdr=0.01) depending on your objectives.
+- 2 (p=0.05)
+- 2.25 (p=0.025)
+- 2.5 (p=0.01)
+- 2.75 (p=0.006)
+- 3 (p=0.0027)
+- 3.25 (p=0.001)
+- 3.5 (p=0.0005)
 
 
+```
+load.temp.rda <- scores(temp.rda, choices=c(1), display="species") 
 
+#plot distribution
+jpeg("06_rda/rda1_loading_hist.jpeg")
+hist(load.temp.rda[,1], main="Loadings on RDA1")
+dev.off()
 
+#chose the sd limit
+z=3
+lim_min<- mean(load.temp.rda[,1]) - ( z * sd(load.temp.rda[,1]) )
+lim_max<- mean(load.temp.rda[,1]) + ( z * sd(load.temp.rda[,1]) )
 
+#outliers
+outlier_temp <- load.temp.rda[load.temp.rda[,1] >=lim_max | load.temp.rda[,1] <= lim_min ,]
+outlier_temp
+
+#export them
+write.table(outlier_temp, "06_rda/outlier_temp.txt")
+```
+
+We may also visualize the rda loadings along the genome 
+
+```
+library(ggplot2)
+#load info about snps
+SNP_pos<-read.table("02_data/SNP_pos.txt", header=T)
+load.temp.rda.pos<-cbind(load.temp.rda, SNP_pos)
+
+#plot
+jpeg("06_rda/loading_temp_manhattanplot.jpeg")
+ggplot(load.temp.rda.pos, aes(x=position, y=RDA1, colour=chromosome))+ 
+  geom_point()+
+  theme_classic()+
+  facet_grid(cols = vars(chromosome), scales = "free_x", space="free_x")+
+  geom_hline(aes(yintercept =lim_min), linetype="dotted", size=1,  show.legend = FALSE)+
+  geom_hline(aes(yintercept =lim_max), linetype="dotted", size=1, show.legend = FALSE)
+  dev.off()
+```
+
+![loading_temp_manhattanplot](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/loading_temp_manhattanplot.png)
+
+As with baypass, we have very few outliers associated with temperature. Yet, their signal is quite strong so they are likley worth exploring a little more.
+
+In our system in which gene flow is super high and geographic structure very low, it is not recommended to control the rda by geography or neutral structure. Yet, as a proff of principle, we will explore how to do it.
 
 
 #### Step 3 environmental variation vs.geographic variation?
-With the RDA we can also ask about the relative contribution of geography and environment since the rda can be controlled by a third matrix. It is also possibel to include a previously inferred geentic structure, etc.
+With the RDA we can also ask about the relative contribution of geography and environment since the rda can be controlled by a third matrix. It is also possible to include a previously inferred neutral structure, etc.
 
-Very simply we can use latitude and longitude
+Very simply we can use latitude and longitude. Run the rda with this geogrpahic variables. As we have two RDA now, it may be worth looking at the triplot and explore significance axis by axis
 
 ```
-geo.rda <- rda(gen.imp ~ info$lat + info$longe, scale=T)
+geo.rda <- rda(gen.imp ~ info$lat + info$long, scale=T)
 geo.rda
 RsquareAdj(geo.rda)
 
-temp.geo.rda <- rda(gen.imp ~ info$temp, cbind(info$lat,info$longe), scale=T)
+jpeg("06_rda/rda1_triplot_geo.jpeg")
+plot(geo.rda, scaling=3) 
+points(geo.rda, display="sites", pch=20, cex=1.3, col=info$pop, scaling=3)
+dev.off()
+```
+
+Only RDA1 describe significant association between genetic variation and latitude. Yet, geography explains only 0.06% of variance in our case!
+Well, let's try the controlled the rda by geography anyway:
+
+```
+temp.geo.rda <- rda(X= gen.imp, Y= info$temp, Z=cbind(info$lat,info$long), scale=T)
 temp.geo.rda
+RsquareAdj(temp.rda)
 RsquareAdj(temp.geo.rda)
-
-signif.axis <- anova.cca(geo.rda, by="axis", parallel=getOption("mc.cores"))
-signif.axis
 ```
+So here, we can interpret that temperature explain 0.041% of variance, of which 0.026% is also explained by geography. I guess that in some systems, or with more populations, those numbers would be higher!!
+
+#### Advanced options for geographic variables
+Another option is to use dbmem, which generate vectors transforming (spatial) distances to rectangular data that is suitable     for constrained ordination or regression.
+Since we have multiple variable (multiple pcnm vectors), we want to know which ones to keep. The function ordistep will perform model choice to select variable. It is a bit longer to run. 
 
 ```
+library(cluster)
 #Create a geographic matrix with dbmem
 coorgeo<-info[,6:7]
 dist_eucl<-daisy(coorgeo)
 geo_pcnm<-pcnm(dist_eucl)
 geo_mat<-geo_pcnm$vectors
+head(geo_mat)
+
+#perform rda
+geo.rda<-rda(gen.imp~geo_mat[,1]+geo_mat[,2]+geo_mat[,3]+geo_mat[,4]+geo_mat[,5]+geo_mat[,6]+geo_mat[,7]+geo_mat[,8])
+RsquareAdj(geo.rda)
+#select model
+anova(geo.rda, step=1000, by= "margin")
+ordistep(geo.rda)
 ```
+We now explain more than 0.92% of variance with geographic distance... 
 
 #### Repeat the analysis on phenotype?
+If you are interested in finding SNPs/multiloci haplotypes associated with phenotype, this can also be done with rda.
+Here, you can pratice with sex, and check whether the SNPs are indeed located on Chr5!
+```
+sex.rda <- rda(gen.imp ~ info$sex, scale=T)
 
+RsquareAdj(sex.rda)
+
+sex.signif.full <- anova.cca(sex.rda, parallel=getOption("mc.cores")) # default is permutation=999
+sex.signif.full
+
+load.sex.rda <- scores(sex.rda, choices=c(1), display="species") 
+load.sex.rda.pos<-cbind(load.sex.rda, SNP_pos)
+
+#plot
+jpeg("06_rda/loading_sex_manhattanplot.jpeg")
+ggplot(load.sex.rda.pos, aes(x=position, y=RDA1, colour=chromosome))+ 
+  geom_point()+
+  theme_classic()+
+  facet_grid(cols = vars(chromosome), scales = "free_x", space="free_x")
+dev.off()
+```
 
 #### expand to multivariate?
 Another powerful aspect of the RDA is to be able to analyse together several environmental variables. 
 
 Yet, they should not be correlated. so if you include several environmental axis, it is best to first do quick correlation steps and select the most interesting variables or PC axis that summarize them. 
 
-The problème of including several variables (or worse sort of composite variables based on PCA is that it can become tricky to disentangle which outliers are associated with which environmental variable). 
+The problem of including several variables (or worse sort of composite variables based on PCA is that it can become tricky to disentangle which outliers are associated with which environmental variable). 
 
 Today, we only included temperature but if you wish, you can use the gps points and databases (bioclim, marspec...) to retrieve more environmental data. If you are interested into that we can come back on it later or on the last day. We palso resent here a sort of dummy example with latitude and longitude as variables if you have time to run the multivariate.
 
-If you include several environmental variables (for instance rda(gen.imp~info$temperature +info$longitude), you can test of teh association between genetic variation and each variable with the model by axis, and check that the correlation between environmental variable with the VIF. It might take a bit longer to run 
+If you include several environmental variables (for instance rda(gen.imp~info$temperature +info$longitude), you can test of teh association between genetic variation and each variable with the model by axis, and check that the correlation between environmental variable with the VIF. It might take a bit longer to run. The ordistep function shown above will be useful to select meaningful variables.
+
+To extract outliers associated with each environmental variable, you can have a look at Forester's tutorial.
 
 ```
 temp_gps.rda <- rda(gen.imp ~ info$temperature+ info$latitude + info$longitude, scale=T)
