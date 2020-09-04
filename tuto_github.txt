@@ -15,3 +15,6 @@ git add . (to add the files that you ahve made or update)
 git commit -m "blabla" (to document what are the changes you did)
 
 git push (to update the files you add to the webrepository)
+
+# For more on Git and GitHub
+https://github.com/enormandeau/github_tutorial
