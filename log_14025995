@@ -1,2 +1,0 @@
-[bwa_idx_build] fail to open file '02_genome/genome_mallotus_dummy.fasta' : No such file or directory
-ls: cannot access '03_raw_reads/*.fq.gz': No such file or directory
