@@ -680,7 +680,7 @@ points(temp.rda, display="sites", pch=20, cex=1.3, col=info$pop, scaling=3)
 dev.off()
 ```
 
-![rda1_triplot](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/rda1_triplot.png)
+![rda1_triplot](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/rda1_triplot.jpeg)
 
 RDA2 is meaningless and samples are dispersed along RDA1 which represent temperature.
 
@@ -714,6 +714,7 @@ outlier_temp
 #export them
 write.table(outlier_temp, "06_rda/outlier_temp.txt")
 ```
+![rda1_loading_hist](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/rda1_loading_hist.jpeg)
 
 We may also visualize the rda loadings along the genome 
 
@@ -734,7 +735,7 @@ ggplot(load.temp.rda.pos, aes(x=position, y=RDA1, colour=chromosome))+
   dev.off()
 ```
 
-![loading_temp_manhattanplot](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/loading_temp_manhattanplot.png)
+![loading_temp_manhattanplot](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/loading_temp_manhattanplot.jpeg)
 
 As with baypass, we have very few outliers associated with temperature. Yet, their signal is quite strong so they are likley worth exploring a little more.
 
@@ -756,6 +757,7 @@ plot(geo.rda, scaling=3)
 points(geo.rda, display="sites", pch=20, cex=1.3, col=info$pop, scaling=3)
 dev.off()
 ```
+![rda1_triplot_geo](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/rda1_triplot_geo.jpeg)
 
 Only RDA1 describe significant association between genetic variation and latitude. Yet, geography explains only 0.06% of variance in our case!
 Well, let's try the controlled the rda by geography anyway:
