@@ -6,26 +6,26 @@ Prepared by Anna Tigano, Yann Dorant and Claire Mérot
 
 ## Logging on the AWS server from your computer
 ### Mac OS X and Linux users
-If you are using a Mac or Linux machine, you will need to open a terminal window and then type ```ssh```. ssh stands for secure shell and is a way of interacting with remote servers. You will need to log in to the cluster using both ssh and a keyfile that has been generated for you.
-Firstly, download the keyfile and open a terminal window. Then copy it into your home directory like so:
+If you are using a Mac or Linux machine, you will need to open a terminal window and then use the ```ssh``` command. ssh stands for secure shell and is a way of connecting to and interacting with remote servers. You will need to log in to the cluster using both ssh and a keyfile that has been generated for you.
+Firstly, download the keyfile and open a terminal window. Then copy the keyfile into your home directory like so:
 ```
 cp mark.pem ~
 ```
-Then you should be able to log in with ssh whatever your working directory is. You need to provide ssh with the path to your key, which you can do with the ```-i``` flag. This basically points to your identity file or keyfile. For example:
+Then, you should be able to log in with ssh. You need to provide ssh with the path to your key, which you can do with the ```-i``` flag. This basically points to your identity file or keyfile. For example:
 ```
 ssh -i "~/anna.pem" anna@54.245.175.86
 ```
-Note that you will need to change the log in credentials shown here (i.e. the username and keyfile name) with your own. Also be aware that the cluster IP address will change everyday. We will update you on this each day. You might be prompted to accept an RSA key - if so just type yes and you will log in to the cluster!
+Note that you will need to change the log in credentials shown here (i.e. the username and keyfile name) with your own. Also be aware that the cluster IP address will change everyday. We will update you on this each day. You might be prompted to accept an RSA key - if so, just type yes and you will log in to the cluster!
 
 ###Downloading and uploading files
-Occassionally, we will need to shift files between the cluster and our local machines. To do this, we can use a command utility called ```scp``` or secure copy. It works in a similar way to ssh. Let’s try making a dummyfile in our local home directory and then uploading it to our home directory on the cluster.
+Occassionally, we will need to transfer files between the cluster and our local machines. To do this, we can use a command utility called ```scp```, which stans for secure copy. It works in a similar way to ssh. Let’s try making a dummy file in our local home directory and then uploading it to our home directory on the cluster.
 ```
 # make a file
 touch test_file
 # upload to cluster
 scp -i "~/anna.pem" test_file mark@54.245.175.86:~/
 ```
-Just to break this down a little we are simply copying a file, ```test_file``` in this case to the cluster. After the : symbol, we are specifying where on the cluster we are placing the file, here we use ~/ to specify the home directory.
+Just to break this down a little we are simply copying a file, ```test_file``` in this case to the cluster. After the `:` symbol, we are specifying where on the cluster we are placing the file, here we use `~/` to specify the home directory.
 
 
 Copying files back on to our local machine is just as straightforward. You can do that like so:
@@ -33,10 +33,10 @@ Copying files back on to our local machine is just as straightforward. You can d
 # download to local
 scp -i "~/mark.pem" mark@54.245.175.86:~/test_file ./
 ```
-Where here all we did was use scp with cluster address first and the the location (our working directory) second - i.e. ./
+Where here all we did was use scp with the cluster address and path first and the location on our computers (in our working directory) second - i.e. `./`
 
 Alternatively, we can use Cyberduck, or similar software, to transfer data back and forth.
-Open Cyberduck, and click on 'Open connection' on the top left of the screen. Select 'SFTP (SSH File Tranfer Protocol)' from the dropdown menu and copy the IP address for the day in the Server field and your username for in the Username field. Leave the PAssword field empty, go down to SSH Private Key and add the Private Key Carlo sent you. Press Connect and you're connected!
+Open Cyberduck, and click on 'Open connection' on the top left of the screen. Select 'SFTP (SSH File Tranfer Protocol)' from the dropdown menu and copy the IP address for the day in the Server field and your username for in the Username field. Leave the Password field empty, go down to SSH Private Key and add the Private Key Carlo sent you. Press Connect and you're connected!
 
 ### Windows users
 If you are using a Windows machine, you will need to log on using PuTTY since there is no native ssh client. PuTTY does not natively support the private key format (.pem) needed to login to our Amazon cloud instance. You first need to convert the private key that we gave to you to a key that PuTTY can read. PuTTY has a tool named PuTTYgen, which can convert keys to the required PuTTY format (.ppk). When you installed PuTTY, it will also have installed PuTTYgen.
@@ -59,16 +59,16 @@ When you log in the next time, you can just click on the saved session and click
 
 If the IP address did not change and you just want to login again, you can also right-click on the putty symbol in the taskbar (provided that you have pinned it to the taskbar) and select the session.
 
-You can tranfer files back and forth with Filezilla, a handy software to move files from a remote server such as the Amazon cloud or a cluster of your university.
+You can also tranfer files back and forth with Filezilla, a handy software to move files from a remote server such as the Amazon cloud or a cluster of your university.
 
 Open Filezilla and choose Edit -> Settings.
 Next, choose SFTP and Add the .pem key file as indicated below and click OK.
-Finally, enter the IP address and the user name and when you hit enter, it should connect you. Next, time, you can use the Quickconnect dropdown menu, provided the IP address has not changed in the meantime.
+Finally, enter the IP address and the user name and when you hit enter, it should connect you. Next time, you can use the Quickconnect dropdown menu, as long as the IP address has not changed in the meantime.
 Now you will see the file directory system (folders) on your local computer on the left and your folders on the amazon cloud on the right. You can now just drag and drop files from one side to the other.
 
 ## Day1: Handling NGS data: From raw reads to SNPs matrix
 
-Capelin data: They are taken from Cayuela et al,2020. Molecular Ecology https://doi-org.acces.bibl.ulaval.ca/10.1111/mec.15499
+Capelin: Data taken from Cayuela et al,2020. Molecular Ecology https://doi-org.acces.bibl.ulaval.ca/10.1111/mec.15499
  
 Genome assembly: For this course, we made a dummy assembly of about 90 MB (instead of about 500 MB) and 5 chromosomes (instead of 24).
 
