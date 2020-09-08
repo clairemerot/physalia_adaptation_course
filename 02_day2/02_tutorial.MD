@@ -124,31 +124,21 @@ STRUCTURE has been the most popular software for detecting and describing popula
 We'll use the ```.structure``` file created by ```populations```. The first 6 columns of the file will be ignored; these typically would include IDs, metadata, etc. so we need to have 6 dummy columns before the genotypes for each individual/locus. Note that this software only handles bi-allelic loci. The two alleles at each locus can be encoded as desired; however, missing data should be encoded as '-9' (also check https://rajanil.github.io/fastStructure/ for details). Below is a little script to prepare the file and run fastSTRUCTURE.
 ```
 cd  populations_all_random ### or populations_2lin_random or populations_canada_random
-tail -n +3 populations.snps.structure > populations.structure_nohead ### deletes first two rows
+tail -n +3 populations.structure > populations.structure_nohead ### deletes first two rows
 cut -f1-2 populations.structure_nohead > twocolumns
 paste twocolumns twocolumns populations.structure_nohead | sed 's/\t0/\t-9/g' > populations.faststructure.str
-python structure.py -K 2 --input=populations.faststructure --output=capelin.all --format=str
+conda activate faststructure ### we need to activate a conda environment with a different version of Python where faststructure is installed
+structure.py -K 2 --input=populations.faststructure --output=capelin.all --format=str
 ```
 Now you can modify the ```-K``` parameters and test different different numbers of clusters.
 With this script you can test what number of populations/cluster best describes your dataset.
 ```
-python chooseK.py --input=capelin.all
+chooseK.py --input=capelin.all
 ```
-Finally, we can plot the admixture proportions with
-```
-python distruct.py
+but the results are not very clear. Indeed, it can be hard to find the the number of cluster that best describes your dataset. The qualitative analyses of structure plots for several K is often the most informative approach.
 
-Here is how you can use this script
+Run faststructure with K ranging 2-n, with n being the number of populations in your dataset and download the output with the ```.meanQ``` extension on your local computer. Then go to <http://pophelper.com/> and upload your ```.meanQ``` files. You can start exploring the one generated for K=2 while you run fastSTRUCTURE with the other K. pophelper is a very user-friendly, intuitive online app to visualize population structure data.
 
-Usage: python distruct.py
-     -K <int>  (number of populations)
-     --input=<file>  (/path/to/input/file; same as output flag passed to structure.py)
-     --output=<file>   (/path/to/output/file)
-     --popfile=<file>  (file with known categorical labels; optional)
-     --title=<figure title>  (a title for the figure; optional)
-
-python distruct.py -K 2 --input=capelin.all --output=capelin.all_distruct
-```
 ### PCA
 
 Population structure leads to systematic patterns in measures of mean relatedness between individuals in large genomic data sets, which are often discovered and visualized using dimension reduction techniques such as principal component analysis (PCA). The results of PCA can produce "maps" of population structure that may reflect the samples' geographic origin dirstored by rates of gene flow (November et al., 2008) or other intra-genome evolutionary processes that can bond or dispel certain groups of samples. Using PCA in genomics is quite simple without the need to diving into the math.
