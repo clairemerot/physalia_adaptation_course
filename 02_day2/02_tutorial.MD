@@ -110,7 +110,7 @@ In fact, window estimates are a practical way to summarize data and to reduce th
 We can also calculate π in VCFtools with the command
 ```
 cd ~/stacks
-vcftools --vcf populations_2lin_random/populations.snps.vcf --site-pi --keep ~/scripts/pop_canada.txt --out pi_canada
+vcftools --vcf populations_2lin_random/populations.snps.vcf --site-pi --keep ~/scripts/pop_canada40.txt --out pi_canada
 ```
 However, these single-site estimates of π are not very meaningful. π is defined as the average number of nucleotide differences per site between two DNA sequences in all possible pairs in the sample population. That is the same reason why π averaged across polymorphic sites in STACKS is not meaningful either. π must be averaged across the whole length of the sequence you are analyzing, whether it is a collection of RAD loci or whole chromosomes.
 
