@@ -197,6 +197,7 @@ nohup bash ~/scripts/stacks_gstacks_2lin.sh >& gstacks_2lin.log &
 ```
 Once we have our catalog of variants in the ```gstacks_2lin``` folder we can run ```populations``` to apply filters and print variant files in different formats. As ```populations``` is very fast for this small dataset, we can run it from the terminal. But first you make the folder where you want your results to be saved.
 ```
+cd ~/stacks
 mkdir populations_2lin_random
 populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
 ```
