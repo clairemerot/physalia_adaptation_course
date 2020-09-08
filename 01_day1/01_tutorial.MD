@@ -143,7 +143,7 @@ STACKS <http://catchenlab.life.illinois.edu/stacks/> is a bioinformatic pipeline
 
 ```ref_map.pl``` = ```gstacks``` --> ```populations```
 
-As you might have guessed already, the first 4 steps in ```denovo_map.pl``` are for assembling loci from short reads for each individual and for creating a catalog of all loci across the population when you don't have a refernce genome. The next two steps are shared between the two pipeline. ```gstacks``` builds a catalog of loci and calls SNPs in each sample and ```populations``` generates population-level summary statistics and input files for a variety of software for downstream analyses.
+As you might have guessed already, the first 4 steps in ```denovo_map.pl``` are for assembling loci from short reads for each individual and for creating a catalog of all loci across the population when you don't have a reference genome. The next two steps are shared between the two pipeline. ```gstacks``` builds a catalog of loci and calls SNPs in each sample and ```populations``` generates population-level summary statistics and input files for a variety of software for downstream analyses.
 
 As most of you have at least a draft reference genome, we'll focus on the ```ref_map.pl``` pipeline. For those interested in the ```denovo_map.pl``` pipeline, this article is a great resource to pick the most appropriate combination of parameters 
 ```
@@ -152,7 +152,7 @@ Lost in parameter space: a road map for stacks.
 Methods in Ecology and Evolution, 8(10), 1360-1373.
 ```
 
-Although the modules ```gastacks``` and ```populations``` can be run in one go with the ```ref_map.pl``` pipeline, we generally call variants in ```gstacks``` once, and then run ```populations``` several times to tune variant filtering, to print variants for different subsets of samples and to generate F-statistics for each of these subsets.
+Although the modules ```gstacks``` and ```populations``` can be run in one go with the ```ref_map.pl``` pipeline, we generally call variants in ```gstacks``` once, and then run ```populations``` several times to tune variant filtering, to print variants for different subsets of samples and to generate F-statistics for each of these subsets.
 
 You should already have all the scripts in your ```~/scripts``` folder.
 Let's have a look at the ```stacks_gstacks.sh``` script.
@@ -165,7 +165,7 @@ cd stacks
 mkdir -p gstacks
 gstacks -I ~/bamfiles -M ~/scripts/popmap_all.txt -O ~/stacks/gstacks -t 3
 ```
-This is simple and self explanatory: we tell the server that we are writing in bash, create a couple of folders (but only if they are not already present with the ```-p``` flag) and run gstacks.
+This is simple and self explanatory: we tell the server that we are writing in bash, create a couple of folders (but only if they are not already present with the ```-p``` flag) and run ```gstacks```.
 
 To run this job, we can either use the command ```bash``` before the script or make it executable before running it:
 ```
@@ -177,7 +177,7 @@ chmod +x ~/scripts/stacks_gstacks.sh ### notice that the script name has turned 
 nohup ~/scripts/stacks_gstacks.sh >& gstacks.log &
 ```
 
-Note that we use ```nohup``` to send the job to the background, so that we have the terminal free for us to do other things and can save the stdout for a file of our choice.
+Note that we use ```nohup``` to send the job to the background, so that we have the terminal free for us to do other things and can save the stdout to a file of our choice.
 
 When the job starts you can start checking how it is going from the ```gstacks.log``` file (you can use ```cat```, ```less```, ```more```, etc)
 
