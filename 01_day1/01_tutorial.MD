@@ -131,7 +131,7 @@ ln -s ~/Share/physalia_adaptation_course/01_day1/04_aligned_files/*.bam .
 #### SAM/BAM
 The alignment file contains much more information than the raw data .fastq files. In addition to all the information contained in the .fastq files, we now have information of the quality of the alignment and the position of where those reads mapped in the genome. Although we produce .sam files with the alignment, we quickly convert them to .bam, which is in binary format. These files are not readable directly but you can use 
 ```
-samtools view -h xxx.bam | less 
+samtools view -h A_01.bam | less 
 ```
 With the pipe sign ```|```, we pipe the output of the first command into the second command.
 The first few lines starting with ```@``` is the header. If you have a lot of scaffolds in your reference the header can be very long. If you want to see the first few alignments remove ```-h``` from the command above.
