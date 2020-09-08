@@ -85,17 +85,17 @@ VCFtools - 0.1.16
 
 Parameters as interpreted:
 	--vcf populations_2lin_random/populations.snps.vcf
-	--weir-fst-pop /home/ubuntu/scripts/pop_canada.txt
-	--weir-fst-pop /home/ubuntu/scripts/pop_greenland.txt
-	--keep /home/ubuntu/scripts/pop_canada.txt
-	--keep /home/ubuntu/scripts/pop_greenland.txt
+	--weir-fst-pop /home/ubuntu/scripts/pop_canada40.txt
+	--weir-fst-pop /home/ubuntu/scripts/pop_greenland40.txt
+	--keep /home/ubuntu/scripts/pop_canada40.txt
+	--keep /home/ubuntu/scripts/pop_greenland40.txt
 	--out fst_2lin
 
 Keeping individuals in 'keep' list
 After filtering, kept 80 out of 80 Individuals
 Outputting Weir and Cockerham Fst estimates.
-Weir and Cockerham mean Fst estimate: 0.032662
-Weir and Cockerham weighted Fst estimate: 0.23741
+Weir and Cockerham mean Fst estimate: 0.032099
+Weir and Cockerham weighted Fst estimate: 0.22947
 After filtering, kept 8530 out of a possible 8530 Sites
 Run Time = 0.00 seconds
 ```
