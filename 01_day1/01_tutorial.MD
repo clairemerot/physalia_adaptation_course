@@ -222,8 +222,9 @@ Also note that the files within each folders have pretty standardized names (che
 
 Although we applied stringent filters to minimize the amount of missing data, these are applied at the SNP level and we could have single individuals that for a variety of reasons (e.g., poor DNA quality, low DNA concentration, pipetting errors) have a high proportion of missing data. We can check the amount of missing data for each individuals with
 ```
+cd populations_2lin_random
 vcftools --vcf populations.snps.vcf --missing-indv --out missing
-sort -kr5,5 missing.imiss 
+sort -rk5,5 missing.imiss | less # with this you will visualize individuals by % of missing data, from the highest to the lowest
 ```
 In this case % of missing data are below 5%, so we don't need to discard any individual.
 
@@ -233,8 +234,9 @@ Here you've executed the pipeline on 80 individuals. Before we wrap up today, yo
 You should have already run the script ```~/scripts/gstacks_stacks.sh```. 
 Now, run ```populations``` on the new catalog twice, once for all individuals, and once for just the Canadian samples. What do you need to modify here?
 ```
+cd ~/stacks
 mkdir populations_2lin_random
-populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-
+populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
 ```
  
 Make sure you print these outputs in each of these two folders ```populations_all_random``` and ```populations_canada_random```.
