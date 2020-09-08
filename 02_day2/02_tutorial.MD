@@ -14,13 +14,19 @@ grep -v "^#" populations.fst_NWA-GRE.tsv | sort -rk8,8 | head -n 20
 ```
 ```grep -v``` exclude lines that start with #, then you sort the file by values of F<sub>ST</sub> from the highest to the lowest (```-r```), and print to the screen the top 20 SNPs.
 
-If you have more than two populations, STACKS will print out ```populations.fst_POP1-POP2.tsv``` for each unique combination of populations. Look into the ```populations_canada_random``` folder. Here we can create a list of the 100 most differentiated SNPs among all populations with this one-liner
+If you have more than two populations, STACKS will print out ```populations.fst_POP1-POP2.tsv``` for each unique combination of populations. Look into the ```populations_canada_random``` folder. 
+```
+cat populations.fst_*.tsv | grep -v "^#" - | sort -rk8,8 | head -n 20
+```
+
+Have a look at this list. Are these SNPs randomly distributed across the 5 chromosomes?
+
+
+Here we can create a list of the 100 most differentiated SNPs among all populations with this one-liner
 ```
 cat populations.fst_*.tsv | grep -v "^#" - | sort -rk8,8 | head -n 1000 | sort -un -k1,1 -k2,2 -s | sort -rk8,8 | cut -f 1,6 | tail -n +2 | head -n 100 | sort -n > high_fst.whitelist.tsv
 ```
 which is mostly based on commands that we've just used above, with the difference that you merge all files containing population pairwise information and print only the SNP information. Note that even though the data are mapped to a reference genome, STACKS has built a catalog of loci and uses locus ID and position within the locus (stored in columns 1 and 6 in this file) to retrieve information on these SNPs (i.e. STACKS doesn't use chromosome and position to identify SNPs).
-
-Have a look at this list. Are these SNPs randomly distributed across the 5 chromosomes?
 
 Now that we have created a 'whitelist', we can rerun populations and generate F-statistics and input files for these 100 highly differentiated SNPs only.
 ```
