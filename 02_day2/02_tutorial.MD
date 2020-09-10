@@ -597,7 +597,7 @@ ggplot(pca_correlation, aes(x=midpos, y=corr_vector, colour=chrom))+
 ```
 
 What do you see?  Which windows correlate with PC1? What do you think?
-![local_pca_corr_PC1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/local_pca_corr_PC1.png)
+![local_pca_corr_PC1](05_localPCA/images/local_pca_corr_PC1.png)
 
 Now you can have a look at correlation between local PC1s and the global PC2...
 
