@@ -1,0 +1,14 @@
+###cutadapt for adapters 
+mkdir ../cutdata
+for FILE in `cat $FILELIST`; do
+SAMPLE=`basename $FILE .fastq.gz`
+cutadapt -a file:adapters.fasta -o ../cutdata/${FILE}_cut.fastq.gz ${FILE} -e 0.2 -m 80
+
+###preprocess data
+mkdir processed
+process_radtags -p ~/cutdata -i gzfastq -o ./processed/ -c -q -t 80 -y fastq --renz_1 pstI --renz_2 mspI 
+
+
+#c,--clean — clean data, remove any read with an uncalled base.
+#q,--quality — discard reads with low quality scores.
+#t — truncate final read length to this value.
