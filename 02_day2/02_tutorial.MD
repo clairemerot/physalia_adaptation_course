@@ -620,16 +620,18 @@ ggplot(mds_matrix, aes(x=mds3, y=mds4, colour=chrom))+
   geom_point()+
   theme_classic()
 ```
-![mds1_2](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/mds1_2.png)
+![mds1_2](05_localPCA/images/mds1_2.png)
 
 As you see, MDS 1 and 2 are largely driven by Chr 4 and Chr5. Let's look at mds scores along the genome to pinpoint those regions
 Building on what we did before, you can probably make a Manhattan plot with a midposition as x, and mds1 or mds2 as y.
 
 This is the output for MDS2
-![mds2_manhattan_plot](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/mds2_position.png)
+![mds2_manhattan_plot](05_localPCA/images/mds2_position.png)
 
-To follow-up, You can try to find approximately the breakpoints of those areas that appear outliers
-We will come back to those regions later (on day 4) to analyse them. In the meantime to look at the geographic structure of the populations, we suggest that you remove them from your analyses.
+To follow-up, You can try to find approximately the breakpoints of those areas that appear outliers.
+We can locate them approximately from 4.8MB to 16.6MB on chromosome 4 and the full chromosome 5
+
+We will come back to those regions later (on day 4) to analyse them. In the meantime to look at the geographic structure of the populations, we suggest that you remove them from your analyses. 
 
 #### A note about running R into a terminal or on a server
 Instead of running R frontally, as we did at the beginning for lostruct, we could have written a whole script and run it with
