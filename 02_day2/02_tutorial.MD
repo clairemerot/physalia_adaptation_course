@@ -456,31 +456,17 @@ This analysis is more powerful if we keep all SNPs including those in LD so we w
 #### step 0: prepare the vcf
 If you have not done this yet, please copy the folder 02_day2 from the share directory to your own repository and open it 
 (cp is used for files and cp -r for folders) the . indicates that it will copy where you are (I guess the root of your home directory
-
 ``` 
 cp -r Share/physalia_adaptation/02_day2 .
-cd 02_day2 
+cd 02_day2/05_localPCA
 ```
-
-First you need to get the unfiltered vcf for the 12 NWA populations. Maybe you know where it is from yesterday, maybe not. If you don't, you can use the version I put for you in the 02_day2/02-data folder.
-
-```
-cp "the path where it is..."/capelin_NWA.vcf 05_localPCA/
-#or if you don't remember
-
-#unzip and keep the zip version (-k option)
-gunzip -k 02-data/capelin_NWA.vcf.gz
-mv 02-data/capelin_NWA.vcf 05_localPCA/
-```
-Now, let's open the 05_localPCA folder, we will do all the subanalysis "local PCA" within this folder.
-``` cd 05_localPCA ```
-
+We will do all the subanalysis "local PCA" within this folder
+First you need to process the unfiltered vcf for the 12 NWA populations. Maybe you know where it is from yesterday, maybe not. Since it is a big file we suggest that you use the version that I put for you in Share/ressources.
 We will use several programms to convert the vcf into a bcf, sort it and index it.
 The package lostruct can also take a vcf but it is heavy to load the whole file. Instead they made function that is able to cut the vcf window by window to avoid overloading the memory (but this requires a sorted, indexed bcf)
-
 ```
 #we need to sort the vcf
-(grep ^"#" capelin_NWA.vcf; grep -v ^"#" capelin_NWA.vcf | sort -k1,1 -k2,2n) > capelin_NWA_sorted.vcf
+(grep ^"#" ../../Share/ressources/capelin_NWA.vcf; grep -v ^"#" capelin_NWA.vcf | sort -k1,1 -k2,2n) > capelin_NWA_sorted.vcf
 
 #then compress it and index it
 bgzip -c capelin_NWA_sorted.vcf > capelin_NWA_sorted.vcf.gz
