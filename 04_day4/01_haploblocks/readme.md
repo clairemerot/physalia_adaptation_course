@@ -5,11 +5,12 @@
 Thanks to our local PCA exploration on day 2, we know that there are non-recombining haploblocks which may be an inversion on chromosome 4.
 We located the breakpoints approximately from 4.8MB to 16.6MB
 
-Please copy all the folder 04_day4 from Share into you repository
+Please copy all the folder 04_day4 from Share into you repository.
+
 Please open the following path and we will run all commands from here
 ``` cd 04_day4/01_haploblocks```
 
-You should have in the 02_data folder the vcf for canadian populations with all SNPs (1 snp randomly selected by locus) and all individuals
+You should have in the 02_data folder the vcf for canadian populations with all SNPs (1 snp randomly selected by locus) and all individuals.
 You also have a file with information about individuals info_samples_canada.txt
 
 ``` ls 02_data```
@@ -19,21 +20,16 @@ You also have a file with information about individuals info_samples_canada.txt
 First, we want to classify our individuals according to the cluster that we observed on the PCA.
 To do so, we want to extract the relevant regions, perform a PCA and clustering approach
 
-We now how to exclude chromosome from a vcf. We will now select just a determined region from the vcf
+We know how to exclude chromosome from a vcf. We will now select just a determined region from the vcf
 
 #### on the server : make a vcf with chr 4 4.8-16.6MB
 We will also export it as 012 as we did on day2 to do the PCA
 
 ```
-vcftools --vcf 02_data/population.can.random.snp.vcf --chr Chr4 --from-bp 4800000 --to-bp 16600000 --recode --out 02_data/population.can.random.snp.chr4inv
-vcftools --vcf 02_data/population.can.random.snp.chr4inv.recode.vcf --012 --out 02_data/population.can.random.snp.chr4inv
+gunzip 02_data/canada.vcf.gz
+vcftools --vcf 02_data/canada.vcf --chr Chr4 --from-bp 4800000 --to-bp 16600000 --recode --out 02_data/canada.chr4inv
+vcftools --vcf 02_data/canada.chr4inv.recode.vcf --012 --out 02_data/canada.chr4inv
 ```
-
-```
-vcftools --vcf 02_data/capelin_NWA.vcf --chr Chr4 --from-bp 4800000 --to-bp 16600000 --recode --out 02_data/capelin_NWA.chr4inv
-vcftools --vcf 02_data/capelin_NWA.chr4inv.recode.vcf --012 --out 02_data/capelin_NWA.chr4inv
-```
-
 
 Now you can copy the whole folder 01_haploblocks on your local computer in which we will run the PCA in R
 
@@ -42,8 +38,8 @@ Now you can copy the whole folder 01_haploblocks on your local computer in which
 Like on day 2, we will perform a PCA (including earlier steps of filling missing data etc). Note that we could also have used the vcfR library as we did on day 3
 
 ```
-geno <- read.table("02_data/population.can.random.snp.chr4inv.012")[,-1] #load geno
-indv <- read.table("02_data/population.can.random.snp.chr4inv.012.indv") #load individuals info
+geno <- read.table("02_data/canada.chr4inv.012")[,-1] #load geno
+indv <- read.table("02_data/canada.chr4inv.012.indv") #load individuals info
 rownames(geno)<-indv[,1]
 geno[1:6,1:6] #check the geno matrix
 geno.pca<-prcomp(geno) #run the pca
@@ -63,7 +59,7 @@ You can note the ratio of the between sum of squares over the total sum of squar
 Here it is around 92%, this is not amazing but still meaningful, clustering in 3 is better than a whole pool...
 
 Let's keep those clusters as it is for subsequent analysis. In real life, you may want to refine further, for instance using windows or SNPs most strongly divergent, or excluding dubious intermediate individuals
-To split the vcf between our three groups we will need a list of individuals id in eahc category
+To split the vcf between our three groups we will need a list of individuals id in each category
 
 ```
 #save information
@@ -88,9 +84,9 @@ Please copy back those 4 files into the 01_haploblocks/02_data folder on the ser
 We will now use vcftools to create a vcf for each group (and simplify names)
 
 ```
-vcftools --vcf 02_data/population.can.random.snp.vcf --keep 02_data/AA.list --recode --out 02_data/AA
-vcftools --vcf 02_data/population.can.random.snp.vcf --keep 02_data/AB.list --recode --out 02_data/AB
-vcftools --vcf 02_data/population.can.random.snp.vcf --keep 02_data/BB.list --recode --out 02_data/BB
+vcftools --vcf 02_data/canada.vcf --keep 02_data/AA.list --recode --out 02_data/AA
+vcftools --vcf 02_data/canada.vcf --keep 02_data/AB.list --recode --out 02_data/AB
+vcftools --vcf 02_data/canada.vcf --keep 02_data/BB.list --recode --out 02_data/BB
 ls 02_data
 ```
 
@@ -98,7 +94,7 @@ ls 02_data
 
 #### On the server: calculate Ld with Plink
 To calculate LD we will use plink, but not in pruning mode. We want all pairwise LD on each chromosome.
-for Ld, we will remove SNPs at low frequency as they will be uninformative and increase the size of the matrix (>1% of frequency - we could have filter up to 5% or 10% with whole genome data). 
+for Ld, we will remove SNPs at low frequency as they will be uninformative and increase the size of the matrix (>5% of frequency - we could have filter up to 5% or 10% with whole genome data). 
 We will focus on chromosome 4 but feel free to try other chromosome.
 
 Plink requires three inputs (.bed, .bim, .fam). The argument --r2 calculate the Ld as R2 (you could also have chosen D), inter-chr makes a long matrix (square would have amke a suare one)
@@ -106,38 +102,40 @@ we need to put --allow-extra-chromosome since we are not on humans! and --ld-win
 
 ```
 #extract a reduced vcf 
-vcftools --vcf 02_data/population.can.random.snp.vcf --chr Chr4 --maf 0.01 --recode --out 03_ld/maf0.01_chr4
+vcftools --vcf 02_data/canada.vcf --chr Chr4 --maf 0.05 --recode --out 03_ld/maf0.05_chr4
 
 #format for plink
-plink --vcf 03_ld/maf0.01_chr4.recode.vcf --make-bed --out 03_ld/maf0.01_chr4
+plink --vcf 03_ld/maf0.05_chr4.recode.vcf --make-bed --out 03_ld/maf0.05_chr4
 
 #calculate ld
-plink --bed 03_ld/maf0.01_chr4.bed \
---bim 03_ld/maf0.01_chr4.bim \
---fam 03_ld/maf0.01_chr4.fam \
+plink --bed 03_ld/maf0.05_chr4.bed \
+--bim 03_ld/maf0.05_chr4.bim \
+--fam 03_ld/maf0.05_chr4.fam \
 --r2 inter-chr --allow-extra-chr --ld-window-r2 0 \
---out 03_ld/maf0.01_chr4
+--out 03_ld/maf0.05_chr4
 
-head 03_ld/maf0.01_chr4.ld
+head 03_ld/maf0.05_chr4.ld
 ```
 
-Let's do the same for the vcf with only BB homozygotes 
+Let's do LD within a group of homokaryotes. We choose the group that has many individuals. For me that was AA.
+
+We want to consider the same SNPs so we used the recode vcf >5% and keep the AA individuals using the command keep.
 
 ```
-#extract a reduced vcf 
-vcftools --vcf 02_data/BB.recode.vcf --chr Chr4 --maf 0.01 --recode --out 03_ld/BB_maf0.01_chr4
+#extract a reduced vcf with the same snps but only BB individuals
+vcftools --vcf 03_ld/maf0.05_chr4.recode.vcf --keep 02_data/AA.list --recode --out 03_ld/AA_maf0.05_chr4
 
 #format for plink
-plink --vcf 03_ld/BB_maf0.01_chr4.recode.vcf --make-bed --out 03_ld/BB_maf0.01_chr4
+plink --vcf 03_ld/AA_maf0.05_chr4.recode.vcf --make-bed --out 03_ld/AA_maf0.05_chr4
 
 #calculate ld
-plink --bed 03_ld/BB_maf0.01_chr4.bed \
---bim 03_ld/BB_maf0.01_chr4.bim \
---fam 03_ld/BB_maf0.01_chr4.fam \
+plink --bed 03_ld/AA_maf0.05_chr4.bed \
+--bim 03_ld/AA_maf0.05_chr4.bim \
+--fam 03_ld/AA_maf0.05_chr4.fam \
 --r2 inter-chr --allow-extra-chr --ld-window-r2 0 \
---out 03_ld/BB_maf0.01_chr4
+--out 03_ld/AA_maf0.05_chr4
 
-head 03_ld/BB_maf0.01_chr4.ld
+head 03_ld/AA_maf0.05_chr4.ld
 ```
 
 
@@ -149,24 +147,24 @@ We will use R to visualise our results
 ```
 library(ggplot2)
 #load data
-chr4.ld<-read.table("03_ld/maf0.01_chr4.ld", header=T)
+chr4.ld<-read.table("03_ld/maf0.05_chr4.ld", header=T)
 head(chr4.ld)
 
 #plot (very simple solution with ggplot. maybe you can find something nicer..?
-ggplot(chr4.ld,aes(x=BP_A,y=BP_B, col=R2)) + theme_classic() + geom_point( shape=15) + 
+ggplot(chr4.ld,aes(x=BP_A,y=BP_B, col=R2)) + theme_classic() + geom_point(size=1, shape=15) + 
   scale_colour_gradientn(colours=c("lightgrey","deepskyblue3","blue","blue3","navyblue","black"), limits=c(0,1),  name="R2")
  
 #load data homozygotes
-BB_chr4.ld<-read.table("03_ld/BB_maf0.01_chr4.ld", header=T)
-head(BB_chr4.ld)
+AA_chr4.ld<-read.table("03_ld/AA_maf0.05_chr4.ld", header=T)
+head(AA_chr4.ld)
 
-ggplot(BB_chr4.ld,aes(x=BP_A,y=BP_B, col=R2)) + theme_classic() + geom_point( shape=15) + 
+ggplot(AA_chr4.ld,aes(x=BP_A,y=BP_B, col=R2)) + theme_classic() + geom_point(size=1, shape=15) + 
   scale_colour_gradientn(colours=c("lightgrey","deepskyblue3","blue","blue3","navyblue","black"), limits=c(0,1),  name="R2")
 
 #plotting both heatmap on the same graph...
 ggplot(chr4.ld,aes(x=BP_A,y=BP_B, col=R2)) + theme_classic() + 
   geom_point( shape=15) + 
-  geom_point(data=BB_chr4.ld, aes(x=BP_B,y=BP_A,col=R2),  shape=15)+
+  geom_point(data=AA_chr4.ld, aes(x=BP_B,y=BP_A,col=R2), size=1, shape=15)+
   scale_colour_gradientn(colours=c("lightgrey","deepskyblue3","blue","blue3","navyblue","black"), limits=c(0,1),  name="R2")
 
 ```
@@ -180,18 +178,18 @@ Note that here, this is not ideal since it is better to have balanced sample siz
 
 #### On the server: get Fst and FSt by windows
 ```
-vcftools --vcf 02_data/population.can.random.snp.vcf --weir-fst-pop 02_data/AA.list --weir-fst-pop 02_data/AB.list --out 04_divergence/AA_AB
-vcftools --vcf 02_data/population.can.random.snp.vcf --weir-fst-pop 02_data/AA.list --weir-fst-pop 02_data/BB.list --out 04_divergence/AA_BB
-vcftools --vcf 02_data/population.can.random.snp.vcf --weir-fst-pop 02_data/AB.list --weir-fst-pop 02_data/BB.list --out 04_divergence/AB_BB
+vcftools --vcf 02_data/canada.vcf --weir-fst-pop 02_data/AA.list --weir-fst-pop 02_data/AB.list --out 04_divergence/AA_AB
+vcftools --vcf 02_data/canada.vcf --weir-fst-pop 02_data/AA.list --weir-fst-pop 02_data/BB.list --out 04_divergence/AA_BB
+vcftools --vcf 02_data/canada.vcf --weir-fst-pop 02_data/AB.list --weir-fst-pop 02_data/BB.list --out 04_divergence/AB_BB
 ```
 
 We can also do it by windows:
 ```
 WINDOW=100000
 WINDOW_STEP=25000
-vcftools --vcf 02_data/population.can.random.snp.vcf --weir-fst-pop 02_data/AA.list --weir-fst-pop 02_data/AB.list --fst-window-size $WINDOW --fst-window-step $WINDOW_STEP --out 04_divergence/AA_AB
-vcftools --vcf 02_data/population.can.random.snp.vcf --weir-fst-pop 02_data/AA.list --weir-fst-pop 02_data/BB.list --fst-window-size $WINDOW --fst-window-step $WINDOW_STEP --out 04_divergence/AA_BB
-vcftools --vcf 02_data/population.can.random.snp.vcf --weir-fst-pop 02_data/AB.list --weir-fst-pop 02_data/BB.list --fst-window-size $WINDOW --fst-window-step $WINDOW_STEP --out 04_divergence/AB_BB
+vcftools --vcf 02_data/canada.vcf --weir-fst-pop 02_data/AA.list --weir-fst-pop 02_data/AB.list --fst-window-size $WINDOW --fst-window-step $WINDOW_STEP --out 04_divergence/AA_AB
+vcftools --vcf 02_data/canada.vcf --weir-fst-pop 02_data/AA.list --weir-fst-pop 02_data/BB.list --fst-window-size $WINDOW --fst-window-step $WINDOW_STEP --out 04_divergence/AA_BB
+vcftools --vcf 02_data/canada.vcf --weir-fst-pop 02_data/AB.list --weir-fst-pop 02_data/BB.list --fst-window-size $WINDOW --fst-window-step $WINDOW_STEP --out 04_divergence/AB_BB
 ```
 
 #### On your computer: visualise
@@ -201,7 +199,7 @@ vcftools --vcf 02_data/population.can.random.snp.vcf --weir-fst-pop 02_data/AB.l
 AA_BB<-read.table("04_divergence/AA_BB.weir.fst", header=T)
 head(AA_BB)
 
-#plot
+#plotFst_AAvsBB
 ggplot(AA_BB, aes(x=POS/1000000, y=WEIR_AND_COCKERHAM_FST, col=CHROM))+
   geom_point()+ geom_smooth()+
   theme_classic()+
@@ -212,13 +210,11 @@ ggplot(AA_BB, aes(x=POS/1000000, y=WEIR_AND_COCKERHAM_FST, col=CHROM))+
 AA_BB.win<-read.table("04_divergence/AA_BB.windowed.weir.fst", header=T)
 head(AA_BB.win)
 ```
+![fst](06_images/Fst_AAvsBB.png)
 As you can note within our region of interest on Chr4, some SNP have a super high Fst (up to 1), suggesting fixed alleles and extremely high divergence
-You may have noticed that some FSt values are negatives.. This is likely driven by very low frequency alleles (we could have filtered out SNP at maf below a certain threshold).
-Plus we have an inbalanced sample sizes. We also observe NA in the calculation of FSt by site
+You may have noticed that some FSt values are negatives.. This is likely driven by very low frequency alleles and inbalanced sample sizes. We also observe NA in the calculation of FSt by site
 
 Try to plot also the AA_AB and AB_BB contrasts. 
-
-![fst](06_images/Fst_ABvsBB.png)
 
 We can also look at the values summarized by Fst
 ```
@@ -233,18 +229,17 @@ ggplot(AA_BB.win, aes(x=BIN_MID/1000000, y=MEAN_FST, col=CHROM))+
   labs(  x = "position (in MB)")
 ```
 
-
 ## Studying heterozygosity
 
 We will now try to figure out whether heterozygosity is indeed higher in our Ab groups. We will use the --hardy options for vcftools which tests hardy-weinberg equilibrium for each SNP and report the observed and expected fraction of heterozygotes at that position
 
 #### On the server: get H-W stats and number of heterozygotes
-We will only keep SNPs with maf above 3% since rare SNP won't be super informative in terms of heterozygotes (high stochasticity due to sampling a low number of heterozygotes)
+We will only keep SNPs with maf above 5% since rare SNP won't be super informative in terms of heterozygotes (high stochasticity due to sampling a low number of heterozygotes)
 
 ```
-vcftools --vcf 02_data/BB.recode.vcf --maf 0.03 --hardy --out 05_heterozygosity/BB
-vcftools --vcf 02_data/AB.recode.vcf --maf 0.03 --hardy --out 05_heterozygosity/AB
-vcftools --vcf 02_data/AA.recode.vcf --maf 0.03 --hardy --out 05_heterozygosity/AA
+vcftools --vcf 02_data/BB.recode.vcf --maf 0.05 --hardy --out 05_heterozygosity/BB
+vcftools --vcf 02_data/AB.recode.vcf --maf 0.05 --hardy --out 05_heterozygosity/AB
+vcftools --vcf 02_data/AA.recode.vcf --maf 0.05 --hardy --out 05_heterozygosity/AA
 ```
 
 You can look at the files ``` head 05_heterozygosity/AA.hwe ``` . As you see, it is really annoying to have a symbol "/" at the middle of our column. We will use a simple awk command to get a better format for subsequent R analysis
@@ -264,21 +259,21 @@ And plot the data with our usual ggplot command
 
 ```
 #load data
-BB.hwe<-read.table("05_heterozygosity/BB_formatted.hwe", header = T)
+AB.hwe<-read.table("05_heterozygosity/AB_formatted.hwe", header = T)
 #rename columns
-colnames(BB.hwe)<-c("CHR","POS","Homo1_obs", "Het_Obs", "Homo2_Obs", "Homo1_Exp", "Het_Exp","Homo2_Exp","Chisq_HWE","P_HWE","P_HET_DEFICIT", "P_HET_EXCESS")
-head(BB.hwe)
+colnames(AB.hwe)<-c("CHR","POS","Homo1_obs", "Het_Obs", "Homo2_Obs", "Homo1_Exp", "Het_Exp","Homo2_Exp","Chisq_HWE","P_HWE","P_HET_DEFICIT", "P_HET_EXCESS")
+head(AB.hwe)
 #calculate the fraction of observed heterozygotes
-BB.hwe$het_fraction<-BB.hwe$Het_Obs/(BB.hwe$Homo1_obs+BB.hwe$Het_Obs+BB.hwe$Homo2_Obs)
+AB.hwe$het_fraction<-BB.hwe$Het_Obs/(BB.hwe$Homo1_obs+BB.hwe$Het_Obs+BB.hwe$Homo2_Obs)
 
 #plot
-ggplot(BB.hwe, aes(x=POS/1000000, y=het_fraction, col=CHR))+
+ggplot(AB.hwe, aes(x=POS/1000000, y=het_fraction, col=CHR))+
   geom_point(alpha=0.5)+ geom_smooth()+
   theme_classic()+
   facet_grid(cols = vars(CHR), scales = "free_x", space="free_x")+
   labs(  x = "position (in MB)")
 ```
-You can do the same for AA and AB. Now let's try to visualise the three of them together
+You can do the same for AA and BB. Now let's try to visualise the three of them together
 
 ```
 #keep genotype information before joining the three tables
@@ -330,5 +325,5 @@ head(BB.hwe_win)
 You can perform the window summary on AA and AB, try plotting as above group by group, or all groups together.
 It is slightly more readable. 
 
-In all cases, we nevertheless note the expected higher observed heterozygosity in AB around the middle of Chr4. The AA groups has much less individuals, whcih may lead to more stochastic estimates? 
+In all cases, we nevertheless note the expected higher observed heterozygosity in AB around the middle of Chr4. 
 On Chr5, there is a region of high heterozygosity in all three groups, which may be driven by sex.
