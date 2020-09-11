@@ -13,11 +13,15 @@ We have put inside the folder 02_data your two vcf from yesterday:
 - an info file about the 12 populations
 
 Those files were all generated (by you!) on the previous days but to make you start more easily, we decided to prepare them here.
+Also, to reduce computational time today and avoid using rare SNPs which are not interested for the analysis we are doing today, we have applied a MAF threshold of 1%
+
 You can have a look at the files with the command ```head 02_data/file``` (or ```less 02_data/file```)
-vcf files will need to be unzipped wiht the command ```gunzip 02_data/population.can.random.snp.vcf.gz``` .
+vcf files will need to be unzipped wiht the command ```gunzip 02_data/canada.vcf.gz``` ```gunzip 02_data/canada_no45.vcf.gz``` .
 To see the beginning of the vcf file it may be useful to use ```less -S 02_data/file```, which cut the right part of the file to fit your window, or 'head -n 25 02_data/file' to look at the first 25 lines
 
 We will work from the 03_day3 folder and try to open our data within their folder (for instance 'head 02_data/file') and ouput in the folder of the analysis for instance (> 03_fst/output)
+
+##
 
 ## 3A Investigate F-statistics in relation with geography
 ### Pairwise differentiation between populations
@@ -41,7 +45,7 @@ Ok, now we are ready to convert our VCF files to the StAMPP file format. The too
 * -o output prefix name
 
 ```
-bash Toolbox/00-VCF_Reshaper.sh -v 02_data/population.can.random.snp.vcf -p 02_data/popmap_canada.txt -f StAMPP -o 03_fst/population_can_random.snp
+bash Toolbox/00-VCF_Reshaper.sh -v 02_data/canada.vcf -p 02_data/popmap_canada.txt -f StAMPP -o 03_fst/canada
 ```
 Then move inside the toolbox folder ``cd Toolbox/``
 Once is done, you will ses that a ``.StAMPP`` file inthe 03_fst folder.
@@ -51,7 +55,7 @@ Then, we can run the Rscript `StAMPP-fst.R` to perform pairwise FST for each dat
 * Number of CPU allowed (default CPU=1)
 
 ```
-Rscript Toolbox/StAMPP-fst.R 03_fst/population_can_random.snp.StAMPP 03_fst/population_can_random.snp 3
+Rscript Toolbox/StAMPP-fst.R 03_fst/canada.StAMPP 03_fst/canada 3
 ```
 Allowing 3 CPU, each FST calculation should take around 5-6 minutes
 
@@ -102,7 +106,7 @@ Now we can load the data, arrange it and then plot.
 
 ```
 #-------------- fst matrix for all SNPs --------------------
-fst.mat <- read.table("03_fst/population_can_random.snp_fst_matrix.txt")
+fst.mat <- read.table("03_fst/canada_fst_matrix.txt")
 #use the function to fill the full matrix
 fst.all.mat<- fst.mat %>%
               as.matrix(.) %>%
@@ -214,20 +218,20 @@ Then we give our parameters. We chose to be very stringent removing SNP with a V
 We could also have given a R² threshold with --indep-pairwise $WINDOW $SNP $R2
 
 ```
-plink --vcf 02_data/population.can.random.snp.vcf --make-bed --out 02_data/population.can.random.snp
+plink --vcf 02_data/canada.vcf --make-bed --out 02_data/canada
  
 WINDOW=100
 SNP=100
 VIF=2
-plink --bed 02_data/population.can.random.snp.bed \
---bim 02_data/population.can.random.snp.bim \
---fam 02_data/population.can.random.snp.fam \
+plink --bed 02_data/canada.bed \
+--bim 02_data/canada.bim \
+--fam 02_data/canada.fam \
 --indep $WINDOW['kb'] $SNP $VIF --allow-extra-chr \
---out 02_data/population.can.random.snp
+--out 02_data/canada
 ```
 You can have a look at the files 02_data/population.can.random.snp.prune.in and 02_data/population.can.random.snp.prune.outThey include a lit of SNP id as displayed in the vcf ("53:2:+") for instance. This list will be useful forour subsequent analyses in OutFLANK. For other purpose we may also want to have a vcf with only pruned marker. We are using again vcftools with the --exclude option (and recode)
 ```
-vcftools --vcf 02_data/population.can.random.snp.vcf --exclude 02_data/population.can.random.snp.prune.out --recode --out 02_data/population.can.random.snp.pruned
+vcftools --vcf 02_data/canada.vcf --exclude 02_data/canada.prune.out --recode --out 02_data/canada.pruned
 ```
 If you have finished early, you can play at doing the pairwise FST/IBD or the population structure analysis of yesterday on the pruned dataset to check whether this removed the structure linked to sex or Chr4 rearrangement...
 
@@ -249,7 +253,7 @@ Let's open R in our terminal and convert our vcf to the outflank format:
 library(OutFLANK)
 library(vcfR)
 library(ggplot2)
-obj.vcfR <- read.vcfR("02_data/population.can.random.snp.vcf")
+obj.vcfR <- read.vcfR("02_data/canada.vcf")
 
 #extract useful informations about snp id and position
 position <- getPOS(obj.vcfR) # Positions in bp
@@ -309,7 +313,7 @@ We will use the prune.in file produced by plink and a few manipulation to know t
 
 ```
 #import pruned info
-id_snp_pruned<-read.table("02_data/population.can.random.snp.prune.in")
+id_snp_pruned<-read.table("02_data/canada.prune.in")
 
 #those are SNPs id, we need to know at which position they are
 #this can be done with the %in% function
@@ -397,14 +401,14 @@ This package is an extension of Bayenv. It may be a little long to run so you wi
 #### Step 0: prepare files
 We will use again scripts prepared by Yann Dorant in his toolbox:
 ```
-python Toolbox/reshaper_baypass.py 02_data/population.can.random.snp.vcf 02_data/popmap_canada.txt 05_baypass/population.can.random.baypass
-python Toolbox/reshaper_baypass.py 02_data/population.can.random.snp.pruned.recode.vcf 02_data/popmap_canada.txt 05_baypass/population.can.random.pruned.baypass
+python Toolbox/reshaper_baypass.py 02_data/canada.vcf 02_data/popmap_canada.txt 05_baypass/canada.baypass
+python Toolbox/reshaper_baypass.py 02_data/canada.pruned.recode.vcf 02_data/popmap_canada.txt 05_baypass/canada.pruned.baypass
 ```
 
 #### Step 1: run baypass basic
 
 ```
-g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass \
+g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -outprefix 05_baypass/allsnps.output -nthreads 3
 ```
 We can have a look at the output. the most importnat are the omega matrix, which is covariance between populations and the xtx value which represent a kind of value associated to each SNP. the higher it gets, the more this snps differentiate the populations.
@@ -416,11 +420,11 @@ Best practices suggest to first run baypass on the LD-pruned vcf and to extract 
 
 ```
 #run on pruned snps
-g_baypass -npop 12 -gfile 05_baypass/population.can.random.pruned.baypass \
+g_baypass -npop 12 -gfile 05_baypass/canada.pruned.baypass \
 -outprefix 05_baypass/prunedsnps.output -nthreads 2
 
 #controlled run
-g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass \
+g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/allsnps.controlled.output -nthreads 2
 
@@ -551,7 +555,7 @@ $PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -efile 05_baypass/env.txt  \
 -outprefix 05_baypass/simulate_env.output -scalecov -nthreads 3
 
-"$PATH_BP"/sources/g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass \
+"$PATH_BP"/sources/g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -efile 05_baypass/env.txt  \
 -outprefix 05_baypass/allsnps_env.output -scalecov -nthreads 2
 
@@ -560,7 +564,7 @@ $PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/simulate_env.controlled.output -scalecov -nthreads 3
 
-"$PATH_BP"/sources/g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass \
+"$PATH_BP"/sources/g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -efile 05_baypass/env.txt \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/allsnps.controlled_env.output -scalecov -nthreads 2
