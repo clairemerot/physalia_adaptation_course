@@ -490,6 +490,7 @@ tabix -fp vcf capelin_NWA_sorted.vcf.gz
 bcftools convert -O b capelin_NWA_sorted.vcf.gz > capelin_NWA_sorted.bcf
 bcftools index capelin_NWA_sorted.bcf
 ```
+To check whether this has worked and produced files, you can do a quick ```ls -lh``` which will show you the size of the files in human-readable format
 
 Now we are good to work in R with the library. This requires some computational power and memory, so we suggest to make the initial steps in R command lines on the server and then copy the output files to visualise on your local Rstudio
 
