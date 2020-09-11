@@ -3,7 +3,7 @@ Today, we will restrain our analysis on the Canadian 12 populations which belong
 
 To start, please copy the folder Day 3 into your home directory.
 ```
-cp -r Share/physalia_adaptation/03_day3 MYDESTINATION
+cp -r Share/physalia_adaptation/03_day3 .
 cd 03_day3 
 ```
 We have put inside the folder 02_data your two vcf from yesterday:
