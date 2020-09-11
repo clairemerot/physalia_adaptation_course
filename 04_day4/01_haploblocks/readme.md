@@ -7,6 +7,10 @@ We located the breakpoints approximately from 4.8MB to 16.6MB
 
 Please copy all the folder 04_day4 from Share into you repository.
 
+``` 
+cp -r Share/physalia_adaptation/04_day4 .
+```
+
 Please open the following path and we will run all commands from here
 ``` cd 04_day4/01_haploblocks```
 
