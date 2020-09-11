@@ -42,7 +42,6 @@ Now you can copy the whole folder 01_haploblocks on your local computer in which
 Like on day 2, we will perform a PCA (including earlier steps of filling missing data etc). Note that we could also have used the vcfR library as we did on day 3
 
 ```
-
 geno <- read.table("02_data/population.can.random.snp.chr4inv.012")[,-1] #load geno
 indv <- read.table("02_data/population.can.random.snp.chr4inv.012.indv") #load individuals info
 rownames(geno)<-indv[,1]
@@ -56,9 +55,10 @@ To cluster those individuals into three groups, we will use kmeans methods
 ```
 geno_kmean<-kmeans (geno.pca$x[,1], c(min(geno.pca$x[,1]), (min(geno.pca$x[,1])+max(geno.pca$x[,1]))/2, max(geno.pca$x[,1]) ))
 geno_kmean
-
 plot(geno.pca$x[,1],geno.pca$x[,2], col= geno_kmean$cluster, pch=20)
 ```
+![pca](06_images/pca_cluster.png)
+
 You can note the ratio of the between sum of squares over the total sum of square which is indicative of the fit of the clusters
 Here it is around 92%, this is not amazing but still meaningful, clustering in 3 is better than a whole pool...
 
@@ -170,6 +170,7 @@ ggplot(chr4.ld,aes(x=BP_A,y=BP_B, col=R2)) + theme_classic() +
   scale_colour_gradientn(colours=c("lightgrey","deepskyblue3","blue","blue3","navyblue","black"), limits=c(0,1),  name="R2")
 
 ```
+![ld](06_images/Ld_heatmap.png)
 
 What do you think? do you observe the linkage possibly due to an inversion (or a non-recombining block?)? Is it also observed in the BB group?
 
@@ -216,6 +217,8 @@ You may have noticed that some FSt values are negatives.. This is likely driven 
 Plus we have an inbalanced sample sizes. We also observe NA in the calculation of FSt by site
 
 Try to plot also the AA_AB and AB_BB contrasts. 
+
+![fst](06_images/Fst_ABvsBB.png)
 
 We can also look at the values summarized by Fst
 ```
@@ -292,6 +295,8 @@ ggplot(all.hwe, aes(x=POS/1000000, y=het_fraction, group=geno, col=geno))+
   facet_grid(cols = vars(CHR), scales = "free_x", space="free_x")+
   labs(  x = "position (in MB)")
 ```
+![Hobs_all](06_images/Hobs_all.png)
+
 We could also do violin plots by chromosome and by groups. And if you want to do something more advanced, you can try a violinplot of the region inside the inversion vs. outside 
 ```
 ggplot(all.hwe, aes(x=geno, y=het_fraction, col=geno))+
@@ -300,6 +305,7 @@ ggplot(all.hwe, aes(x=geno, y=het_fraction, col=geno))+
   facet_grid(cols = vars(CHR))+
   theme_classic()
 ```
+![Hobs_violin](06_images/Hobs_violin.png)
 
 As you observed on the Manhattan plots, there is a lot of heterogeneity between SNPs. Perhaps it might be worth looking at results by sliding-windows?
 Our case is not ideal because SNPs are sparese (RAD-seq) but with shole-genome data you would have no choice bu doing windows.
