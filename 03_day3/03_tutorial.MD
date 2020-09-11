@@ -1,16 +1,21 @@
 # Day3: Detecting putatively adaptive loci
 Today, we will restrain our analysis on the Canadian 12 populations which belong to the same lineage and for which we have environmental data.
 
-To start, please copy the folder Day 3 into your home directory. We have put inside the folder 02_data your two vcf from yesterday:
+To start, please copy the folder Day 3 into your home directory.
+```
+cp -r Share/physalia_adaptation/03_day3 MYDESTINATION
+cd 03_day3 
+```
+We have put inside the folder 02_data your two vcf from yesterday:
 - the vcf of the 12 populations filtered at 1 SNP per locus
 - the vcf of the 12 populations filtered at 1 SNP per locus without chr 5 (sex linked) and without the putative rearranged regions on chr4
 - an info file including sex, as well as population, latitude, longitude and temperature for the resticted dataset of 240 samples
 - an info file about the 12 populations
 
 Those files were all generated (by you!) on the previous days but to make you start more easily, we decided to prepare them here.
-You can have a look at the files with the command 'head 01-data/file' (or less 02_data/file)
-vcf files will need to be unzipped wiht the 'gunzip' command.
-To see the beginning of the vcf file it may be useful to use 'less -S 02_data/file', which cut the right part of the file to fit your window, or 'head -n 25 02_data/file' to look at the first 25 lines
+You can have a look at the files with the command ```head 02_data/file``` (or ```less 02_data/file```)
+vcf files will need to be unzipped wiht the command ```gunzip 02_data/population.can.random.snp.vcf.gz``` .
+To see the beginning of the vcf file it may be useful to use ```less -S 02_data/file```, which cut the right part of the file to fit your window, or 'head -n 25 02_data/file' to look at the first 25 lines
 
 We will work from the 03_day3 folder and try to open our data within their folder (for instance 'head 02_data/file') and ouput in the folder of the analysis for instance (> 03_fst/output)
 
