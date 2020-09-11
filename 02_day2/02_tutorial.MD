@@ -455,10 +455,10 @@ This analysis is more powerful if we keep all SNPs including those in LD so we w
 
 #### step 0: prepare the vcf
 If you have not done this yet, please copy the folder 02_day2 from the share directory to your own repository and open it 
-(cp is used for files and cp -r for folders)
+(cp is used for files and cp -r for folders) the . indicates that it will copy where you are (I guess the root of your home directory
 
 ``` 
-cp -r Share/physalia_adaptation/02_day2 MYDESTINATION
+cp -r Share/physalia_adaptation/02_day2 .
 cd 02_day2 
 ```
 
