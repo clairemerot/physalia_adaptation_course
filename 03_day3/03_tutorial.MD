@@ -409,7 +409,7 @@ python Toolbox/reshaper_baypass.py 02_data/canada.pruned.recode.vcf 02_data/popm
 
 ```
 g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
--outprefix 05_baypass/allsnps.output -nthreads 3
+-outprefix 05_baypass/allsnps.output -nthreads 1
 ```
 We can have a look at the output. the most importnat are the omega matrix, which is covariance between populations and the xtx value which represent a kind of value associated to each SNP. the higher it gets, the more this snps differentiate the populations.
 Please copy those files so that we can look at them in Rstudio on your local computer while the next step will run on the server
@@ -421,12 +421,12 @@ Best practices suggest to first run baypass on the LD-pruned vcf and to extract 
 ```
 #run on pruned snps
 g_baypass -npop 12 -gfile 05_baypass/canada.pruned.baypass \
--outprefix 05_baypass/prunedsnps.output -nthreads 2
+-outprefix 05_baypass/prunedsnps.output -nthreads 1
 
 #controlled run
 g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
--outprefix 05_baypass/allsnps.controlled.output -nthreads 2
+-outprefix 05_baypass/allsnps.controlled.output -nthreads 1
 
 ```
 Please copy the controlled output on your local computer.
@@ -454,12 +454,12 @@ simu.bta <- simulate.baypass(omega.mat=omega, nsnp=500,beta.pi=pi.beta.coef, suf
 You can now quit R, mv the simulated file into the folder baypass and run baypass on the simulated data 
 ```
 mv G.simulates_pods 05_baypass/
-g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods  -outprefix 05_baypass/simulate.output -nthreads 2
+g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods  -outprefix 05_baypass/simulate.output -nthreads 1
 
 #controlled run on simu dataset
 g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
--outprefix 05_baypass/simulate_controlled.output -nthreads 2
+-outprefix 05_baypass/simulate_controlled.output -nthreads 1
 ```
 Please copy the output on the simulated dataset on your local computer.
 
@@ -551,23 +551,23 @@ quit()
 Now we can run baypass with the environment file on both the real dataset and the simulated dataset.
 Here is the example with and without the covariate matrix controlling for a possible underlying structure but depending on your system you may want to control or not, or do both to compare
 ```
-$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
+g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -efile 05_baypass/env.txt  \
--outprefix 05_baypass/simulate_env.output -scalecov -nthreads 3
+-outprefix 05_baypass/simulate_env.output -scalecov -nthreads 1
 
-"$PATH_BP"/sources/g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
+g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -efile 05_baypass/env.txt  \
--outprefix 05_baypass/allsnps_env.output -scalecov -nthreads 2
+-outprefix 05_baypass/allsnps_env.output -scalecov -nthreads 1
 
-$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
+g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -efile 05_baypass/env.txt \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
--outprefix 05_baypass/simulate_env.controlled.output -scalecov -nthreads 3
+-outprefix 05_baypass/simulate_env.controlled.output -scalecov -nthreads 1
 
-"$PATH_BP"/sources/g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
+g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -efile 05_baypass/env.txt \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
--outprefix 05_baypass/allsnps.controlled_env.output -scalecov -nthreads 2
+-outprefix 05_baypass/allsnps.controlled_env.output -scalecov -nthreads 1
 ```
 #### Visualising results on Rstudio on your local computer
 Like we did before we can plot the xtx but we will mostly be interested in the BF value (Bayesian factor of association with an environmental variable)
@@ -630,6 +630,8 @@ RDA takes a matrix of genotypes (0,1,2) with as many rows as samples and as many
 
 We can obtain following the same method as we did for the PCA yesterday. 
 We can also use the geno matrix that we exported earlier from vcfR, and the associated SNP_pos file
+Let's open R in our terminal
+
 ```
 geno<-read.table("02_data/geno_matrix.txt")
 SNP_pos<-read.table("02_data/SNP_pos.txt", header=T)
@@ -673,7 +675,7 @@ RsquareAdj(temp.rda)
 temp.signif.full <- anova.cca(temp.rda, parallel=getOption("mc.cores")) # default is permutation=999
 temp.signif.full
 ```
-so you see that temperature does not explain a large fraction of total variance (0.05%!!) but the model appear significant. It likely means that very few loci covary with temperature but this parameter does not explain a large fraction of genetic variation as a whole. This is expected as most sp will likely be neutral.
+so you see that temperature does not explain a large fraction of total variance (0.1%!!) but the model appear significant. It likely means that very few loci covary with temperature but this parameter does not explain a large fraction of genetic variation as a whole. This is expected as most sp will likely be neutral.
 Yet, formal test allows rejecting the null hypothesis that no linear relationship exists between the SNP data and the environmental predictor.
 
 
@@ -768,7 +770,7 @@ dev.off()
 ```
 ![rda1_triplot_geo](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/rda1_triplot_geo.jpeg)
 
-Only RDA1 describe significant association between genetic variation and latitude. Yet, geography explains only 0.06% of variance in our case!
+Only RDA1 describe significant association between genetic variation and latitude. Yet, geography explains only 0.2% of variance in our case!
 Well, let's try the controlled the rda by geography anyway:
 
 ```
@@ -777,7 +779,7 @@ temp.geo.rda
 RsquareAdj(temp.rda)
 RsquareAdj(temp.geo.rda)
 ```
-So here, we can interpret that temperature explain 0.041% of variance, of which 0.026% is also explained by geography. I guess that in some systems, or with more populations, those numbers would be higher!!
+So here, we can interpret that temperature explain 0.1% of variance, of which 0.08% is also explained by geography. I guess that in some systems, or with more populations, those numbers would be higher!!
 
 #### Advanced options for geographic variables
 Another option is to use dbmem, which generate vectors transforming (spatial) distances to rectangular data that is suitable     for constrained ordination or regression.
@@ -799,7 +801,7 @@ RsquareAdj(geo.rda)
 anova(geo.rda, step=1000, by= "margin")
 ordistep(geo.rda)
 ```
-We now explain more than 0.92% of variance with geographic distance... 
+We now explain more than 1.15% of variance with geographic distance... 
 
 #### Repeat the analysis on phenotype?
 If you are interested in finding SNPs/multiloci haplotypes associated with phenotype, this can also be done with rda.
