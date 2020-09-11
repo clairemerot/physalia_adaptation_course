@@ -214,7 +214,7 @@ Then we give our parameters. We chose to be very stringent removing SNP with a V
 We could also have given a R² threshold with --indep-pairwise $WINDOW $SNP $R2
 
 ```
-plink --vcf 02_data/population.can.random.snp.vcf.gz --make-bed --out 02_data/population.can.random.snp
+plink --vcf 02_data/population.can.random.snp.vcf --make-bed --out 02_data/population.can.random.snp
  
 WINDOW=100
 SNP=100
@@ -243,12 +243,12 @@ It has a super good vignette here: https://htmlpreview.github.io/?https://github
 We will more or less follow it today.
 
 #### Step 0 prepare the data
-Let's first convert our vcf to the outflank format:
+Let's open R in our terminal and convert our vcf to the outflank format:
 ```
 #we use the library vcfR to convert the vcf into the OutFLANK format
 library(OutFLANK)
 library(vcfR)
-lirabry(ggplot2)
+library(ggplot2)
 obj.vcfR <- read.vcfR("02_data/population.can.random.snp.vcf")
 
 #extract useful informations about snp id and position
@@ -404,14 +404,30 @@ python Toolbox/reshaper_baypass.py 02_data/population.can.random.snp.pruned.reco
 #### Step 1: run baypass basic
 
 ```
-PATH_BP="your_path_to_the_source_of_baypass"
-$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass \
+g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass \
 -outprefix 05_baypass/allsnps.output -nthreads 3
 ```
 We can have a look at the output. the most importnat are the omega matrix, which is covariance between populations and the xtx value which represent a kind of value associated to each SNP. the higher it gets, the more this snps differentiate the populations.
 Please copy those files so that we can look at them in Rstudio on your local computer while the next step will run on the server
 
-#### Step 2: Have a threshold for the xtx value
+#### Step 2: run baypass controlled for population structure
+We want again to pinpoint the outlier that differ from the basic structure of the population. This is not a big deal in our example but it may be in other system. 
+Best practices suggest to first run baypass on the LD-pruned vcf and to extract the covariance matrix between population (mat_omega), and then use it as a covariate in the baypass model
+
+```
+#run on pruned snps
+g_baypass -npop 12 -gfile 05_baypass/population.can.random.pruned.baypass \
+-outprefix 05_baypass/prunedsnps.output -nthreads 2
+
+#controlled run
+g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass \
+-omegafile 05_baypass/prunedsnps.output_mat_omega.out \
+-outprefix 05_baypass/allsnps.controlled.output -nthreads 2
+
+```
+Please copy the controlled output on your local computer.
+
+#### Step 3: Have a threshold for the xtx value
 While this runs, we can prepare our subsequent analysis. We need to know above which xtx threhold value we can consider a locus to be an outlier of population differentiation
 To look for that, the authors suggest to simulate a neutral distribution with a small R function, run baypass on the simulated genotypes, and extract the distribution of XtX values. We can then chose a threshold of the 95% quantile, 99% quantile, etc... 
 
@@ -420,7 +436,7 @@ Open R in your terminal and let's simulate genotypes
 args = commandArgs(trailingOnly=TRUE)
 
 #source functions from Gautier file
-source("$PATH_BP/utils/baypass_utils.R")
+source("~/00-softwares/baypass_2.2/utils/baypass_utils.R")
 
 #load omega matrix
 omega = as.matrix(read.table("05_baypass/prunedsnps.output_mat_omega.out"))
@@ -434,30 +450,14 @@ simu.bta <- simulate.baypass(omega.mat=omega, nsnp=2000,beta.pi=pi.beta.coef, su
 You can now quit R, mv the simulated file into the folder baypass and run baypass on the simulated data 
 ```
 mv G.simulates_pods 05_baypass/
-$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods  -outprefix 05_baypass/simulate.output -nthreads 2
-```
-Please copy the output on the simulated dataset on your local computer.
-
-#### Step 3: run baypass controlled for population structure
-We want again to pinpoint the outlier that differ from the basic structure of the population. This is not a big deal in our example but it may be in other system. 
-Best practices suggest to first run baypass on the LD-pruned vcf and to extract the covariance matrix between population (mat_omega), and then use it as a covariate in the baypass model
-
-```
-#run on pruned snps
-$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/population.can.random.pruned.baypass \
--outprefix 05_baypass/prunedsnps.output -nthreads 2
-
-#controlled run
-"$PATH_BP"/sources/g_baypass -npop 12 -gfile 05_baypass/population.can.random.baypass \
--omegafile 05_baypass/prunedsnps.output_mat_omega.out \
--outprefix 05_baypass/allsnps.controlled.output -nthreads 2
+g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods  -outprefix 05_baypass/simulate.output -nthreads 2
 
 #controlled run on simu dataset
-$PATH_BP/sources/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
+g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/simulate_controlled.output -nthreads 2
 ```
-Please copy the controlled output on your local computer.
+Please copy the output on the simulated dataset on your local computer.
 
 #### A note
 For best results, it is recommended to make several independant runs and take the median value for xtx or BF.
