@@ -454,9 +454,16 @@ To get a better sense of what's going on, we will be doing PCA again, but along 
 This analysis is more powerful if we keep all SNPs including those in LD so we will come back to the vcf unfiltered
 
 #### step 0: prepare the vcf
-If you have not done this yet, please copy the folder 02_day2 from the share directory to your own repository and open it ``` cd 02_day2 ```
+If you have not done this yet, please copy the folder 02_day2 from the share directory to your own repository and open it 
+(cp is used for files and cp -r for folders)
+
+``` 
+cp -r Share/physalia_adaptation/02_day2 MYDESTINATION
+cd 02_day2 
+```
 
 First you need to get the unfiltered vcf for the 12 NWA populations. Maybe you know where it is from yesterday, maybe not. If you don't, you can use the version I put for you in the 02_day2/02-data folder.
+
 ```
 cp "the path where it is..."/capelin_NWA.vcf 05_localPCA/
 #or if you don't remember
