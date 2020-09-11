@@ -119,7 +119,7 @@ gplots::heatmap.2(fst.all.mat, trace = 'none',
                   key.xlab='FST')
 ```
 Note that values goes up to FST = 0.02 ! but most of them are very low
-![img_fst_all](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/Fst_heatmap_all_snps.png)
+![img_fst_all](07_img_readme/Fst_heatmap_all_snps.png)
 
 What do you notice? Is it heterogeneous? Do some population look more differentiated than other?
 Why do you think A and J are so different? 
@@ -201,7 +201,7 @@ Yesterday, we saw that a region of chromosome 4 and sex-linked markers on chr 5 
 Let's re-run the steps above on the vcf in which we removed the chr5 and chr4.
 
 Let's look at the pairwise FST matrix and the IBD stats
-![img_fst_all](04_img_readme/Fst_heatmap_no_chr4-5.png)
+![img_fst_all](07_img_readme/Fst_heatmap_no_chr4-5.png)
 
 What do you see now?
 pay attention to the absolute value of FST, to the clustering and IBD (or the absence of)?
