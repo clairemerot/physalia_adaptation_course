@@ -608,10 +608,11 @@ bf_pos<-cbind(SNP_pos, bf_allsnps)
 bf_simu<-read.table("05_baypass/simulate_env.output_summary_betai_reg.out", header=T)
 
 #calculate the threshold from simu (or you cna use BF = 10)
-threshold_fdr0.01 = quantile(xtx_simu$M_XtX,probs=0.99)
+threshold_fdr0.01 = quantile(bf_simu$BF.dB,probs=0.99)
+threshold_fdr0.05 = quantile(bf_simu$BF.dB,probs=0.95)
 
-outliers<-bf_pos[bf_pos$BF.dB>=threshold_fdr0.01,]
-write.table(outliers, "05_baypass/outlier_uncontrolled_fdr0.01.txt", row.names=F, quote=F, sep="\t")
+outliers<-bf_pos[bf_pos$BF.dB>=threshold_fdr0.05,]
+write.table(outliers, "05_baypass/outlier_uncontrolled_fdr0.05.txt", row.names=F, quote=F, sep="\t")
 ```
 
 ### With redundancy analysis (multi-loci)
