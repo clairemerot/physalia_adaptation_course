@@ -612,7 +612,7 @@ threshold_fdr0.01 = quantile(bf_simu$BF.dB,probs=0.99)
 threshold_fdr0.05 = quantile(bf_simu$BF.dB,probs=0.95)
 
 outliers<-bf_pos[bf_pos$BF.dB>=threshold_fdr0.05,]
-write.table(outliers, "05_baypass/outlier_uncontrolled_fdr0.05.txt", row.names=F, quote=F, sep="\t")
+write.table(outliers, "05_baypass/outlier_temp_bp.txt", row.names=F, quote=F, sep="\t")
 ```
 
 ### With redundancy analysis (multi-loci)
@@ -715,7 +715,7 @@ hist(load.temp.rda[,1], main="Loadings on RDA1")
 dev.off()
 
 #chose the sd limit
-z=3
+z=2
 lim_min<- mean(load.temp.rda[,1]) - ( z * sd(load.temp.rda[,1]) )
 lim_max<- mean(load.temp.rda[,1]) + ( z * sd(load.temp.rda[,1]) )
 
@@ -724,7 +724,7 @@ outlier_temp <- load.temp.rda[load.temp.rda[,1] >=lim_max | load.temp.rda[,1] <=
 outlier_temp
 
 #export them
-write.table(outlier_temp, "06_rda/outlier_temp.txt")
+write.table(outlier_temp, "06_rda/outlier_temp_rda.txt")
 ```
 ![rda1_loading_hist](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/rda1_loading_hist.jpeg)
 
