@@ -710,22 +710,27 @@ Here we chose a very low cut-off of 2, which will likely include false-positive 
 ```
 load.temp.rda <- scores(temp.rda, choices=c(1), display="species") 
 
+#load info about snps
+SNP_pos<-read.table("02_data/SNP_pos.txt", header=T)
+load.temp.rda.pos<-cbind(SNP_pos,load.temp.rda )
+head(load.temp.rda.pos)
+
 #plot distribution
 jpeg("06_rda/rda1_loading_hist.jpeg")
-hist(load.temp.rda[,1], main="Loadings on RDA1")
+hist(load.temp.rda.pos$RDA1, main="Loadings on RDA1")
 dev.off()
 
 #chose the sd limit
 z=2
-lim_min<- mean(load.temp.rda[,1]) - ( z * sd(load.temp.rda[,1]) )
-lim_max<- mean(load.temp.rda[,1]) + ( z * sd(load.temp.rda[,1]) )
+lim_min<- mean(load.temp.rda.pos$RDA1) - ( z * sd(load.temp.rda.pos$RDA1) )
+lim_max<- mean(load.temp.rda.pos$RDA1) + ( z * sd(load.temp.rda.pos$RDA1) )
 
 #outliers
-outlier_temp <- load.temp.rda[load.temp.rda[,1] >=lim_max | load.temp.rda[,1] <= lim_min ,]
+outlier_temp <- load.temp.rda.pos[load.temp.rda.pos$RDA1 >=lim_max | load.temp.rda.pos$RDA1 <= lim_min ,]
 outlier_temp
 
 #export them
-write.table(outlier_temp, "06_rda/outlier_temp_rda.txt")
+write.table(outlier_temp, "06_rda/outlier_temp_rda.txt", row.names=F, quote=F, sep="\t")
 ```
 ![rda1_loading_hist](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/rda1_loading_hist.jpeg)
 
@@ -733,9 +738,6 @@ We may also visualize the rda loadings along the genome
 
 ```
 library(ggplot2)
-#load info about snps
-SNP_pos<-read.table("02_data/SNP_pos.txt", header=T)
-load.temp.rda.pos<-cbind(load.temp.rda, SNP_pos)
 
 #plot
 jpeg("06_rda/loading_temp_manhattanplot.jpeg")
@@ -745,7 +747,7 @@ ggplot(load.temp.rda.pos, aes(x=position, y=RDA1, colour=chromosome))+
   facet_grid(cols = vars(chromosome), scales = "free_x", space="free_x")+
   geom_hline(aes(yintercept =lim_min), linetype="dotted", size=1,  show.legend = FALSE)+
   geom_hline(aes(yintercept =lim_max), linetype="dotted", size=1, show.legend = FALSE)
-  dev.off()
+ dev.off()
 ```
 
 ![loading_temp_manhattanplot](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/loading_temp_manhattanplot.jpeg)
