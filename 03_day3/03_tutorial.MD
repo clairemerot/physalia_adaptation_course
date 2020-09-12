@@ -696,7 +696,8 @@ dev.off()
 
 RDA2 is meaningless and samples are dispersed along RDA1 which represent temperature.
 
-We can now use the loadings of the SNPs in  the ordination space to determine which SNPs are candidates for local adaptation. The SNP loadings are stored as species in the RDA object. We’ll extract the SNP loadings from rda1 (choices is for which RDA axis we want) and extract the ones that are in the tail of this distribution. We uses a cut-off of 3 * sd (standard deviation) but you can choose to be more stringent with 3.5 (fdr about 0.0005) or more inclusive with 2.5 (fdr=0.01) depending on your objectives.
+We can now use the loadings of the SNPs in  the ordination space to determine which SNPs are candidates for local adaptation. The SNP loadings are stored as species in the RDA object. We’ll extract the SNP loadings from rda1 (choices is for which RDA axis we want) and extract the ones that are in the tail of this distribution. The most frequently used cut-off is 3 * sd (standard deviation) but you can choose to be more stringent or more inclusive depending on your objectives. 
+Here we chose a very low cut-off of 2, which will likely include false-positive but we want to have enough outliers to be able to perform gene ontology enrichment tomorrow and to look at the overlap with baypass
 - 2 (p=0.05)
 - 2.25 (p=0.025)
 - 2.5 (p=0.01)
