@@ -237,10 +237,9 @@ We will keep a list of the most outliers SNPs differentiating the haplotypes. Be
 ```
 AA_AB<-read.table("04_divergence/AA_AB.weir.fst", header=T)
 head(AA_AB)
-outliers_Chr4<-AA_AB[AA_AB$WEIR_AND_COCKERHAM_FST>=0.1,]
-write.table(outliers_Chr4, "04_divergence/outliers_Chr4.txt", row.names=F, quote=F, sep="\t")
+outlier_Chr4<-AA_AB[AA_AB$WEIR_AND_COCKERHAM_FST>=0.1,]
+write.table(outlier_Chr4, "04_divergence/outlier_Chr4.txt", row.names=F, quote=F, sep="\t")
 ```
-
 
 ## Studying heterozygosity
 
@@ -340,3 +339,5 @@ It is slightly more readable.
 
 In all cases, we nevertheless note the expected higher observed heterozygosity in AB around the middle of Chr4. 
 On Chr5, there is a region of high heterozygosity in all three groups, which may be driven by sex.
+
+If you are curious and if you have time, you may want to try exploring the Chr5 in the same way. Note that you won't need the first step to find clusters since we already have the sex information.
