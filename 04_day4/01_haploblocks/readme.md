@@ -232,6 +232,15 @@ ggplot(AA_BB.win, aes(x=BIN_MID/1000000, y=MEAN_FST, col=CHROM))+
   facet_grid(cols = vars(CHROM), scales = "free_x", space="free_x")+
   labs(  x = "position (in MB)")
 ```
+We will keep a list of the most outliers SNPs differentiating the haplotypes. Because BB is a small group, differentiation AA vs BB may highlight false outliers. We will thus rather extract the SNPs with the highest Fst between AA and AB.
+
+```
+AA_AB<-read.table("04_divergence/AA_AB.weir.fst", header=T)
+head(AA_AB)
+outliers_Chr4<-AA_AB[AA_AB$WEIR_AND_COCKERHAM_FST>=0.1,]
+write.table(outliers_Chr4, "04_divergence/outliers_Chr4.txt", row.names=F, quote=F, sep="\t")
+```
+
 
 ## Studying heterozygosity
 
