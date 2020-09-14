@@ -300,6 +300,24 @@ NOte that x refer to your matrix of read count normalized.
 
 Full code including the RDA step is available in the folder 00-scripts/CNVs_RDA_corrections.R
 
+Ok, now just before going to the step 8, we have to write the list of our CNV loci informing if either they are outliers (i.e. associated with environment variable in our case) or not. We will use this list for the day5,
+Do do this, we will create a new dataframe to list all CNV loci and then add three others columns [CHR, POS, and TRUE/FALSE info]
+
+```
+#create a new list
+list_of_CNVs_loci <- data.frame(CNV_locus=colnames(CNVs_no_sex_chr.imp.mat)) %>% #create an itinial column of CNVs ids. here we use the colnames from the CNVs matrix of read depth.
+  mutate(., CHR=gsub('_.*', '',CNV_locus), #create a new column with only the CHR info (here gsub replace all strings from the _ by blank)
+            POS=gsub('.*_','',CNV_locus), #create a new column with only the POSITION info (here gsub replace all strings before the _ by blank)
+            outlier = ifelse(CNV_locus %in% list_of_CNV_candidates,TRUE,FALSE)) #here we create a new column to get oultiers info for each CNVs.
+                                                                                #Here the question is, if you are in my outliers list ---> TRUE, else = FALSE.
+#let's see our list
+head(list_of_CNVs_loci)
+
+#Write the list in your working folder
+write.table(list_of CNVs_loci, "list_of_CNVs_loci.txt",
+              col.names=TRUE, row.names=FALSE, sep="\t", quote=FALSE)
+```
+
 ### Step 8: Explore adaptive population structure lead bu outliers CNVs loci.
 
 Ultimately, we will explore a putative pattern of adaptive population structure related with outliers CNV loci associated with the temperature through a PCA.
@@ -384,7 +402,7 @@ ggsave("PCA_biplot_oultiers_CNVs.png", width = 8,height = 6)
 **Well, that was not so hard ? no ?**
 
 **So to recap the main steps of this tutorial about CNVs exploration for environmental association.**
- * **Use a lax filtered vcf file (the higher the number SNPs, the better CNV detection is)**
+ * **Use a lax filtered vcf file (the higher the number SNPs and samples, the better CNV detection is)**
  * **Each dataset is unique and the characterization of singletons/duplicated require settings adjustement for each datasets**
  * **Use the read count info embeded in the vcf format (vcftools --geno-depth)**
  * **Normalize the read count data in R with edgeR**
