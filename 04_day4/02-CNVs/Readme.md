@@ -33,7 +33,8 @@ Ok, this will generate a filtered vcf file in your own user repository with the 
 To explore locus duplication and then identify putative CNVs, we based our analyses on the previous work by [McKinney, Waples, et al. (2017)](https://onlinelibrary.wiley.com/doi/abs/10.1111/1755-0998.12613). Using population genetic simulations and empirical data, McKinney, Waples, et al. (2017) demonstrated that a set of simple summary statistics (e.g. the proportion of heterozygous and read ratio deviation of alleles) could be used to confidently discriminate SNPs exhibiting a duplication pattern without the need for a reference genome. Originally developed to deal with specific issues on whole-genome duplications and mixed ploidy problems in salmonids, McKinney, Waples, et al. (2017) method has been used to filter SNPs and to avoid miscalled genotypes, but it can also inform on CNVs.
 In our recent work ([Dorant et al., 2020](https://onlinelibrary.wiley.com/doi/abs/10.1111/mec.15565)), we complemented the initial work of McKinney (2017) to explore SNP “anomalies” using on a suit of four parameters to discriminate high confidence SNPs (hereafter singleton SNPs) from duplicated SNPs: (a) median of allele ratio in heterozygotes (MedRatio), (b) proportion of heterozygotes (PropHet), (c) proportion of rare homozygotes (PropHomRare) and (d) inbreeding coefficient (FIS).
 
-**Theory:** figure modified from McKinnet et al. (2017)
+**Theory:** figure modified from McKinney et al. (2017)
+
 ![McKinney](05-readme_img/McKinney_theoretical_pattern.png)
 
 First of all, we will use the following python script ``00-scripts/02_extract_snp_duplication_info.py`` to extract some statistics from the filtered vcf file.
@@ -269,7 +270,7 @@ In such, we will remove all loci related to the sex chromosome (Chr5) in our CNV
 ```
 CNVs_no_sex_chr.mat <- CNVs.mat[,!grepl('Chr5_', colnames(CNVs.mat))]
 ```
-Next, as for PCA, RDA does not accept missing data. So, we used the same way that in day 2 to impute the missing data (i.e. here using the average normalized read count overall samples for a given CNV locus).
+Next, as for PCA, RDA does not accept missing data. So, we will use the same way that in day2 to impute the missing data (i.e. here using the average normalized read count overall samples for a given CNV locus).
 ```
 #Impute missing values with the average of norm. read count overall
 CNVs_no_sex_chr.imp.mat <- apply(CNVs_no_sex_chr.mat,2,function(x) replace(x, is.na(x), as.numeric(names(which.max(table(x))))))
@@ -287,15 +288,17 @@ Well, we are ready to run the RDA!
 
 **So your mission, should you choose to accept it, is to perform the RDA by your own**
 
-Full code including the RDA step is available in the folder 00-scripts/CNVs_RDA_corrections.R
-
 **HELP: required R function to find RDA outliers**
->outliers <- function(x,z){
+```
+outliers <- function(x,z){
   lims <- mean(x) + c(-1, 1) * z * sd(x)     # find loadings +/-z sd from mean loading
   x[x < lims[1] | x > lims[2]]               # locus names in these tails
 }
+```
+**For the RDA outliers identification, we will choose a permissive threshold. Please set the detection limit to z=2.25 standard deviations (i.e. P < 0.012)**
+NOte that x refer to your matrix of read count normalized.
 
-**For the RDA outliers identification, we will choose a permissive threshold. Please set the detection limit to 2.5 standard deviations (i.e.P < 0.012)**
+Full code including the RDA step is available in the folder 00-scripts/CNVs_RDA_corrections.R
 
 ### Step 8: Explore adaptive population structure lead bu outliers CNVs loci.
 
