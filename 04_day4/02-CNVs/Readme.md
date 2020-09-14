@@ -301,7 +301,7 @@ NOte that x refer to your matrix of read count normalized.
 Full code including the RDA step is available in the folder 00-scripts/CNVs_RDA_corrections.R
 
 Ok, now just before going to the step 8, we have to write the list of our CNV loci informing if either they are outliers (i.e. associated with environment variable in our case) or not. We will use this list for the day5,
-Do do this, we will create a new dataframe to list all CNV loci and then add three others columns [CHR, POS, and TRUE/FALSE info]
+To do this, we will create a new dataframe to list all CNV loci and then add three others columns [CHR, POS, and TRUE/FALSE info]
 
 ```
 #create a new list

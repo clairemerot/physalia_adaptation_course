@@ -98,14 +98,21 @@ for (i in 1:length(cand$snp)) {
 cand <- cbind.data.frame(cand,foo)
 head(cand)
 
+#define list object of candidate CNVs loci
+list_of_CNV_candidates <- cand$locus
 ###### end RDA analysis
+
+
+list_of_CNVs_loci <- data.frame(CNV_locus=colnames(CNVs_no_sex_chr.imp.mat)) %>%
+  mutate(., CHR=gsub('_.*', '',CNV_locus),
+            POS=gsub('.*_','',CNV_locus),
+            outlier = ifelse(CNV_locus %in% list_of_CNV_candidates,TRUE,FALSE))
+
+head(list_of_CNVs_loci)
 
 # |---------|
 # | Step 4  | ================> Check adaptive structure lead by outliers loci
 # |---------|
-
-#define list object of candidate CNVs loci
-list_of_CNV_candidates <- cand$locus
 
 #filter the initial CNV matrix
 CNVs_no_sex_chr.outliers.mat.imp <- CNVs_no_sex_chr.imp.mat[,colnames(CNVs_no_sex_chr.imp.mat) %in% list_of_CNV_candidates]
