@@ -1,7 +1,7 @@
 # Day2: Population structure and differentiation
 ## Step 1: Calculating F-statistics
 ### With Stacks
-If you had any problems yesterday, or are not sure you used the correct settings, you can copy in your folder the files that I generated for each of three datasets. If you have generated some and want to avois confusion with overwriting existing files you can remove the folders you have produced with `rm -fr folder_name```
+If you had any problems yesterday, or are not sure you used the correct settings, you can copy in your folder the files that I generated for each of three datasets. If you have generated some and want to avois confusion with overwriting existing files you can remove the folders you have produced with ```rm -fr folder_name```
 ```
 cd stacks
 cp -r ~/Share/populations_* ./
