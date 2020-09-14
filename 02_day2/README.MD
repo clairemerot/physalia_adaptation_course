@@ -1,6 +1,12 @@
 # Day2: Population structure and differentiation
 ## Step 1: Calculating F-statistics
 ### With Stacks
+If you had any problems yesterday, or are not sure you used the correct settings, you can copy in your folder the files that I generated for each of three datasets. If you have generated some and want to avois confusion with overwriting existing files you can remove the folders you have produced with `rm -fr folder_name```
+```
+cd stacks
+cp -r ~/Share/populations_* ./
+```
+
 As you can see if you ```cd``` in one of the folders storing the output from your ```populations``` runs, STACKS produces many output files. The manual provides a thorough explanation of all the different file formats. Go to <https://catchenlab.life.illinois.edu/stacks/manual/> and scroll down to section 6.6. For each output type, open the corresponding file on the server, and take your time to explore them.
 
 One statistics we are interested in F<sub>ST</sub>, a relative measure of differentiation between populations. Let's look at one of these files in more detail
