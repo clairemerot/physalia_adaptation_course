@@ -17,7 +17,7 @@ ssh -i "~/anna.pem" anna@54.245.175.86
 ```
 Note that you will need to change the log in credentials shown here (i.e. the username and keyfile name) with your own. Also be aware that the cluster IP address will change everyday. We will update you on this each day. You might be prompted to accept an RSA key - if so, just type yes and you will log in to the cluster!
 
-###Downloading and uploading files
+### Downloading and uploading files
 Occassionally, we will need to transfer files between the cluster and our local machines. To do this, we can use a command utility called ```scp```, which stans for secure copy. It works in a similar way to ssh. Let’s try making a dummy file in our local home directory and then uploading it to our home directory on the cluster.
 ```
 # make a file
