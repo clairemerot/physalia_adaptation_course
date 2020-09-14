@@ -69,9 +69,13 @@ wc -l file.fastq
 and divide by 4.
 Or 
 ```
-zcat -f IND.fastq.gz | sed -n '2~4p' | wc -l
+zcat -f A_01.fq | sed -n '2~4p' | wc -l
 ```
-directly from compressed fastq files.
+directly from compressed fastq files, or 
+```
+cat A_01.fq | sed -n '2~4p' | wc -l
+```
+from decompressed fastq files.
 
 When we have paired reads, they are generally stored in two separate files and are paired by position: the first read in ```read1.fastq``` is paired with the first read in ```read2.fastq```, the second read in ```read1.fastq``` is paired with the second read in ```read2.fastq```, and so on. One way to check if your files are intact is to ensure that the two read files have the same amount of lines/reads.
 
