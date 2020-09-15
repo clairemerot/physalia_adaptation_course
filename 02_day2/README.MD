@@ -136,6 +136,12 @@ paste twocolumns twocolumns populations.structure_nohead | sed 's/\t0/\t-9/g' > 
 conda activate faststructure ### we need to activate a conda environment with a different version of Python where faststructure is installed
 structure.py -K 2 --input=populations.faststructure --output=capelin.all --format=str
 ```
+If you have problems activating faststructure please follow this procedure to fix it.
+1. leave the server and reconnect
+2. tap ```conda init bash```
+3. tap ```conda activate faststructure```
+
+
 Now you can modify the ```-K``` parameters and test different different numbers of clusters.
 With this script you can test what number of populations/cluster best describes your dataset.
 ```
