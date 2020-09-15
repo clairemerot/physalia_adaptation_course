@@ -55,9 +55,9 @@ Then, we can run the Rscript `StAMPP-fst.R` to perform pairwise FST for each dat
 * Number of CPU allowed (default CPU=1)
 
 ```
-Rscript Toolbox/StAMPP-fst.R 03_fst/canada.StAMPP 03_fst/canada 3
+Rscript Toolbox/StAMPP-fst.R 03_fst/canada.StAMPP 03_fst/canada 1
 ```
-Allowing 3 CPU, each FST calculation should take around 5-6 minutes
+Allowing 1 CPU, each FST calculation should take around 5-6 minutes
 
 Once FST calculations are done, you will see that four FST output files have been generated per dataset.
 * prefix_fst_bootstrapes.txt
