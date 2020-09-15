@@ -536,10 +536,10 @@ write.table(pca_matrix_noNA, "pca_matrix.txt", sep="\t", row.names=FALSE, quote=
 Back to work, I have put for you the pca_matrix.txt in the folder 05_localPCA. please load it into R, and split it into the window information and the PCs. Let's open R in the terminal
 ```
 library(lostruct)
-pca_matrix_noNA<-read.table("pca_matrix.txt", sep="\t", header=T, stringAsFActor=F)
+pca_matrix_noNA<-read.table("pca_matrix.txt", sep="\t", header=T, stringsAsFactors=FALSE)
 head(pca_matrix_noNA)
-window_pos_noNA<-pca_matrix_noNA[,1]
-pcs_noNA<-pca_matrix[,2:dim(pca_matrix_noNA)[2])
+window_pos_noNA<-pca_matrix_noNA[,1:3]
+pcs_noNA<-as.matrix(pca_matrix_noNA[,4:dim(pca_matrix_noNA)[2]])
 ```
 
 Now we can go back to the main pipeline:
