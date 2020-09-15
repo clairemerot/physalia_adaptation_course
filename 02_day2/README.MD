@@ -459,7 +459,7 @@ To get a better sense of what's going on, we will be doing PCA again, but along 
 
 This analysis is more powerful if we keep all SNPs including those in LD so we will come back to the vcf unfiltered
 
-#### step 0: prepare the vcf
+#### step 0: prepare the vcf (in the terminal)
 If you have not done this yet, please copy the folder 02_day2 from the share directory to your own repository and open it 
 (cp is used for files and cp -r for folders) the . indicates that it will copy where you are (I guess the root of your home directory
 ``` 
@@ -491,7 +491,7 @@ To check whether this has worked and produced files, you can do a quick ```ls -l
 
 Now we are good to work in R with the library. This requires some computational power and memory, so we suggest to make the initial steps in R command lines on the server and then copy the output files to visualise on your local Rstudio
 
-#### Step 1: run lostruct
+#### Step 1: run lostruct (in the terminal)
 To start R in command line, just type "R". Now you have a R console and we wil run the lostruct procedure
 
 ```
@@ -556,7 +556,7 @@ write.table(mds_matrix, "mds_matrix.txt", sep="\t", row.names=FALSE, quote=FALSE
 ```
 Since this is a little long , we will let it run and explore on your local computer with Rstudio some of the local pca. Let's download pca_matrix.txt locally and we will play in R studio to look at some of those local PCA
 
-#### Step 2 Visualising the local PCA outputs
+#### Step 2 Visualising the local PCA outputs (on your computer in Rstudio)
 Back on our local computer in R studio, we will look at all those local PCA.
 First let's go in R, set the working directory, load useful libraries (ggplot2) and the matrix of pca
 
@@ -674,7 +674,7 @@ option2 <- argv[2]
 ```
 
 ### Repeat analyses for geographic structure on different genomic regions/chromosomes
-#### Making a vcf without Chr 4 and Chr5
+#### Making a vcf without Chr 4 and Chr5 (on the server, via the terminal)
 
 We can use the filtering options of vcftools to exclude the chromosomes 4 and 5:
 
