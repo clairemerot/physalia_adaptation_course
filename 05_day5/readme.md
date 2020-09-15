@@ -173,7 +173,7 @@ For information about gene ontology codes, you may want to check this website ht
 For information about proteins, you can look at https://www.uniprot.org/
 
 ## Goseq Gene ontology enrichment analysis
-#### [WARNING]#### Gene enrichment analysis are mostly designed for RNAseq analyses in which all genes are analysed and of much better use when you have whole-genome data. Here on RAD-seq data, in which we subsample the genome, and with so few outliers, we should not make this kind of analysis, or at least not overinterpret it. We decided to include it in the tutorial for teaching purpose since most of you will be working with whole genome data but please keep in mind this warning!
+#### WARNING #### Gene enrichment analysis are mostly designed for RNAseq analyses in which all genes are analysed and of much better use when you have whole-genome data. Here on RAD-seq data, in which we subsample the genome, and with so few outliers, we should not make this kind of analysis, or at least not overinterpret it. We decided to include it in the tutorial for teaching purpose since most of you will be working with whole genome data but please keep in mind this warning!
 
 Note: This script was built with the heolp or Dr. E. Berdan
 
@@ -222,24 +222,36 @@ head(go_ready)
 ```
 
 #### Step 2: Enrichment test
-
+First we need to know which genes were in our pool of analysis, in other words, which genes are nearby a SNP covered by a RAD loci. This will be a subset of all the genes presents in the transcriptome/genome since we did a reduced-representation sequencing. Note that for whole genome you may be in the same situation if because of coverage, quality or whatever reason we have genes not covered by SNPs (after filtration)
 
 ```
-#what are the transcript covered by our dataset?
+#upload transcript intersecting with snps
 all_transcripts<-read.table("05_bed/all_snps.transcript", header=F)
 colnames(all_transcripts)[1]<-"TranscriptName"
-dim(all_transcripts)
+dim(all_transcripts) #how many?
 head(all_transcripts)
 ```
+
+Now we want to add the information about the size of the gene, as a way to correct for bias that one is more likely to fall inside a long gene than a short one .
+We will use the left_join command from dplyr library which is super handy. It will match by transcript name and add the rest of the table, matching rows (magi function to remmebmber!)
+
 ```
+library(dplyr)
 #add size info
 all_transcripts<-left_join(all_transcripts,transcript_info[,c(1,3)])
 dim(all_transcripts)
+head(all_transcripts)
+```
+Now a problem is that some transcripts are listed twice, it could be that the same gene matches at several places in the genome, that we have two snps in the same gene, etc. So we will use a finction to remove duplicated rows. (magic function of dplyr again!)
+```
 #make unique
 all_transcripts_unique<- all_transcripts %>% distinct(TranscriptName,.keep_all = TRUE)
-dim(all_transcripts_unique)
+dim(all_transcripts_unique) # see the matrix has reduced...
+#and we need to name the rows b transcript names for goseq...
 row.names(all_transcripts_unique)<-all_transcripts_unique$TranscriptName
 head(all_transcripts_unique)
+```
+Now let's open one of our outlier list and format it. We will start with the outliers from the associations with temperature as found by the rda
 
 ```
 #transcripts in outliers
@@ -248,28 +260,38 @@ colnames(outliers_transcripts_temp_rda)<-"TranscriptName"
 head(outliers_transcripts_temp_rda)
 dim(outliers_transcripts_temp_rda)
 ```
+We will now add a column to the matrix with all the genes indicating whether this gene is found or not inside the outliers list. this will be a 0/1 vector
 ```
 all_transcripts_unique$outliers_temp_rda<- as.numeric(all_transcripts_unique$TranscriptName %in% outliers_transcripts_temp_rda$TranscriptName)
 head(all_transcripts_unique)
 ```
+
+Now we run goseq function (nullp) to prepare the data and integrate length bias. It requires vectors so here we go transforming data:
+
 ```
 measured_genes = as.vector(all_transcripts_unique$TranscriptName)
 outliers_genes = as.vector(all_transcripts_unique$outliers_temp_rda)
 length = as.vector(all_transcripts_unique$length)
-```
-```
 pwf_outliers = nullp(outliers_genes, bias.data=length)
 row.names(pwf_outliers)<-row.names(all_transcripts_unique)
 head(pwf_outliers)
 ```
+Yeah! we have formatted all the files so now, let's test enrichment using our database (transcript/GO) named "go_ready" and the prepared list of genes with 0/1 info for our outliers from temperature association with rda 
 ```
 enrich_outliers = goseq(pwf_outliers,gene2cat=go_ready, use_genes_without_cat=TRUE)
+head(enrich_outliers)
+```
+We will now correct for multiple testing with Benjamini & Hochberg correction
+```
 enrich_outliers$over_represented_padjust<-p.adjust(enrich_outliers$over_represented_pvalue,method="BH")
 head(enrich_outliers)
 ```
+all go terms are presented in this matrix. We may want to see only the the significant enrichments
 ```
 enrich_outliers[which(enrich_outliers$over_represented_padjust<0.10),]
 ```
+What do you think? Sometimes it may be significan tbut when one has low numbers (1 gene out of 4), is this really interpretable? 
+Anyhow, you know how to do it!
 
 
 
