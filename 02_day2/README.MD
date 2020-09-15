@@ -467,7 +467,12 @@ cp -r Share/physalia_adaptation/02_day2 .
 cd 02_day2/05_localPCA
 ```
 We will do all the subanalysis "local PCA" within this folder
-First you need to process the unfiltered vcf for the 12 NWA populations. Maybe you know where it is from yesterday, maybe not. Since it is a big file we suggest that you use the version that I put for you in Share/ressources.
+First you need to process the unfiltered vcf for the 12 NWA populations.We will tend to use here the vcf before selecting one random SNP per loci (i. e. a vcf with all SNPs even if they are linked) because we need to be as dense as possible and we are looking for LD.
+
+####[EDIT JUMP]####
+We will jump over the preparation of the file because we did not manage to make R communicate with bcftools on the AWS for a mysterious reason. It works very well on our university cluster though... So keep in mind those preparative steps if you want to re-do the analysis on your dataset and for now, please read through it and start applying the tutorial only at the end of the jump.
+
+I put a version of the full vcf in Share/ressources.
 We will use several programms to convert the vcf into a bcf, sort it and index it.
 The package lostruct can also take a vcf but it is heavy to load the whole file. Instead they made function that is able to cut the vcf window by window to avoid overloading the memory (but this requires a sorted, indexed bcf)
 ```
@@ -526,7 +531,20 @@ head (pca_matrix_noNA[,1:10])
 #save the file
 write.table(pca_matrix_noNA, "pca_matrix.txt", sep="\t", row.names=FALSE, quote=FALSE)
 ```
-Now the lostruct procedure proposes to compute pairwise distances between those windows and visualise it with a MDS (multidimensional scaling). Our goal is to identify groups of windows which display similar PCA pattern.This is done with the following functions (we uses 2 PC per window as above, and will look at the 1st 10 axes of the MDS)
+####[end of jump]#### Retrieve the file I did for you:
+
+Back to work, I have put for you the pca_matrix.txt in the folder 05_localPCA. please load it into R, and split it into the window information and the PCs. Let's open R in the terminal
+```
+library(lostruct)
+pca_matrix_noNA<-read.table("pca_matrix.txt", sep="\t", header=T, stringAsFActor=F)
+head(pca_matrix_noNA)
+window_pos_noNA<-pca_matrix_noNA[,1]
+pcs_noNA<-pca_matrix[,2:dim(pca_matrix_noNA)[2])
+```
+
+Now we can go back to the main pipeline:
+
+The lostruct procedure proposes to compute pairwise distances between those windows and visualise it with a MDS (multidimensional scaling). Our goal is to identify groups of windows which display similar PCA pattern.This is done with the following functions (we uses 2 PC per window as above, and will look at the 1st 10 axes of the MDS)
 ```
 pcdist <- pc_dist(pcs_noNA,npc=2)
 mds_axe<-cmdscale(pcdist, k=10)
