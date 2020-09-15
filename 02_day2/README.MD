@@ -209,7 +209,7 @@ geno.012_2lin.012.indv <- read.table('02-data/population.2lin.rand.snp.012.indv'
 Set rownames and colnames to the geno matrix
 dimnames(geno.012_2lin.012) <- list(geno.012_2lin.012.indv$V1, geno.012_2lin.012.pos$locus)
 #check the geno matrix
-geno.012_2lin[1:6,1:6]
+geno.012_2lin.012[1:6,1:6]
 ```
 ```
 Chr1_4669 Chr1_37123 Chr1_53559 Chr1_64218 Chr1_73377 Chr1_76193
