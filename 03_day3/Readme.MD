@@ -1,12 +1,14 @@
 # Day3: Detecting putatively adaptive loci
 Today, we will restrain our analysis on the Canadian 12 populations which belong to the same lineage and for which we have environmental data.
 
-To start, please copy the folder Day 3 into your home directory.
+To start, please copy the folder Day 3 into your home directory adn open it with cd
 ```
 cp -r Share/physalia_adaptation/03_day3 .
 cd 03_day3 
 ```
-We have put inside the folder 02_data your two vcf from yesterday:
+Please remmember we will work from this directory the whole day. When copying on your local computer please copy the whole day3 folder and all its subarchitecture and try to respect that architecture, that will be easier to find your files. 
+
+We have put inside the subfolder 02_data your two vcf from yesterday:
 - the vcf of the 12 populations filtered at 1 SNP per locus
 - the vcf of the 12 populations filtered at 1 SNP per locus without chr 5 (sex linked) and without the putative rearranged regions on chr4
 - an info file including sex, as well as population, latitude, longitude and temperature for the resticted dataset of 240 samples
@@ -67,13 +69,14 @@ Once FST calculations are done, you will see that four FST output files have bee
 
 You can explore each of one with the cmd line ``less -S file.txt``. However, today, we only use the FST matrix.
 
-So, now you can export the pairwise FST matrix (file suffix ``_fst_matrix.txt``) on your local computer to make a few visualisations in R
-Please also export the info files about populations too
+So, now you can export the wole 03_day3 folder to your local computer. 
+Inside you will have the pairwise FST matrix (file suffix ``_fst_matrix.txt``) in the subfolder 03_fst and the info files about populations in the subfodler 02_data
 * 02_data/info_pop_geo_eco.txt
 * 02_data/info_samples_canada.txt
 
 **[On your local computer]**
-We are now in Rstudio on your computer.
+We are now in Rstudio on your computer. Please set you working directory as "03_day3"
+
 We keep it simple and do a simple numeric matrix but you can imagine more fancy ways, with heatmaps or so.
 
 First, load the required libraries
@@ -202,7 +205,7 @@ It seems that the field sampling has not been very good at balancing sex-ratio b
 
 ### Getting rid of LD spurious effects?
 Yesterday, we saw that a region of chromosome 4 and sex-linked markers on chr 5 were overwhelming the structure. Will that influence our pairwise estimates? Possibly
-Let's re-run the steps above on the vcf in which we removed the chr5 and chr4.
+Let's re-run the steps above on the vcf in which we removed the chr5 and chr4 (skip that if you are late).
 
 Let's look at the pairwise FST matrix and the IBD stats
 ![img_fst_all](07_img_readme/Fst_heatmap_no_chr4-5.png)
@@ -233,7 +236,8 @@ You can have a look at the files 02_data/population.can.random.snp.prune.in and 
 ```
 vcftools --vcf 02_data/canada.vcf --exclude 02_data/canada.prune.out --recode --out 02_data/canada.pruned
 ```
-If you have finished early, you can play at doing the pairwise FST/IBD or the population structure analysis of yesterday on the pruned dataset to check whether this removed the structure linked to sex or Chr4 rearrangement...
+
+If you have finished early, you can play at doing the pairwise FST/IBD (step1) or the population structure analysis of yesterday on the pruned dataset to check whether this removed the structure linked to sex or Chr4 rearrangement...
 
 
 ## 3B Investigate outliers of differentiation
