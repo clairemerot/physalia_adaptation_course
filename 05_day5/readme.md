@@ -19,50 +19,46 @@ I also put here the list of all SNPs present in the vcf. you can look at each fi
 
 ## Step 1 SNPeff : annotating our snps 
 
-### Do not run
 SNPeff is a program that uses the gff file and the position of each SNP to annotate the vcf.
-If you work on a model species which already has a database, you are lucky! If not, you need to build a database. As it is a bit long, and takes a lot of space on the server, I have done it for you.
+If you work on a model species which already has a database, you are lucky! If not, you need to build a database. 
 
-#### Step 1: prepare the database
-First we need to add a line into the config file, for this we will use the editor nano which is easy-to-use
+As it is a bit long, and takes space on the server, I have done it for you. It was not very straightforward, Iso I thought I will keep track of how I did and put it for you to read the next step (but do not try to run it please)
 
-```
-#go inside the snpEff folder
-cd snpEff 
-#edit 
-nano snpEff.config
-```
-You should see a file with many lines explaining databases etc...
-just add a new line and write
-```
-#new genome
-genome_mallotus_dummy.genome : capelin
-```
-To exit nano make, ctrl-X and "yes"
+#### Prepare the database [DO NOT RUN]
+First I have downloaded snpEff, unzip it and open it.
+Then I have added a line into the config file, for this I usually use the editor nano which is easy-to-use.
+You may see 
+"#new genome
+genome_mallotus_dummy.genome : capelin"
 
-Now we will put the right files at the right place.
+if you do 
 ```
-cp ~Share/ressources/genome_mallotus_dummy.gff data/genome_mallotus_dummy/genes.gff
-cp ~Share/ressources/genome_mallotus_dummy.fasta data/genomes/genome_mallotus_dummy.fa
-cp ~Share/ressources/genome_mallotus_dummy.fasta data/genomes/genome_mallotus_dummy.genome
+less ~/Share/ressources/snpEff/snpEff.config
+```
+I putted the transcriptome called "genes.gff" into a data folder. and the genome as a fasta (.fa and .genome) in a genomes folder.
+```
+cp ~MYPATH/genome_mallotus_dummy.gff data/genome_mallotus_dummy/genes.gff
+cp ~MYPATH/genome_mallotus_dummy.fasta data/genomes/genome_mallotus_dummy.fa
+cp ~MYPATH/genome_mallotus_dummy.fasta data/genomes/genome_mallotus_dummy.genome
 ```
 
-And build the database:
+And then it can build the database:
 ```
 java -jar snpEff.jar build -gff3 -v genome_mallotus_dummy
-#have a look at the database:
-java -jar snpEff.jar dump genome_mallotus_dummy | less
+```
+If you want to, you can look at the database by doing:
+
+```
+java -jar ~/Share/ressources/snpEff/snpEff.jar dump genome_mallotus_dummy | less
 ```
 To exit "less" simply press "q"
 
 
-#### Step 2: annotate the vcf
-Now we can annotate our vcf and exit snpEff. As you are getting used to now, we use a raw vcf file in the folder 02_data and will write the output into the folder 04_snpEff in which we will ahve all subsequent files related to the snpEff analyses
+#### Annotate the vcf [you run]
+Now we can annotate our vcf. As you are getting used to now, we use a raw vcf file in the folder 02_data and will write the output into the folder 04_snpEff in which we will have all subsequent files related to the snpEff analyses
 ```
-java -Xmx4g -jar snpEff.jar genome_mallotus_dummy ../02_data/canada.vcf > ../04_snpEff/canada_annotated.vcf
-cd ..
+java -Xmx4g -jar ~/Share/ressources/snpEff/snpEff.jar genome_mallotus_dummy 02_data/canada.vcf > 04_snpEff/canada_annotated.vcf
 ```
-
 Let's look at the new vcf
 ```
 less -S 04_snpEff/canada_annotated.vcf
