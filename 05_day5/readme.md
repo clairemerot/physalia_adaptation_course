@@ -17,11 +17,11 @@ Have a look at those files
 ``` ls 03_outliers``` in which I put the txt files that we exported on day 3 when analysing the association with temperature, and on day4 when analysing divergence between haploblocks or between sexes
 I also put here the list of all SNPs present in the vcf. you can look at each file with the command ``` head 03_outliers/SNP_pos.txt``` for instance
 
-## SNPeff : annotating our snps 
+## Step 1 SNPeff : annotating our snps 
 
-### On the server
-This program will use the gff file and the position of each SNP to annotate the vcf.
-If you work on a model species which already has a database, you are lucky! If not, we will learn how to build a database
+### Do not run
+SNPeff is a program that uses the gff file and the position of each SNP to annotate the vcf.
+If you work on a model species which already has a database, you are lucky! If not, you need to build a database. As it is a bit long, and takes a lot of space on the server, I have done it for you.
 
 #### Step 1: prepare the database
 First we need to add a line into the config file, for this we will use the editor nano which is easy-to-use
