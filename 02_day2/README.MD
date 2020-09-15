@@ -279,7 +279,7 @@ geno.012_2lin.012.imp.MAS2 <- MAS(geno=geno.012_2lin.012.imp, MAS.thresh=2)
 
 Next, we are ready to perform the PCA. The code is very simple. Only one line !
 ```
-pca.2lin <- prcomp(geno.012_2lin.imp.MAS2, scale=T)
+pca.2lin <- prcomp(geno.012_2lin.012.imp.MAS2, scale=T)
 ```
 Now, we will look at some interesting stats from the PCA object. First we will plot the variances against the number of the principal component.
 ```
