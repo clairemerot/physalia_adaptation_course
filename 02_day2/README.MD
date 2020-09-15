@@ -161,7 +161,7 @@ Here, we will work with two vcf files
 So within your own folder in the Amazon server, use this two command (cmd) lines:
 ```
 vcftools --vcf stacks/populations_2lin_random/populations.snps.vcf --012 --out populations_2lin_random
-vcftools --vcf stacks/populations_can_random/populations.snps.vcf --012 --out populations_can_random
+vcftools --vcf stacks/populations_canada_random/populations.snps.vcf --012 --out populations_can_random
 
 ```
 Once this is done, you will see via the cmd line `ls` (for listing all files in the directory), that six new files have been generated.
