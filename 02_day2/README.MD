@@ -109,7 +109,7 @@ The calculation is very fast, and in addition to per-site estimates you get mean
 
 If you have a reference genome and panel of SNPs dense enough (or whole genome resequencing data) you can calculate window estimates with
 ```
-vcftools --vcf populations_2lin_random/populations.snps.filter.vcf --weir-fst-pop ~/scripts/pop_canada40.txt --weir-fst-pop ~/scripts/pop_greenland40.txt  --out fst_2lin_win --fst-window-size 100000 --fst-window-step 100000
+vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop ~/scripts/pop_canada40.txt --weir-fst-pop ~/scripts/pop_greenland40.txt  --out fst_2lin_win --fst-window-size 100000 --fst-window-step 100000
 ```
 In fact, window estimates are a practical way to summarize data and to reduce the number of datapoints to handle, which can be problematic for visualization.
 
