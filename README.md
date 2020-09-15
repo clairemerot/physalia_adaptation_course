@@ -68,7 +68,7 @@ Now you will see the file directory system (folders) on your local computer on t
 
 ## Day1: Handling NGS data: From raw reads to SNPs matrix
 
-Capelin: Data taken from Cayuela et al,2020. Molecular Ecology https://doi-org.acces.bibl.ulaval.ca/10.1111/mec.15499
+Capelin: Data taken from Cayuela et al,2020. Molecular Ecology https://doi.org/10.1111/mec.15499
  
 Genome assembly: For this course, we made a dummy assembly of about 90 MB (instead of about 500 MB) and 5 chromosomes (instead of 24).
 
