@@ -23,10 +23,8 @@ To see the beginning of the vcf file it may be useful to use ```less -S 02_data/
 
 We will work from the 03_day3 folder and try to open our data within their folder (for instance 'head 02_data/file') and ouput in the folder of the analysis for instance (> 03_fst/output)
 
-##
-
-## 3A Investigate F-statistics in relation with geography
-### Pairwise differentiation between populations
+## 1 Investigate F-statistics in relation with geography
+### 1.1 Pairwise differentiation between populations
 
 **[On the Amazon server]**
 We will calculate here FST between all pairs of populations. FST accross the genome are expected to be largely driven by neutral markers while peaks of FSt may be related to selection for local adaptation... So we will first try to get a sense of global pattern and then look for outliers
@@ -131,7 +129,7 @@ Note that values goes up to FST = 0.02 ! but most of them are very low
 What do you notice? Is it heterogeneous? Do some population look more differentiated than other?
 Why do you think A and J are so different? 
 
-### Isolation by distance
+### 1.2 Isolation by distance
 To explore whether this is linked to distance between population, we will do a IBD test (Isolation by distance)
 ```
 library(SoDA)
@@ -213,7 +211,7 @@ Let's look at the pairwise FST matrix and the IBD stats
 What do you see now?
 pay attention to the absolute value of FST, to the clustering and IBD (or the absence of)?
 
-### Making a LD-pruned vcf
+### 1.3 Making a LD-pruned vcf
 Another way to get rid of SNPs in LD due to the inversion or sex (?) would be to use a LD-pruned set of SNPs. For this we can use PLINK which will compute LD between SNPs by windows along the genome and keep one SNP out of several SNPs in linkage. Here we are interested in long distance LD (since we have already removed short-distance LD by keepin only one SNP per RAD locus) so I have set the window quite large.
 
 Plink requires a bim file when taking a vcf input this can be created with the first line.
@@ -240,8 +238,8 @@ vcftools --vcf 02_data/canada.vcf --exclude 02_data/canada.prune.out --recode --
 If you have finished early, you can play at doing the pairwise FST/IBD (step1) or the population structure analysis of yesterday on the pruned dataset to check whether this removed the structure linked to sex or Chr4 rearrangement...
 
 
-## 3B Investigate outliers of differentiation
-### With OutFLANK
+## 2 Investigate outliers of differentiation
+### 2.1 With OutFLANK
  OutFLANK is an R package that implements the method developed by Whitlock and Lotterhos (https://www.journals.uchicago.edu/doi/10.1086/682949) to use likelihood on a trimmed distribution of FST values to infer the distribution of FST for neutral markers. This distribution is then used to assign q-values to each locus to detect outliers that may be due to spatially heterogeneous selection.
 https://github.com/whitlock/OutFLANK
 
@@ -250,7 +248,7 @@ Whitlock, M. C., and K. J. Lotterhos. 2015. Reliable detection of loci responsib
 It has a super good vignette here: https://htmlpreview.github.io/?https://github.com/whitlock/OutFLANK/blob/master/inst/doc/OutFLANKAnalysis.html
 We will more or less follow it today.
 
-#### Step 0 prepare the data
+####  prepare the data
 Let's open R in our terminal and convert our vcf to the outflank format:
 ```
 #we use the library vcfR to convert the vcf into the OutFLANK format
@@ -312,7 +310,7 @@ We will follow the best practices recommended by the authors:
 We will use the list of pruned SNPs extracted with PLINK earlier.
 Note that other possibilities exists such as using the package bigsnpr
 
-####Step 1 we will run OutFLANK on the pruned SNPs and look at the distribution of FST
+#### run OutFLANK on the pruned SNPs and look at the distribution of FST
 We will use the prune.in file produced by plink and a few manipulation to know the position of the SNPs that are in the pruned subset and will be include 
 
 ```
@@ -346,7 +344,7 @@ dev.off()
 ![outflank_trim1](07_img_readme/outflank_prunedSNP_pvalues.jpeg)
 The p-value should be more or less flat and the distribution of FST about normal
 
-####Step 2 We now run OutFLANK on all SNPs, corrected by the trim dataset
+#### run OutFLANK on all SNPs, corrected by the trim dataset
 ```
 P1 <- pOutlierFinderChiSqNoCorr(my_fst, Fstbar = out_trim$FSTNoCorrbar, dfInferred = out_trim$dfInferred, qthreshold = 0.05, Hmin=0.1)
 head(P1)
@@ -392,7 +390,7 @@ There is accumulating litterature suggesting that recombination is a very import
 
 You may want to re-run on the SNP subset without chr4/chr5 to get a sense of what that says.
 
-### With Baypass
+### 2.2 With Baypass
 To look at adaptive differentiation and environmental asssociations, we wil use Baypass http://www1.montpellier.inra.fr/CBGP/software/baypass/
 The publication is here https://www.genetics.org/content/201/4/1555
 Mathieu Gautier
@@ -402,14 +400,14 @@ And there is a good manual here : http://www1.montpellier.inra.fr/CBGP/software/
 This package is an extension of Bayenv. It may be a little long to run so you will have time to skim the manual for more details. There are different underlying bayesian modle, and we will just run the default mode but you may want to explore a bit further in the future
 
 
-#### Step 0: prepare files
+####  prepare files
 We will use again scripts prepared by Yann Dorant in his toolbox:
 ```
 python Toolbox/reshaper_baypass.py 02_data/canada.vcf 02_data/popmap_canada.txt 05_baypass/canada.baypass
 python Toolbox/reshaper_baypass.py 02_data/canada.pruned.recode.vcf 02_data/popmap_canada.txt 05_baypass/canada.pruned.baypass
 ```
 
-#### Step 1: run baypass basic
+#### run baypass basic
 
 ```
 g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
@@ -418,7 +416,7 @@ g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 We can have a look at the output. the most importnat are the omega matrix, which is covariance between populations and the xtx value which represent a kind of value associated to each SNP. the higher it gets, the more this snps differentiate the populations.
 Please copy those files so that we can look at them in Rstudio on your local computer while the next step will run on the server
 
-#### Step 2: run baypass controlled for population structure
+####  run baypass controlled for population structure
 We want again to pinpoint the outlier that differ from the basic structure of the population. This is not a big deal in our example but it may be in other system. 
 Best practices suggest to first run baypass on the LD-pruned vcf and to extract the covariance matrix between population (mat_omega), and then use it as a covariate in the baypass model
 
@@ -435,7 +433,7 @@ g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 ```
 Please copy the controlled output on your local computer.
 
-#### Step 3: Have a threshold for the xtx value
+#### Have a threshold for the xtx value
 While this runs, we can prepare our subsequent analysis. We need to know above which xtx threhold value we can consider a locus to be an outlier of population differentiation
 To look for that, the authors suggest to simulate a neutral distribution with a small R function, run baypass on the simulated genotypes, and extract the distribution of XtX values. We can then chose a threshold of the 95% quantile, 99% quantile, etc... 
 
@@ -528,14 +526,14 @@ Now you may want to do the same for the analysis controlled by population struct
 ![xtx_uncontrolled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/xtx_uncontrolled.png)
 ![xtx_controlled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/xtx_controlled.png)
 
-## 3C Environmental association
-### With Baypass (locus by locus)
+## 3 Environmental association
+### 3.1 With Baypass (locus by locus)
 Baypass can also integrate environmental matrix or phenotypic matrix to run associations.
 This means that we will no longer look at overall average differentiation between populations, but really ask which SNPs co-vary in frequency with environmental variables, in other words makes sens of differentiation between population along ecological gradients or look for phenotype/genotype association.
 
 It is exactly the same procedure as before, except that we add the -efile option
 
-#### step 0 format env file 
+####  format env file 
 Baypass wants the environment as one line per env variable and one column per population. no header.
 We can use our file 02_data/info_pop_geo_eco.txt to extract that. We will be interested in the temperature variable today.
 As I did not pay attention to order the population alphabetically at the beginning of STACKS (sorry), we need to make really sure that our env file is exactly in the same order as the population are in the geno file. This is why there is a "order" column...
@@ -619,7 +617,7 @@ outliers<-bf_pos[bf_pos$BF.dB>=threshold_fdr0.05,]
 write.table(outliers, "05_baypass/outlier_temp_bp.txt", row.names=F, quote=F, sep="\t")
 ```
 
-### With redundancy analysis (multi-loci)
+### 3.2 With redundancy analysis (multi-loci)
 Until now we have look at signatrue of adaptation locus by locus. This is a design that is more likely to point strong selective sweep, large-effect locus and large islands of divergence. Yet, most adaptation is expected to be polygenic and genome-scan are possibly not the best option to tackle this problem... Yet, doing RDa analysis which consider the whole genetic variance together with the geographic variation or ecological variation may be one of the first step in that direction.
 
 Again, we can also used the RDA to identify putative candidate.
@@ -630,7 +628,7 @@ Which has a super nice vignette that you can check here https://popgen.nescent.o
 
 We will do most of the computational aspect of the RDA on the server but you could probably also run it locally, it is usually quite fast.
 
-#### Step 0 Prepare data 
+#### Prepare data 
 RDA takes a matrix of genotypes (0,1,2) with as many rows as samples and as many columns as loci. No missing data.We’ll use a simple approach to imputing missing values: we will impute using the most common genotype at each SNP across all individuals 
 
 We can obtain following the same method as we did for the PCA yesterday. 
@@ -662,7 +660,7 @@ head(info)
 ```
 
 
-#### Step 1 Run rda on environmental variable and test it 
+#### Run rda on environmental variable and test it 
 The command lines to run a rda are quite simple:
 
 #run rda
@@ -684,7 +682,7 @@ so you see that temperature does not explain a large fraction of total variance 
 Yet, formal test allows rejecting the null hypothesis that no linear relationship exists between the SNP data and the environmental predictor.
 
 
-#### Step 2 Analyse RDA output
+####  Analyse RDA output
 We can plot the RDA. As we have only one informative RDA1, this will not be super informative.
 We’ll start with simple triplots from vegan. Here we’ll use scaling=3 (also known as “symmetrical scaling”) for the ordination plots. This scales the SNP and individual scores by the square root of the eigenvalues.
 Here, the SNPs are in red (in the center of each plot), and the individuals are coloured by their population. The blue vectors are the environmental predictors. The relative arrangement of these items in the ordination space reflects their relationship with the ordination axes, which are linear combinations of the predictor variables.
@@ -761,7 +759,7 @@ As with baypass, we have very few outliers associated with temperature. Yet, the
 In our system in which gene flow is super high and geographic structure very low, it is not recommended to control the rda by geography or neutral structure. Yet, as a proff of principle, we will explore how to do it.
 
 
-#### Step 3 environmental variation vs.geographic variation?
+####  environmental variation vs.geographic variation?
 With the RDA we can also ask about the relative contribution of geography and environment since the rda can be controlled by a third matrix. It is also possible to include a previously inferred neutral structure, etc.
 
 Very simply we can use latitude and longitude. Run the rda with this geogrpahic variables. As we have two RDA now, it may be worth looking at the triplot and explore significance axis by axis
@@ -856,6 +854,46 @@ RsquareAdj(temp_gps.rda)
 signif.axis <- anova.cca(temp_gps.rda, by="axis", parallel=getOption("mc.cores"))
 signif.axis
 vif.cca(temp_gps.rda)
-
 ```
 
+### 3.3 Take outliers detected by two different methods
+It is often recommended to keep only outliers (or SNPs with strong GEA) detected by more than one method to avoid false positive. This will nevertheless also reduce the power of the analysis... a matter of choice? Here we will run a few R command to keep the intersection of our baypass and rda outliers. It is worth noting that since RDA and baypass works differently, it may not be surprising to have a limited overlap.
+
+You can run that in Rstudio on your computer if you copy the outliers files into their respective folders. 
+We will also make a Venn-diagram
+
+```
+library(dplyr)
+
+#load outliers tables
+outlier_temp_rda<-read.table("06_rda/outlier_temp_rda.txt", header=T)
+head(outlier_temp_rda)
+nRDA<-dim(outlier_temp_rda)[1]
+nRDa #how many outliers?
+
+outlier_temp_bp<-read.table("05_baypass/outlier_temp_bp.txt", header =T)
+head(outlier_temp_bp)
+outlier_temp_bp<-outlier_temp_bp[,c(1,2,3,8)] #we keep snp id, chr, pos and BF
+dim(outlier_temp_bp)
+nBP<-dim(outlier_temp_bp)[1]
+nBP #how many outliers?
+
+#join outliers keeping positions present in either the 1st or the 2nd database (or both)
+outlier_temp_fulljoin<-full_join(outlier_temp_rda,outlier_temp_bp)
+head(outlier_temp_fulljoin)
+nALL<-dim(outlier_temp_fulljoin)[1]
+nALL # how many in total?
+
+#join outliers keeping positions present in either the 1st or the 2nd database (or both)
+outlier_temp_innerjoin<-inner_join(outlier_temp_rda,outlier_temp_bp)
+head(outlier_temp_innerjoin)
+dim(outlier_temp_innerjoin)
+nboth<-dim(outlier_temp_innerjoin)[1]
+nboth #how many joint outliers?
+
+#visualize
+library(ggVennDiagram)
+ggVennDiagram(list(rda = 1:nRDA, BP = (nRDA+1-nboth):(nRDA-nboth+nBP)))
+```
+
+![venn](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/venn.png)
