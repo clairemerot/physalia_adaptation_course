@@ -479,7 +479,7 @@ omega = as.matrix(read.table("05_baypass/prunedsnps.output_mat_omega.out"))
 #load beta parameters
 pi.beta.coef=read.table("05_baypass/allsnps.output_summary_beta_params.out", h=T)$Mean
 
-#create the POD - simulate - don't forget to change suffix name
+#create the POD - simulate
 simu.bta <- simulate.baypass(omega.mat=omega, nsnp=500,beta.pi=pi.beta.coef, suffix="simulates_pods")
 ```
 You can now quit R, mv the simulated file into the folder baypass and run baypass on the simulated data 
