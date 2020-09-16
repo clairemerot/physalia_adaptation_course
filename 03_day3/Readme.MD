@@ -3,7 +3,7 @@ Today, we will restrain our analysis on the Canadian 12 populations which belong
 
 To start, please copy the folder Day 3 into your home directory adn open it with cd
 ```
-cp -r Share/physalia_adaptation/03_day3 .
+cp -r Share/physalia_adaptation_course/03_day3 .
 cd 03_day3 
 ```
 Please remmember we will work from this directory the whole day. When copying on your local computer please copy the whole day3 folder and all its subarchitecture and try to respect that architecture, that will be easier to find your files. 
@@ -272,6 +272,14 @@ We will more or less follow it today.
 ####  prepare the data
 Let's open R in our terminal and convert our vcf to the outflank format:
 ```
+#1st intall the librairies
+
+if (!("devtools" %in% installed.packages())){install.packages(devtools)}
+library(devtools)
+if (!("qvalue" %in% installed.packages())){BiocManager::install("qvalue")}
+if (!("vcfR" %in% installed.packages())){install.packages("vcfR")} 
+devtools::install_github("whitlock/OutFLANK")
+
 #we use the library vcfR to convert the vcf into the OutFLANK format
 library(OutFLANK)
 library(vcfR)
