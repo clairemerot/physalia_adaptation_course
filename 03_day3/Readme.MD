@@ -61,13 +61,17 @@ Then, we can run the Rscript `StAMPP-fst.R` to perform pairwise FST for each dat
 NOTE: dont' worry about the error message. It only say that it cannot delete temporary files. It's not important.
 
 ** !!! Before using it, you have to install the package in you own server session.**
+
 Please open an online R session : just tap R in the shell.
+
 Once R in open, install the required packages using :
 ```
 install.packages("BiocManager")
 install.packages("varhandle")
 #install StAMPP via BioConductor pathway
 BiocManager::install("StAMPP")
+
+#once all is installed--quit R
 q()
 ```
 Here we are ready to run the StAMPP and perform FST calculations.
