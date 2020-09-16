@@ -8,77 +8,27 @@ cd 04_day4/01_haploblocks
 We will run all commands from here
 
 ## Step 0 Sliding PCA 
-As you saw on day 2, the PCA performed on the 240 samples from North America display a very unexpected pattern. The loadings indicate that some portion of the genome are overwhelmingly driving the structure.We suspect there may be sex-linked markers and/or chromosomal rearrangements
+As you saw on day 2, the PCA performed on the 240 samples from the 12 populations from Canada display a very unexpected pattern. The loadings indicate that some portion of the genome are overwhelmingly driving the structure.We suspect there may be sex-linked markers and/or chromosomal rearrangements
+
 To get a better sense of what's going on, we will be doing PCA again, but along the genome by window of X SNPs.For this we will use  R package * lostruct* available here https://github.com/petrelharp/local_pca and presented in this publication https://www.genetics.org/content/211/1/289
 
-This analysis is more powerful if we keep all SNPs including those in LD so we will come back to the vcf unfiltered
+####  prepare files
+We will jump over the preparation of the file and the 1st steps of lostruct to read and prepare the windows because R does not communicate with bcftools on the AWS and we wan tto save you time to see all the analysis. So keep in mind that there are preparative steps if you want to re-do the analysis on your dataset. You can look into this file to see them: https://github.com/clairemerot/physalia_adaptation_course/tree/master/04_day4/01_haploblocks
 
-####  prepare the vcf (in the terminal) [do not run]
-We will jump over the preparation of the file because we did not manage to make R communicate with bcftools on the AWS for a mysterious reason. It works very well on our university cluster though... So keep in mind those preparative steps if you want to re-do the analysis on your dataset and for now, please read through it and start applying the tutorial only at the end of the jump.
+Briefly, this analysis is more powerful if we keep all SNPs including those in LD so we will use the vcf unfiltered (before we took one random SNP per RADlocus) for the 12 canadian populations. We do several steps to convert into a bcf. Then we use a function in lostruct to make windows of your chosen size. We suggest to use window of 100 snp since we are not very dense (RAD data) and we don't have a lot of snps.Typically with whole genome you may first run by windows of 1000 or 5000 snps for a first look, and then refine with smaller windows. The analysis can be run chromosome by chromosome (as in the paper) or on the entire genome. Here, we are going for the entire genome.
 
-####[EDIT JUMP -> don't run this part, please read it for your information and run the commands after END OF JUMP]####
-First you need to process the unfiltered vcf for the 12 NWA populations.We will tend to use here the vcf before selecting one random SNP per loci (i. e. a vcf with all SNPs even if they are linked) because we need to be as dense as possible and we are looking for LD. I put a version of the full vcf in Share/ressources.
-We will use several programms to convert the vcf into a bcf, sort it and index it.
-The package lostruct can also take a vcf but it is heavy to load the whole file. Instead they made function that is able to cut the vcf window by window to avoid overloading the memory (but this requires a sorted, indexed bcf)
+Then, lostruct run the PCA on all windows. Here we choose to consider k=npc=2 because they usually capture most variance for each local PCA
+
+It outputs a matrix pcs in which each rows give the first k eigenvalues and k eigenvectors for each window. This gives you a matrix with 483 columns (3 columns of info, 240 columns with PC1 score for each individual, and 240 column with PC2 score for each individual). It has as many rows as windows (1016 with windows of 100 SNPs). I added 3 columns of information about the window position. you can have a look at it with
+
 ```
-#we need to sort the vcf
-(grep ^"#" ../../Share/ressources/capelin_NWA.vcf; grep -v ^"#" capelin_NWA.vcf | sort -k1,1 -k2,2n) > 00_localPCA/capelin_NWA_sorted.vcf
-
-#then compress it and index it
-bgzip -c 00_localPCA/capelin_NWA_sorted.vcf > 00_localPCA/capelin_NWA_sorted.vcf.gz
-tabix -fp vcf 00_localPCA/capelin_NWA_sorted.vcf.gz
-
-#then convert it to a bcf and sort it
-bcftools convert -O b 00_localPCA/capelin_NWA_sorted.vcf.gz > 00_localPCA/capelin_NWA_sorted.bcf
-bcftools index 00_localPCA/capelin_NWA_sorted.bcf
+less 00_localPCA/pca.matrix.txt
 ```
-To check whether this has worked and produced files, you can do a quick ```ls -lh``` which will show you the size of the files in human-readable format
+escape less by pressing "q"
 
-Now we are good to work in R with the library. This requires some computational power and memory, so we suggest to make the initial steps in R command lines on the server and then copy the output files to visualise on your local Rstudio
+####  run lostruct (on the server)
+Back to work,  we will run the end of lostruct procedure. you can do it either on the terminal or in Rstudio on your computer
 
-####  run lostruct (in the terminal)[do not run]
-To start R in command line, just type "R". Now you have a R console and we wil run the lostruct procedure
-```
-#open library
-library(lostruct)
-options(datatable.fread.input.cmd.message=FALSE)  #disable a useless message
-snps <- vcf_windower("00_localPCA/capelin_NWA_sorted.bcf",size=100,type='snp', sites= vcf_positions("00_localPCA/capelin_NWA_sorted.bcf"))
-```
-This function makes windows out of the given data file of your chosen size. You can choose the size of the window with "size" and on which variable you want to split ('snp' or 'bp'). We suggest to use window of 100 snp since we are not very dense (RAD data) and we don't have a lot of snps.Typically with whole genome you may first run by windows of 1000 or 5000 snps for a first look, and then refine with smaller windows. The analysis can be run chromosome by chromosome (as in the paper) or on the entire genome. Here, we are going for the entire genome.
-You can display for instance the 5th window and know its location by doing
-```
-snps(5)
-region(snps) (5)
-```
-We can now run the PCA on all windows. Here we choose to consider k=npc=2 because they usually capture most variance for each local PCA
-```
-pcs <- eigen_windows(snps,k=2)
-dim(pcs) #check dimension
-head (pcs[,1:10]) #look at the first 10 columns
-pcs_noNA<-pcs[-which(is.na(pcs[,1])),] #because of NA, some windows were not computed by pca. we will remove them
-```
-In the matrix pcs, each rows give the first k eigenvalues and k eigenvectors for each window. This gives you a matrix with 483 columns (3 columns of info, 240 columns with PC1 score for each individual, and 240 column with PC2 score for each individual). It has as many rows as windows (1016 with windows of 100 SNPs)
-
-As you see we don't know the position of each window, we will get it with the function regions, remove the NA windows and exapnd the pca matrix to include the position information we retrieve before and export the file
-```
-#retrieve positions
-window_pos<-region(snps)()
-head(window_pos)
-
-#keep windows without NA
-window_pos_noNA<- window_pos[-which(is.na(pcs[,1])),]
-#merge
-pca_matrix_noNA<-cbind(window_pos_noNA, pcs_noNA)
-head (pca_matrix_noNA[,1:10])
-
-#save the file
-write.table(pca_matrix_noNA, "00_localPCA/pca_matrix.txt", sep="\t", row.names=FALSE, quote=FALSE)
-```
-####[END OF JUMP]#### Retrieve the file I did for you:
-
-####  run lostruct (in the terminal)[yes run it!]
-
-Back to work, now that you have read and understood, let's comme back to our terminal. I have put for you the pca_matrix.txt in the folder 05_localPCA. please load it into R, and split it into the window information and the PCs.To start R in command line, just type "R". Now you have a R console and we wil run the end of lostruct procedure
 ```
 #install libraries
 install.packages("data.table")
@@ -87,13 +37,13 @@ library(lostruct)
 ```
 
 ```
+#load matrix
 pca_matrix_noNA<-read.table("00_localPCA/pca_matrix.txt", sep="\t", header=T, stringsAsFactors=FALSE)
 head(pca_matrix_noNA)
+#split columns with positions information and PC
 window_pos_noNA<-pca_matrix_noNA[,1:3]
 pcs_noNA<-as.matrix(pca_matrix_noNA[,4:dim(pca_matrix_noNA)[2]])
 ```
-
-Now we can go back to the main pipeline:
 
 The lostruct procedure proposes to compute pairwise distances between those windows and visualise it with a MDS (multidimensional scaling). Our goal is to identify groups of windows which display similar PCA pattern.This is done with the following functions (we uses 2 PC per window as above, and will look at the 1st 10 axes of the MDS)
 ```
@@ -105,7 +55,7 @@ head(mds_axe)
 mds_matrix<-cbind(window_pos_noNA, mds_axe)
 write.table(mds_matrix, "00_localPCA/mds_matrix.txt", sep="\t", row.names=FALSE, quote=FALSE)
 ```
-Since this is a little long , we will let it run and explore on your local computer with Rstudio some of the local pca. Let's download pca_matrix.txt locally and we will play in R studio to look at some of those local PCA
+Since this is a little long , we can let it run and explore on your local computer with Rstudio some of the local pca. Let's download pca_matrix.txt locally and we will play in R studio to look at some of those local PCA
 
 #### Visualising the local PCA outputs (on your computer in Rstudio)
 Back on our local computer in R studio, we will look at all those local PCA.
@@ -226,73 +176,14 @@ option2 <- argv[2]
 ```
 ## Step 1 Genotype the individuals for the haploblocks
 Thanks to our local PCA exploration on day 2, we know that there are non-recombining haploblocks which may be an inversion on chromosome 4.
-We located the breakpoints approximately from 4.8MB to 16.6MB. We can make a PCa in that region only and use k-means approaches to classify the individuals into 3 groups. To save time I did this for you and put the AA.list, AB.list and BB. list into the 02_data folder. If you are interested in the code, you can have a look in this file
+We located the breakpoints approximately from 4.8MB to 16.6MB. We can make a PCa in that region only and use k-means approaches to classify the individuals into 3 groups. 
 
-#### [to save time, I suggest that you skip Step1] ### You can read it and use the AA.list AB.list and BB.list that I put for you in the 02_data
-Thanks to our local PCA exploration on day 2, we know that there are non-recombining haploblocks which may be an inversion on chromosome 4.
-We located the breakpoints approximately from 4.8MB to 16.6MB
+To save time I did this for you and put the AA.list, AB.list and BB. list into the 02_data folder. 
 
-First, we want to classify our individuals according to the cluster that we observed on the PCA.
-To do so, we want to extract the relevant regions, perform a PCA and clustering approach
+If you are interested in the code, you can have a look in this file
+https://github.com/clairemerot/physalia_adaptation_course/blob/master/04_day4/01_haploblocks/Step1_tuto.md
 
-We know how to exclude chromosome from a vcf. We will now select just a determined region from the vcf
-
-#### on the server : make a vcf with chr 4 4.8-16.6MB
-You should have in the 02_data folder the vcf for canadian populations with all SNPs (1 snp randomly selected by locus) and all individuals.
-You also have a file with information about individuals info_samples_canada.txt
-``` ls 02_data```
-
-We will make a vcf with chr 4 4.8-16.6MB and export it as 012 as we did on day2 to do the PCA
-```
-gunzip 02_data/canada.vcf.gz
-vcftools --vcf 02_data/canada.vcf --chr Chr4 --from-bp 4800000 --to-bp 16600000 --recode --out 02_data/canada.chr4inv
-vcftools --vcf 02_data/canada.chr4inv.recode.vcf --012 --out 02_data/canada.chr4inv
-```
-Now you can copy the generated files into  on your local computer following the same architecture (04_day4/01_haploblocks/02_data) 
-
-#### on your computer in R studio
- perform a PCA 
-```
-geno <- read.table("02_data/canada.chr4inv.012")[,-1] #load geno
-indv <- read.table("02_data/canada.chr4inv.012.indv") #load individuals info
-rownames(geno)<-indv[,1]
-geno[1:6,1:6] #check the geno matrix
-geno.pca<-prcomp(geno) #run the pca
-plot(geno.pca$x[,1],geno.pca$x[,2] # plot the pca
-```
-We tend to see three groups although the smallest one is not well define, possibly because this are less individuals belonging to this group.
-To cluster those individuals into three groups, we will use kmeans methods
-
-```
-geno_kmean<-kmeans (geno.pca$x[,1], c(min(geno.pca$x[,1]), (min(geno.pca$x[,1])+max(geno.pca$x[,1]))/2, max(geno.pca$x[,1]) ))
-geno_kmean
-plot(geno.pca$x[,1],geno.pca$x[,2], col= geno_kmean$cluster, pch=20)
-```
 ![pca](06_images/pca_cluster.png)
-
-You can note the ratio of the between sum of squares over the total sum of square which is indicative of the fit of the clusters
-Here it is around 92%, this is not amazing but still meaningful, clustering in 3 is better than a whole pool...
-
-Let's keep those clusters as it is for subsequent analysis. In real life, you may want to refine further, for instance using windows or SNPs most strongly divergent, or excluding dubious intermediate individuals
-To split the vcf between our three groups we will need a list of individuals id in each category
-
-```
-#save information
-info_cluster_inv<-cbind(indv,geno_kmean$cluster)
-colnames(info_cluster_inv)<-c("id_inv","cluster_inv")
-head(info_cluster_inv)
-
-#prepare the list
-AA_ind<-info_cluster_inv[info_cluster_inv$cluster_inv=="1",1]
-AB_ind<-info_cluster_inv[info_cluster_inv$cluster_inv=="2",1]
-BB_ind<-info_cluster_inv[info_cluster_inv$cluster_inv=="3",1]
-  
-#export files
-write.table(info_cluster_inv, "02_data/info_cluster_inv.txt", quote=F, row.names=F)
-write.table(AA_ind, "02_data/AA.list", quote=F, row.names=F, col.names=F)
-write.table(AB_ind, "02_data/AB.list", quote=F, row.names=F, col.names=F)
-write.table(BB_ind, "02_data/BB.list", quote=F, row.names=F, col.names=F)
-```
 
 ## Step 2 Study linkage disequilibrium
 
