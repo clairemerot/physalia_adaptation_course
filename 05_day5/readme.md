@@ -294,7 +294,39 @@ enrich_outliers[which(enrich_outliers$over_represented_padjust<0.10),]
 What do you think? Sometimes it may be significan tbut when one has low numbers (1 gene out of 4), is this really interpretable? 
 Anyhow, you know how to do it!
 
-If you wish, you can repeat the analysis on the outliers from baypass, or joined BP/rda, or on the outlires of divergence found on chr4 and chr5. 
+If you wish, you can repeat the analysis on the outliers from baypass, or joined BP/rda, or on the outliers of divergence found on chr4 and chr5. 
+
+## Step4 Annotation of repeated regions and CNV
+I have run a programm called RepeatMasker http://www.repeatmasker.org/ which uses databases of transposable elements and detection of repeated pattern to annotate the genome for those interspersed repeats and low-complexity DNA sequences. Because we are on afish, I use the database Danio rerio (Zebrafish). The command is very easy
+[do not run] ```RepeatMasker genome_mallotus_dummy.fasta -pa $N_CPU -species Danio```
+
+Another possibility is to build the database of TE and repeats for your species. A good programm for that is RepeatModeler2 (Flynn et al PNAS 2020 https://doi.org/10.1073/pnas.1921046117)
+
+So RepeatMasker outputs both a masked version of the genome and a file .out in which there is a list of repeated elements and TE with their position. I have arranged a little that file to make it into a bed format. you can see it in the folder 07_TE
+``` head 07_TE/genome_mallotus_dummy_repeat.bed ```
+
+Now we will look into the loci that we identified as being duplicated (CNVs). Yann puts back for you the CNV matrix in the 07_TE folder so don't bother looking at yesterday's files :-)
+
+We will use R to convert the full matrix and the matrix of outliers into bed format. Please open R either in the terminal or  on your own computer (but you will need to move files between server and and local).
+We will choose a window of X bp around the CNV locus.
+
+```
+library (dplyr)
+
+```
+
+Now we can run bedtools to output the intersection of the CNV positions with the annotated repeats
+```
+
+```
+
+And you can now have a look at your results with a text editor and investigate the composition of your detected loci in different class of TE with R. 
+```
+
+```
+
+
+
 
 
 
