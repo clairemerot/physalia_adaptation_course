@@ -431,7 +431,7 @@ python Toolbox/reshaper_baypass.py 02_data/canada.pruned.recode.vcf 02_data/popm
 #### run baypass basic
 
 ```
-g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
+/home/scripts/g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -outprefix 05_baypass/allsnps.output -nthreads 1
 ```
 We can have a look at the output. the most importnat are the omega matrix, which is covariance between populations and the xtx value which represent a kind of value associated to each SNP. the higher it gets, the more this snps differentiate the populations.
@@ -443,11 +443,11 @@ Best practices suggest to first run baypass on the LD-pruned vcf and to extract 
 
 ```
 #run on pruned snps
-g_baypass -npop 12 -gfile 05_baypass/canada.pruned.baypass \
+/home/scripts/g_baypass -npop 12 -gfile 05_baypass/canada.pruned.baypass \
 -outprefix 05_baypass/prunedsnps.output -nthreads 1
 
 #controlled run
-g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
+/home/scripts/g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/allsnps.controlled.output -nthreads 1
 
@@ -463,7 +463,7 @@ Open R in your terminal and let's simulate genotypes
 args = commandArgs(trailingOnly=TRUE)
 
 #source functions from Gautier file
-source("~/00-softwares/baypass_2.2/utils/baypass_utils.R")
+source("/home/ubuntu/00-softwares/baypass_2.2/utils/baypass_utils.R")
 
 #load omega matrix
 omega = as.matrix(read.table("05_baypass/prunedsnps.output_mat_omega.out"))
@@ -477,10 +477,10 @@ simu.bta <- simulate.baypass(omega.mat=omega, nsnp=500,beta.pi=pi.beta.coef, suf
 You can now quit R, mv the simulated file into the folder baypass and run baypass on the simulated data 
 ```
 mv G.simulates_pods 05_baypass/
-g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods  -outprefix 05_baypass/simulate.output -nthreads 1
+/home/scripts/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods  -outprefix 05_baypass/simulate.output -nthreads 1
 
 #controlled run on simu dataset
-g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
+/home/scripts/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/simulate_controlled.output -nthreads 1
 ```
@@ -495,7 +495,7 @@ for i in 1 2 3 4 5
 do
 seed=$((1000 + RANDOM % 9999)) #set random seed
 echo "$seed"
-g_baypass -npop $N_pop -gfile $geno -efile $env -omegafile $omega_mat -outprefix output"$i" -nthreads $N_CPU -npilot 25 -burnin 5000 -seed $seed
+/home/scripts/g_baypass -npop $N_pop -gfile $geno -efile $env -omegafile $omega_mat -outprefix output"$i" -nthreads $N_CPU -npilot 25 -burnin 5000 -seed $seed
 done
 ```
 
