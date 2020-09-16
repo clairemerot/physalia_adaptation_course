@@ -80,7 +80,13 @@ write.table(pca_matrix_noNA, "00_localPCA/pca_matrix.txt", sep="\t", row.names=F
 
 Back to work, now that you have read and understood, let's comme back to our terminal. I have put for you the pca_matrix.txt in the folder 05_localPCA. please load it into R, and split it into the window information and the PCs.To start R in command line, just type "R". Now you have a R console and we wil run the end of lostruct procedure
 ```
+#install libraries
+install.packages("data.table")
+devtools::install_github("petrelharp/local_pca/lostruct")
 library(lostruct)
+```
+
+```
 pca_matrix_noNA<-read.table("00_localPCA/pca_matrix.txt", sep="\t", header=T, stringsAsFactors=FALSE)
 head(pca_matrix_noNA)
 window_pos_noNA<-pca_matrix_noNA[,1:3]
