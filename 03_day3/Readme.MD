@@ -867,7 +867,7 @@ If you include several environmental variables (for instance rda(gen.imp~info$te
 To extract outliers associated with each environmental variable, you can have a look at Forester's tutorial.
 
 ```
-temp_gps.rda <- rda(gen.imp ~ info$temperature+ info$latitude + info$longitude, scale=T)
+temp_gps.rda <- rda(gen.imp ~ info$temperature+ info$lat + info$long, scale=T)
 temp_gps.rda
 
 RsquareAdj(temp_gps.rda)
