@@ -1,7 +1,6 @@
-####  prepare the vcf (in the terminal) [do not run]
-We will jump over the preparation of the file because we did not manage to make R communicate with bcftools on the AWS for a mysterious reason. It works very well on our university cluster though... So keep in mind those preparative steps if you want to re-do the analysis on your dataset and for now, please read through it and start applying the tutorial only at the end of the jump.
+## Step 1 Sliding PCA : skipped step of preparing files
 
-####[EDIT JUMP -> don't run this part, please read it for your information and run the commands after END OF JUMP]####
+####  prepare the vcf (in the terminal) [do not run]
 First you need to process the unfiltered vcf for the 12 NWA populations.We will tend to use here the vcf before selecting one random SNP per loci (i. e. a vcf with all SNPs even if they are linked) because we need to be as dense as possible and we are looking for LD. I put a version of the full vcf in Share/ressources.
 We will use several programms to convert the vcf into a bcf, sort it and index it.
 The package lostruct can also take a vcf but it is heavy to load the whole file. Instead they made function that is able to cut the vcf window by window to avoid overloading the memory (but this requires a sorted, indexed bcf)
@@ -21,7 +20,7 @@ To check whether this has worked and produced files, you can do a quick ```ls -l
 
 Now we are good to work in R with the library. This requires some computational power and memory, so we suggest to make the initial steps in R command lines on the server and then copy the output files to visualise on your local Rstudio
 
-####  run lostruct (in the terminal)[do not run]
+####  run lostruct (in the terminal)
 To start R in command line, just type "R". Now you have a R console and we wil run the lostruct procedure
 ```
 #open library
