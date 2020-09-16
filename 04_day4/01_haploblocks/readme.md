@@ -226,6 +226,10 @@ option2 <- argv[2]
 ```
 ## Step 1 Genotype the individuals for the haploblocks
 Thanks to our local PCA exploration on day 2, we know that there are non-recombining haploblocks which may be an inversion on chromosome 4.
+We located the breakpoints approximately from 4.8MB to 16.6MB. We can make a PCa in that region only and use k-means approaches to classify the individuals into 3 groups. To save time I did this for you and put the AA.list, AB.list and BB. list into the 02_data folder. If you are interested in the code, you can have a look in this file
+
+#### [to save time, I suggest that you skip Step1] ### You can read it and use the AA.list AB.list and BB.list that I put for you in the 02_data
+Thanks to our local PCA exploration on day 2, we know that there are non-recombining haploblocks which may be an inversion on chromosome 4.
 We located the breakpoints approximately from 4.8MB to 16.6MB
 
 First, we want to classify our individuals according to the cluster that we observed on the PCA.
@@ -239,13 +243,11 @@ You also have a file with information about individuals info_samples_canada.txt
 ``` ls 02_data```
 
 We will make a vcf with chr 4 4.8-16.6MB and export it as 012 as we did on day2 to do the PCA
-
 ```
 gunzip 02_data/canada.vcf.gz
 vcftools --vcf 02_data/canada.vcf --chr Chr4 --from-bp 4800000 --to-bp 16600000 --recode --out 02_data/canada.chr4inv
 vcftools --vcf 02_data/canada.chr4inv.recode.vcf --012 --out 02_data/canada.chr4inv
 ```
-
 Now you can copy the generated files into  on your local computer following the same architecture (04_day4/01_haploblocks/02_data) 
 
 #### on your computer in R studio
@@ -290,17 +292,6 @@ write.table(info_cluster_inv, "02_data/info_cluster_inv.txt", quote=F, row.names
 write.table(AA_ind, "02_data/AA.list", quote=F, row.names=F, col.names=F)
 write.table(AB_ind, "02_data/AB.list", quote=F, row.names=F, col.names=F)
 write.table(BB_ind, "02_data/BB.list", quote=F, row.names=F, col.names=F)
-```
-
-#### On the server
-Please copy back those 4 files into the 01_haploblocks/02_data folder on the server for all subsequent analysis.
-We will now use vcftools to create a vcf for each group (and simplify names)
-
-```
-vcftools --vcf 02_data/canada.vcf --keep 02_data/AA.list --recode --out 02_data/AA
-vcftools --vcf 02_data/canada.vcf --keep 02_data/AB.list --recode --out 02_data/AB
-vcftools --vcf 02_data/canada.vcf --keep 02_data/BB.list --recode --out 02_data/BB
-ls 02_data
 ```
 
 ## Step 2 Study linkage disequilibrium
@@ -455,6 +446,15 @@ write.table(outlier_Chr4, "04_divergence/outlier_Chr4.txt", row.names=F, quote=F
 We will now try to figure out whether heterozygosity is indeed higher in our Ab groups. We will use the --hardy options for vcftools which tests hardy-weinberg equilibrium for each SNP and report the observed and expected fraction of heterozygotes at that position
 
 #### On the server: get H-W stats and number of heterozygotes
+We will  use vcftools to create a vcf for each group 
+
+```
+vcftools --vcf 02_data/canada.vcf --keep 02_data/AA.list --recode --out 02_data/AA
+vcftools --vcf 02_data/canada.vcf --keep 02_data/AB.list --recode --out 02_data/AB
+vcftools --vcf 02_data/canada.vcf --keep 02_data/BB.list --recode --out 02_data/BB
+ls 02_data
+```
+
 We will only keep SNPs with maf above 5% since rare SNP won't be super informative in terms of heterozygotes (high stochasticity due to sampling a low number of heterozygotes)
 
 ```
