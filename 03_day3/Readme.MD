@@ -51,13 +51,26 @@ Ok, now we are ready to convert our VCF files to the StAMPP file format. The too
 ```
 bash Toolbox/00-VCF_Reshaper.sh -v 02_data/canada.vcf -p 02_data/popmap_canada.txt -f StAMPP -o 03_fst/canada
 ```
-Then move inside the toolbox folder ``cd Toolbox/``
-Once is done, you will ses that a ``.StAMPP`` file inthe 03_fst folder.
+Then check output folder ``ls 03_fst_canada/``
+Once is done, you will see that a ``.StAMPP`` file in the 03_fst folder.
 Then, we can run the Rscript `StAMPP-fst.R` to perform pairwise FST for each dataset. This script require three args.
 * Input StAMPP file
 * Output prefix
 * Number of CPU allowed (default CPU=1)
 
+NOTE: dont' worry about the error message. It only say that it cannot delete temporary files. It's not important.
+
+** !!! Before using it, you have to install the package in you own server session.**
+Please open an online R session : just tap R in the shell.
+Once R in open, install the required packages using :
+```
+install.packages("BiocManager")
+install.packages("varhandle")
+#install StAMPP via BioConductor pathway
+BiocManager::install("StAMPP")
+q()
+```
+Here we are ready to run the StAMPP and perform FST calculations.
 ```
 Rscript Toolbox/StAMPP-fst.R 03_fst/canada.StAMPP 03_fst/canada 1
 ```
