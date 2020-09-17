@@ -1,7 +1,7 @@
 # Day4 : Copy Number Variants
 
 ## Overview
-During this practical, you will search for putative copy number variants within a VCF file. Then. putative CNVs identified will be examine for environmental association with temperature. For this practical, we will use a lax filtered vcf file based on the 12 Canadian sampling sites.
+During this practical, you will search for putative copy number variants within a VCF file. Then, putative CNVs identified will be examined for environmental association with temperature. For this practical, we will use a lax filtered vcf file based on the 12 Canadian sampling sites.
 
 #### [On the Amazon server]
 ### Step 0: Set working directory and copy basic files
