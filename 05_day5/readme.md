@@ -5,7 +5,7 @@ Today, we will explore the annotation of the genome, to see if some of the outli
 First of all, like previous days please copy into your directory the folder 05_day5, open it and we will work from there all day (excpet for snpEff.
 
 ```
-cp -r Share/physalia_adaptation/05_day5 .
+~/Share/physalia_adaptation_course/05_day5 .
 cd 05_day5
 ```
 
