@@ -99,7 +99,7 @@ I suggest below a very basic loop to store the correlation by windows. You can p
 Please note here that we could also have used the genotype correlation, for instance call 0/1 or 0/1/2 the cluster observed on the global pca and then look for each snps at the correlation between genotypes and gneotype for the cluster identified.
 
 ```
-geno <- read.table("canada.012")[,-1] #load geno
+geno <- read.table("00_localPCA/canada.012")[,-1] #load geno
 geno[1:6,1:6] #check the geno matrix
 global.pca<-prcomp(geno) #run the pca
 plot(geno.pca$x[,1],geno.pca$x[,2]) # plot the pca
