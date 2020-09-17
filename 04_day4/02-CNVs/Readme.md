@@ -172,7 +172,7 @@ CNVs_radTag <- read.table("CNVs_RADtag_IDs.txt") %>%
 
 #3. load gdepth file of duplicated SNPs (output from vcftools --geno-depth)
 gdepth_raw_data <- read.table("02-data/capelin_canada_filtered_4_60_0_6.gdepth", h=T) %>%
-                        mutate(.,  RadTag_all =  RadTag_all) %>%
+                        mutate(.,  RadTag_all =  CNVs_radTag$RadTag_all) %>%
                         select(., CHROM, POS, RadTag_all, everything())
 
 #check the data
@@ -410,3 +410,7 @@ ggsave("PCA_biplot_oultiers_CNVs.png", width = 8,height = 6)
  * **Fill missing data**
  * **Use RDA for CNV-Environment association (or other ways such as GLMMs)**
  * **Explore the results as you wish (e.g. PCA, BrayCurtis trees...)**
+
+
+Some examples to better understand what kind of pattern we can observe depending on the dataset or species.
+![](05-readme_img/CNV_detect_ex.gif)
