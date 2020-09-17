@@ -80,6 +80,7 @@ Look at the format. We have 3 columns for position, total eigen values, eigvalue
 So to get information for a window we can fo something like:
 ```
 Nind<-240
+i=15 #for the 15th window
 
 pc1_i<-t(pca_matrix[i, 7:(Nind+6)]) #scores along PC1
 pc2_i<-t(pca_matrix[i, (Nind+7):(2*Nind+6)]) #scores along PC2
@@ -376,7 +377,7 @@ AB.hwe<-read.table("05_heterozygosity/AB_formatted.hwe", header = T)
 colnames(AB.hwe)<-c("CHR","POS","Homo1_obs", "Het_Obs", "Homo2_Obs", "Homo1_Exp", "Het_Exp","Homo2_Exp","Chisq_HWE","P_HWE","P_HET_DEFICIT", "P_HET_EXCESS")
 head(AB.hwe)
 #calculate the fraction of observed heterozygotes
-AB.hwe$het_fraction<-BB.hwe$Het_Obs/(BB.hwe$Homo1_obs+BB.hwe$Het_Obs+BB.hwe$Homo2_Obs)
+AB.hwe$het_fraction<-AB.hwe$Het_Obs/(AB.hwe$Homo1_obs+AB.hwe$Het_Obs+AB.hwe$Homo2_Obs)
 
 #plot
 ggplot(AB.hwe, aes(x=POS/1000000, y=het_fraction, col=CHR))+
