@@ -2,7 +2,7 @@
 IMPORTANT: Please copy all the folder 04_day4 from /Share into you repository on the AWS server. Please copy it in your own computer and try to follow the same architecture when moving your files.
 
 ``` 
-cp -r ~/Share/physalia_adaptation/04_day4 .
+cp -r ~/Share/physalia_adaptation_course/04_day4 .
 cd 04_day4/01_haploblocks
 ```
 We will run all commands from here
