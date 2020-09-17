@@ -412,5 +412,5 @@ ggsave("PCA_biplot_oultiers_CNVs.png", width = 8,height = 6)
  * **Explore the results as you wish (e.g. PCA, BrayCurtis trees...)**
 
 
-Some examples to better understand what kind of pattern we can observe depending on the dataset or species.
+Some examples to better understand what kind of pattern we can observe depending on the dataset or species. (It is a gif, give it some time to swith to the next example)
 ![](05-readme_img/CNV_detect_ex.gif)
