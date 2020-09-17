@@ -102,7 +102,7 @@ Please note here that we could also have used the genotype correlation, for inst
 geno <- read.table("00_localPCA/canada.012")[,-1] #load geno
 geno[1:6,1:6] #check the geno matrix
 global.pca<-prcomp(geno) #run the pca
-plot(geno.pca$x[,1],geno.pca$x[,2]) # plot the pca
+plot(global.pca$x[,1],global.pca$x[,2]) # plot the pca
 PC_of_interest<-global_pca$x[,1] #if you want to look at correlation with PC1
 
 #initialise the vector
