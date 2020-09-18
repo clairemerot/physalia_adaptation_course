@@ -289,7 +289,7 @@ First we need to know which genes were in our pool of analysis, in other words, 
 
 ```
 #upload transcript intersecting with snps
-all_transcripts<-read.table("05_bed/all_snps.transcript", header=F)
+all_transcripts<-read.table("06_go/all_snps.transcript", header=F)
 colnames(all_transcripts)[1]<-"TranscriptName"
 dim(all_transcripts) #how many?
 head(all_transcripts)
@@ -318,7 +318,7 @@ Now let's open one of our outlier list and format it. We will start with the out
 
 ```
 #transcripts in outliers
-outliers_transcripts_temp_rda<-read.table("05_bed/outlier_temp_rda.transcript", header=F)
+outliers_transcripts_temp_rda<-read.table("06_go/outlier_temp_rda.transcript", header=F)
 colnames(outliers_transcripts_temp_rda)<-"TranscriptName"
 head(outliers_transcripts_temp_rda)
 dim(outliers_transcripts_temp_rda)
