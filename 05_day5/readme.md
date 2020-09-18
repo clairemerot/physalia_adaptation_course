@@ -124,6 +124,26 @@ fish_res
 ```
 You can change Fisher alternative hypothesis to "two.sided", "greater" or "less"
 
+You can loop over the categories with a loop and store the results
+```
+for (i in 1 : length(joined_repartition1$category)
+{
+cat(joined_repartition1$category[i])
+
+#build the contigency table
+cont_tab<-rbind(c(joined_repartition1$n_oulier[i],total_outlier),
+                c(joined_repartition1$n_all_snps[i],total_snp))
+cat(cont_tab)
+
+#run Fisher test
+cont_tab[ which(is.na(cont_tab))]<-0
+fish_res<-fisher.test(cont_tab,alternative = "greater")
+cat(fish_res)
+}
+```
+
+
+
 ## Step 2 Bedtools : find the intersection between SNPs and genes
 Bedtools is a program that is great to find the intersection between two files. It usually works on a specific bedformat which have at least three columns (Chromosome, FromPosition, ToPosition) and 12 columns to the maximum.
 It won't like having header. We will try to keeep a 4th column with SNP id.
