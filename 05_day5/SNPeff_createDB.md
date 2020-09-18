@@ -2,9 +2,10 @@
 First I have downloaded snpEff, unzip it and open it.
 Then I have added a line into the config file, for this I usually use the editor nano which is easy-to-use.
 You may see 
-"#new genome
-genome_mallotus_dummy.genome : capelin"
-
+```
+#new genome
+genome_mallotus_dummy.genome : capelin
+```
 if you do 
 ```
 less ~/Share/ressources/snpEff/snpEff.config
