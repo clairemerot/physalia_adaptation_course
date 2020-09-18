@@ -197,6 +197,9 @@ Plink requires three inputs (.bed, .bim, .fam). The argument --r2 calculate the 
 we need to put --allow-extra-chromosome since we are not on humans! and --ld-window-r2 0 asks all output to be printed. To reduce the file you can choose here a minimum threshold for R2
 
 ```
+#unzip vcf
+gunzip 02_data/canada.vcf.gz
+
 #extract a reduced vcf 
 vcftools --vcf 02_data/canada.vcf --chr Chr4 --maf 0.05 --recode --out 03_ld/maf0.05_chr4
 
