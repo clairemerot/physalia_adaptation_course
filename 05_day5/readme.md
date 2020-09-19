@@ -13,8 +13,8 @@ Inhere, you should have everything we need for today. You can explore the differ
 ``` ls 02_data``` in which you will find the vcf, ``` ls 03_outliers``` in which I put the txt files that we exported on day 3 when analysing the association with temperature, and on day4 when analysing divergence between haploblocks or between sexes
 I also put here the list of all SNPs present in the vcf. you can look at each file with the command ``` head 03_outliers/SNP_pos.txt``` for instance
 
-The annotated transcriptome (which is generally in .gff format) as well as the transposition onto the genome in an annotation table are located at the following path ~/Share/ressources/
-You don't need to copy them as we have prepared simplified files (in R simply selecting the relevant column) when needed. You may want to have a loof to get a sense of what it looks like.
+The annotated transcriptome (which is generally in .gff format) as well as the transposition onto the genome in an annotation table are located at the following path ~/Share/ressources/ A copy of the .gff transcriptome is inside the 02_data folder.
+You don't need to copy them as we have prepared simplified files (in R simply selecting the relevant column) when needed. You may want to have a look to get a sense of what it looks like.
 ``` less ~/Share/ressources/genome_mallotus_dummy.gff3``` 
 press "q" to exit the less visualisation
 ``` less ~/Share/ressources/genome_mallotus_dummy_annotation_table.tsv``` 
@@ -25,6 +25,7 @@ SNPeff is a program that uses the gff file and the position of each SNP to annot
 If you work on a model species which already has a database, you are lucky! If not, you need to build a database. 
 
 As it is a bit long, and takes space on the server, I have done it for you. It was not very straightforward, so I thought I will keep track of how I did and put it for you in this file https://github.com/clairemerot/physalia_adaptation_course/blob/master/05_day5/SNPeff_createDB (but do not try to run it on the server please)
+If you want to re-creat it, the .gff is inside the 02_data while the reference genome was in the folder 01_day1/02_genome
 
 If you want to, you can look at the database by doing:
 
