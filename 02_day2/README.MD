@@ -1,4 +1,8 @@
 # Day2: Population structure and differentiation
+
+If you have no access to the server, please note that we put all the essential files from stacks (vcf, .structure and fst) in the three populations folder.
+The popmap text files can be found in ../00_documents
+
 ## Step 1: Calculating F-statistics
 ### With Stacks
 If you had any problems yesterday, or are not sure you used the correct settings, you can copy in your folder the files that I generated for each of three datasets. If you have generated some and want to avois confusion with overwriting existing files you can remove the folders you have produced with ```rm -fr folder_name```
