@@ -3,6 +3,8 @@
 This repository includes scripts and data associated with the practical sessions of the Physalia Course about Adaptation Genomics
 Prepared by Anna Tigano, Yann Dorant and Claire Mérot
 
+Excpet for day 1 in which you won't have the bam files, all the tutorial can be completed with the compressed files stored in the github page for each day (day 2 to day 5
+
 
 ## Logging on the AWS server from your computer
 ### Mac OS X and Linux users
