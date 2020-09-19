@@ -1,0 +1,5 @@
+*.vcf
+*.bcf
+*.vcf.gz
+*.txt
+

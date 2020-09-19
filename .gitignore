@@ -5,15 +5,11 @@
 *.fasta
 *.fastq
 *.log
-*.fa*
-*.fasta*
 *.bai
 *log_*
 *.vcf
 *.bcf
-*.vcf*
 *.bcf*
-*.gz
 *.swp
 *.save
 log*
