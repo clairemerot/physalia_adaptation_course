@@ -130,7 +130,7 @@ ggplot(pca_correlation, aes(x=midpos, y=corr_vector, colour=chrom))+
 ```
 
 What do you see?  Which windows correlate with PC1? What do you think?
-![local_pca_corr_PC1](https://github.com/clairemerot/physalia_adaptation_course/tree/master/04_day4/01_haploblocks/00_localPCA/images/local_pca_corr_PC1.png)
+![local_pca_corr_PC1](00_localPCA/images/local_pca_corr_PC1.png)
 
 Now you can have a look at correlation between local PC1s and the global PC2...
 
@@ -153,13 +153,13 @@ ggplot(mds_matrix, aes(x=mds3, y=mds4, colour=chrom))+
   geom_point()+
   theme_classic()
 ```
-![mds1_2](https://github.com/clairemerot/physalia_adaptation_course/tree/master/04_day4/01_haploblocks/00_localPCA/images/mds1_2.png)
+![mds1_2](00_localPCA/images/mds1_2.png)
 
 As you see, MDS 1 and 2 are largely driven by Chr 4 and Chr5. Let's look at mds scores along the genome to pinpoint those regions
 Building on what we did before, you can probably make a Manhattan plot with a midposition as x, and mds1 or mds2 as y.
 
 This is the output for MDS2
-![mds2_manhattan_plot](https://github.com/clairemerot/physalia_adaptation_course/tree/master/04_day4/01_haploblocks/00_localPCA/images/mds2_position.png)
+![mds2_manhattan_plot](00_localPCA/images/mds2_position.png)
 
 To follow-up, You can try to find approximately the breakpoints of those areas that appear outliers.
 We can locate them approximately from 4.8MB to 16.6MB on chromosome 4 and the full chromosome 5
