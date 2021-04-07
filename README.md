@@ -1,4 +1,4 @@
-# physalia_adaptation_course
+# Physalia adaptation course
 
 This repository includes scripts and data associated with the practical sessions of the Physalia Course about Adaptation Genomics
 Prepared by Anna Tigano, Yann Dorant and Claire Mérot for the course in May 2021
