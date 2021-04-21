@@ -4,7 +4,9 @@ First, start PuTTYgen (for example, from the Start menu, choose All Programs > P
 
 In the new window that pops up, Change “PuTTY Private Key Files” to “All Files” to allow you to find your pem file.
 
-Then save your key and click on YES to dismiss the Warning as shown below.
+Then you will save your private key. Click on YES to dismiss the Warning.
+
+Save your key with the same name as the .pem that we provided to you. For instance if it was x45x.pem, save it as x45x.ppk
 
 Great, now your key file is ready and we can start Putty. In Putty, enter your user name and the IP address in the format <user_name>@. Make sure that 22 is given as Port and that SSH is selected.
 
