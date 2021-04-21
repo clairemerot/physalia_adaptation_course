@@ -1,3 +1,8 @@
+Please follow the tutorial with images to transform your key, connect via Putty and use a scp client like winSCP
+
+See here: https://github.com/clairemerot/physalia_adaptation_course/blob/2021/connect_AWS_windows.pdf
+
+
 If you are using a Windows machine, you will need to log on using PuTTY since there is no native ssh client. PuTTY does not natively support the private key format (.pem) needed to login to our Amazon cloud instance. You first need to convert the private key that we gave to you to a key that PuTTY can read. PuTTY has a tool named PuTTYgen, which can convert keys to the required PuTTY format (.ppk). When you installed PuTTY, it will also have installed PuTTYgen.
 
 First, start PuTTYgen (for example, from the Start menu, choose All Programs > PuTTY > PuTTYgen). Then select RSA and click on Load:
