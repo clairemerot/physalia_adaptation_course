@@ -22,7 +22,7 @@ Then, lostruct run the PCA on all windows. Here we choose to consider k=npc=2 be
 It outputs a matrix pcs in which each rows give the first k eigenvalues and k eigenvectors for each window. This gives you a matrix with 483 columns (3 columns of info, 240 columns with PC1 score for each individual, and 240 column with PC2 score for each individual). It has as many rows as windows (1016 with windows of 100 SNPs). I added 3 columns of information about the window position. you can have a look at it with
 
 ```
-less 00_localPCA/pca.matrix.txt
+less 00_localPCA/pca_matrix.txt
 ```
 escape less by pressing "q"
 
