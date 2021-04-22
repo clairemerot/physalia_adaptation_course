@@ -36,5 +36,11 @@ Data: We focus on 12 population from Canada for which there is almost no geograp
 
 ## Day4: Accounting for Structural Variants
 
+4-1: Investigating haplotypes blocks ( ~inversions?)
+
+This tutorial include working on local PCA, but also calculation of LD, Fst and observed fraction of heterozygotes which may be useful in other contexts
+
+4-2: Filtering duplicated loci in RAD-seq data ( ~ Copy number variants)
+
 ## Day5: Functional approaches
 
