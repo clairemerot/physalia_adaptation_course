@@ -22,37 +22,39 @@ Then, lostruct run the PCA on all windows. Here we choose to consider k=npc=2 be
 It outputs a matrix pcs in which each rows give the first k eigenvalues and k eigenvectors for each window. This gives you a matrix with 483 columns (3 columns of info, 240 columns with PC1 score for each individual, and 240 column with PC2 score for each individual). It has as many rows as windows (1016 with windows of 100 SNPs). I added 3 columns of information about the window position. you can have a look at it with
 
 ```
-less 00_localPCA/pca_matrix.txt
+less -S 00_localPCA/pca_matrix.txt
 ```
 escape less by pressing "q"
 
 ####  run lostruct (on the server)
-Back to work,  we will run the end of lostruct procedure. you can do it either on the terminal or in Rstudio on your computer
+We will run the end of lostruct procedure. you can do it either on the terminal (start R ) or in Rstudio on your computer
 
 ```
 #install libraries
 install.packages("data.table")
 devtools::install_github("petrelharp/local_pca/lostruct")
+
+#load library
 library(lostruct)
 ```
 
 ```
 #load matrix
-pca_matrix_noNA<-read.table("00_localPCA/pca_matrix.txt", sep="\t", header=T, stringsAsFactors=FALSE)
-head(pca_matrix_noNA)
+pca_matrix<-read.table("00_localPCA/pca_matrix.txt", sep="\t", header=T, stringsAsFactors=FALSE)
+head(pca_matrix)
 #split columns with positions information and PC
-window_pos_noNA<-pca_matrix_noNA[,1:3]
-pcs_noNA<-as.matrix(pca_matrix_noNA[,4:dim(pca_matrix_noNA)[2]])
+window_pos<-pca_matrix[,1:3]
+pcs<-as.matrix(pca_matrix[,4:dim(pca_matrix)[2]])
 ```
 
 The lostruct procedure proposes to compute pairwise distances between those windows and visualise it with a MDS (multidimensional scaling). Our goal is to identify groups of windows which display similar PCA pattern.This is done with the following functions (we uses 2 PC per window as above, and will look at the 1st 10 axes of the MDS)
 ```
-pcdist <- pc_dist(pcs_noNA,npc=2)
+pcdist <- pc_dist(pcs,npc=2)
 mds_axe<-cmdscale(pcdist, k=10)
 head(mds_axe)
 
 #again the mds file is missing position information so:
-mds_matrix<-cbind(window_pos_noNA, mds_axe)
+mds_matrix<-cbind(window_pos, mds_axe)
 write.table(mds_matrix, "00_localPCA/mds_matrix.txt", sep="\t", row.names=FALSE, quote=FALSE)
 ```
 Since this is a little long , we can let it run and explore on your local computer with Rstudio some of the local pca. Let's download pca_matrix.txt locally and we will play in R studio to look at some of those local PCA
