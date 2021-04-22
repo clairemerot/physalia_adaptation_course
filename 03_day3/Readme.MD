@@ -204,7 +204,7 @@ P1_pos<-left_join(P1, chr_pos, by=c("LocusName"="id_snp"))
 
 #We can have a look at the results by exporting the figures
 #we can look at the FSt as a function of heterozygosity to understand which snps have been evaluated, which one appear true or false outliers
-And we can look along the genome with our manhattan plots
+#And we can look along the genome with our manhattan plots
 
 jpeg("04_outflank/outflank_outlier_fst_He.jpeg")
 ggplot(P1_pos, aes(x=He, y=FST, colour=OutlierFlag))+ 
@@ -237,7 +237,7 @@ What about chr 4? It may be that the rearrangement is involved in local adaptati
 Should we put a different threshold for FST outliers between different regions of the genome? And how to do it? This is an open question at the moment.
 There is accumulating litterature suggesting that recombination is a very important factor, which may both create spurious effects, leading even under neutrality to high FSt variance but also, biological effets by promoting cluster of adaptive loci, without mentionning the matter of linked selection or recombination...
 
-You may want to re-run on the SNP subset without chr4/chr5 to get a sense of what that says.
+Optional: You may want to re-run on the SNP subset without chr4/chr5 to get a sense of what that says.
 
 ### 2.2 With Baypass
 To look at adaptive differentiation and environmental asssociations, we wil use Baypass http://www1.montpellier.inra.fr/CBGP/software/baypass/
