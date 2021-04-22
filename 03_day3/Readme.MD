@@ -44,7 +44,7 @@ Before considering which variation of the genome is shaped by selection, we need
 It can be done by looking into PCA or STRUCTURE/ADMIXTURE analysis, as well as by looking into pairwise Fst between populations.
 Last year, we had a tutorial about how to get a matrix of pairwise Fst and assess whether this genetic differentiation was correlated with geographic distance (Isolation-by-distance), we remove it to keep the day shorter and focus on finding putatively-adaptive loci. Yet you can still refer to that tutorial if you wish under that link:
 
-00_documents/IBD.md
+[FST by pair and IBD tutorial - extra](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/00_documents/IBD.md)
 
 If you had time to go up to that point yesterday, you should have observed that there is basically no geographic structure in our 12 populations, which is somehow expected in a marine species. However, we saw with that a region of chromosome 4 and sex-linked markers on chr 5 were overwhelming the structure. Will that influence our analyses? Possibly
 
