@@ -64,7 +64,8 @@ NOTE: dont' worry about the error message. It only say that it cannot delete tem
 
 Please open an online R session : just tap R in the shell.
 
-Once R in open, install the required packages using the following lines. Please use them one by one and answer "yes" if it asks you to install a personnal library:
+Once R in open, install the required packages using the following lines. Please use them one by one and answer "yes" if it asks you to install a personnal library. it may take a few minutes and write lots of line. please be patien and don't close the terminal.
+
 ```
 install.packages("BiocManager")
 install.packages("varhandle")
@@ -74,6 +75,7 @@ BiocManager::install("StAMPP")
 #once all is installed--quit R
 q()
 ```
+
 Here we are ready to run the StAMPP and perform FST calculations.
 ```
 Rscript Toolbox/StAMPP-fst.R 03_fst/canada.StAMPP 03_fst/canada 1
