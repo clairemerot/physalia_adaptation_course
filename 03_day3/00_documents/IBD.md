@@ -117,7 +117,7 @@ gplots::heatmap.2(fst.all.mat, trace = 'none',
                   key.xlab='FST')
 ```
 Note that values goes up to FST = 0.02 ! but most of them are very low
-![img_fst_all](../../07_img_readme/Fst_heatmap_all_snps.png)
+![img_fst_all](../07_img_readme/Fst_heatmap_all_snps.png)
 
 What do you notice? Is it heterogeneous? Do some population look more differentiated than other?
 Why do you think A and J are so different? 
@@ -165,7 +165,7 @@ ggplot(IBD.df) + aes(x=log(distance), y=FST/(1-FST)) +
   geom_smooth(method='lm', formula= y~x) +
   theme_bw()
 ```
-![img_IBD](../../07_img_readme/IBD_plot_all_snps.png)
+![img_IBD](../07_img_readme/IBD_plot_all_snps.png)
 
 So Isolation by distance is not significant and it does not seem that geography can explain the genetic distances very well with this full dataset.
 If we come back to our heatmap, we can notice the cluster of populations C, F, I. How do you interpret it?
@@ -193,3 +193,12 @@ table (info_ind$pop,info_ind$sex)
  ```
 It seems that the field sampling has not been very good at balancing sex-ratio between populations... We should be worried about sex-linked markers driving the signal!It may be one of the reason why A and J are the most diferrentiated
 (note: we intentionnaly subsetted the dataset to create this bias which was not in the original publication ;-) but it may happen easily for some species or low sample size)
+
+Yesterday, we saw that a region of chromosome 4 and sex-linked markers on chr 5 were overwhelming the structure. Will that influence our pairwise estimates? Possibly
+Let's re-run the steps above on the vcf in which we removed the chr5 and chr4 (skip that if you are late).
+
+Let's look at the pairwise FST matrix and the IBD stats
+![img_fst_all](../07_img_readme/Fst_heatmap_no_chr4-5.png)
+
+What do you see now?
+pay attention to the absolute value of FST, to the clustering and IBD (or the absence of)?
