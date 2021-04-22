@@ -26,6 +26,14 @@ Raw reads: Obtained by GBS methods, sequenced with IonTorrent.
 
 ## Day3: Outlier detection - Environmental associations
 
+Data: We focus on 12 population from Canada for which there is almost no geographic structure but environmental variability
+
+3-1: Genetic structure and LD-pruned data
+
+3-2: Outlier of differentiation with two methods (Outflank & Baypass)
+
+3-3: Genotype-Environnement Associations with two methods (Baypass & redundancy analysis)
+
 ## Day4: Accounting for Structural Variants
 
 ## Day5: Functional approaches
