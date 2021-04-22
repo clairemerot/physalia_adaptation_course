@@ -117,7 +117,7 @@ gplots::heatmap.2(fst.all.mat, trace = 'none',
                   key.xlab='FST')
 ```
 Note that values goes up to FST = 0.02 ! but most of them are very low
-![img_fst_all](07_img_readme/Fst_heatmap_all_snps.png)
+![img_fst_all](../../07_img_readme/Fst_heatmap_all_snps.png)
 
 What do you notice? Is it heterogeneous? Do some population look more differentiated than other?
 Why do you think A and J are so different? 
@@ -165,7 +165,7 @@ ggplot(IBD.df) + aes(x=log(distance), y=FST/(1-FST)) +
   geom_smooth(method='lm', formula= y~x) +
   theme_bw()
 ```
-![img_IBD](07_img_readme/IBD_plot_all_snps.png)
+![img_IBD](../../07_img_readme/IBD_plot_all_snps.png)
 
 So Isolation by distance is not significant and it does not seem that geography can explain the genetic distances very well with this full dataset.
 If we come back to our heatmap, we can notice the cluster of populations C, F, I. How do you interpret it?
