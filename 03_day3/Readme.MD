@@ -6,7 +6,7 @@ To start, please copy the folder Day 3 into your home directory adn open it with
 cp -r ~/Share/physalia_adaptation_course/03_day3 .
 cd 03_day3 
 ```
-Please remmember we will work from this directory the whole day. When copying on your local computer please copy the whole day3 folder and all its subarchitecture and try to respect that architecture, that will be easier to find your files. 
+Please remember we will work from this directory the whole day. When copying on your local computer please copy the whole day3 folder and all its subarchitecture and try to respect that architecture, that will be easier to find your files. 
 
 We have put inside the subfolder 02_data your two vcf from yesterday:
 - the vcf of the 12 populations filtered at 1 SNP per locus
@@ -552,8 +552,8 @@ xtx_pos[xtx_pos$M_XtX>= threshold_fdr0.05,]
 ```
 
 Now you may want to do the same for the analysis controlled by population structure. Compare the results. What do you think? 
-![xtx_uncontrolled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/xtx_uncontrolled.png)
-![xtx_controlled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/xtx_controlled.png)
+![xtx_uncontrolled](07_img_readme/xtx_uncontrolled.png)
+![xtx_controlled](07_img_readme/xtx_controlled.png)
 
 ## 3 Environmental association
 ### 3.1 With Baypass (locus by locus)
@@ -621,11 +621,11 @@ What do you observe?
 
 Uncontrolled model
 
-![bf_uncontrolled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/bf_uncontrolled.png)
+![bf_uncontrolled](07_img_readme/bf_uncontrolled.png)
 
 Controlled model
 
-![bf_controlled](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/bf_controlled.png)
+![bf_controlled](07_img_readme/bf_controlled.png)
 
 So on the data we have today, we find very few putative outlier SNPs associated with temperature. It may be that we don't have the power to detect some, we have only 12 populations and a reduced representation of the genome. It may be that given the high gene flow, very few regions of the genome are under  selection that is strong enough to show detectable differences in allelic frequencies.
 
@@ -723,7 +723,7 @@ points(temp.rda, display="sites", pch=20, cex=1.3, col=info$pop, scaling=3)
 dev.off()
 ```
 
-![rda1_triplot](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/rda1_triplot.jpeg)
+![rda1_triplot](07_img_readme/rda1_triplot.jpeg)
 
 RDA2 is meaningless and samples are dispersed along RDA1 which represent temperature.
 
@@ -763,7 +763,7 @@ outlier_temp
 #export them
 write.table(outlier_temp, "06_rda/outlier_temp_rda.txt", row.names=F, quote=F, sep="\t")
 ```
-![rda1_loading_hist](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/rda1_loading_hist.jpeg)
+![rda1_loading_hist](07_img_readme/rda1_loading_hist.jpeg)
 
 We may also visualize the rda loadings along the genome 
 
@@ -781,7 +781,7 @@ ggplot(load.temp.rda.pos, aes(x=position, y=RDA1, colour=chromosome))+
  dev.off()
 ```
 
-![loading_temp_manhattanplot](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/loading_temp_manhattanplot.jpeg)
+![loading_temp_manhattanplot](07_img_readme/loading_temp_manhattanplot.jpeg)
 
 As with baypass, we have very few outliers associated with temperature. Yet, their signal is quite strong so they are likley worth exploring a little more.
 
@@ -803,7 +803,7 @@ plot(geo.rda, scaling=3)
 points(geo.rda, display="sites", pch=20, cex=1.3, col=info$pop, scaling=3)
 dev.off()
 ```
-![rda1_triplot_geo](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/rda1_triplot_geo.jpeg)
+![rda1_triplot_geo](07_img_readme/rda1_triplot_geo.jpeg)
 
 Only RDA1 describe significant association between genetic variation and latitude. Yet, geography explains only 0.2% of variance in our case!
 Well, let's try the controlled the rda by geography anyway:
@@ -925,4 +925,4 @@ library(ggVennDiagram)
 ggVennDiagram(list(rda = 1:nRDA, BP = (nRDA+1-nboth):(nRDA-nboth+nBP)))
 ```
 
-![venn](https://github.com/clairemerot/physalia_adaptation_course/blob/master/03_day3/07_img_readme/venn.png)
+![venn](07_img_readme/venn.png)
