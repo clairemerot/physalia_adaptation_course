@@ -51,7 +51,7 @@ Ok, now we are ready to convert our VCF files to the StAMPP file format. The too
 ```
 bash Toolbox/00-VCF_Reshaper.sh -v 02_data/canada.vcf -p 02_data/popmap_canada.txt -f StAMPP -o 03_fst/canada
 ```
-Then check output folder ``ls 03_fst_canada/``
+Then check output folder ``ls 03_fst/``
 Once is done, you will see that a ``.StAMPP`` file in the 03_fst folder.
 Then, we can run the Rscript `StAMPP-fst.R` to perform pairwise FST for each dataset. This script require three args.
 * Input StAMPP file
