@@ -250,7 +250,21 @@ This package is an extension of Bayenv. It may be a little long to run so you wi
 
 
 ####  prepare files
-We will use again scripts prepared by Yann Dorant in his toolbox:
+to save time today, we will use a toolbox developped by Yann Dorant. You may be interested in looking at the scripts to understand how this is done.
+This toolbox embed various useful script in order to fastly convert vcf format to common pop genomics formats (genepop, StAMPP, baypass, bayenv...). If you are interested to learn more about this toolbox, you will find the full description at https://gitlab.com/YDorant/Toolbox
+
+To download the toolbox in your current working folder on the server (03_day3), use the following command line:
+```
+git clone https://gitlab.com/YDorant/Toolbox
+```
+
+Ok, now we are ready to convert our VCF files to the baypass format. The toolbox have an easy way to do that with a bash script. This bash script require four args:
+* -v VCF file
+* -p population map
+* -f output file format
+* -o output prefix name
+* 
+
 ```
 python Toolbox/reshaper_baypass.py 02_data/canada.vcf 02_data/popmap_canada.txt 05_baypass/canada.baypass
 python Toolbox/reshaper_baypass.py 02_data/canada.pruned.recode.vcf 02_data/popmap_canada.txt 05_baypass/canada.pruned.baypass
