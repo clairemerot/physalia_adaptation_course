@@ -64,7 +64,7 @@ NOTE: dont' worry about the error message. It only say that it cannot delete tem
 
 Please open an online R session : just tap R in the shell.
 
-Once R in open, install the required packages using :
+Once R in open, install the required packages using the following lines. Please use them one by one and answer "yes" if it asks you to install a personnal library:
 ```
 install.packages("BiocManager")
 install.packages("varhandle")
