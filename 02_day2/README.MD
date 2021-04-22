@@ -391,7 +391,7 @@ setwd("~/Desktop")
 twolin<-import2genind("populations_2lin_random/populations.str") # 80 ind and 8530 SNPs in my case, check your populations.log file to get the right number of SNPs
 ### This command will prompt questions about the structure of the file
 ```
-![convert4dapc](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_adegenet_loaddata.png)
+![convert4dapc](../images_tutorial/02-day2_adegenet_loaddata.png)
 ```
 ### Once the dataset is loaded, you can proceed with the DAPC
 dapc_twolin<-dapc(twolin) ### choose 50 PCs and 1 distriminant function, as you did have a choice...
@@ -416,11 +416,11 @@ dapc_canada1<-dapc(canada, n.da=4, n.pca=100)
 dapc_canada2<-dapc(canada, n.da=4, n.pca=200)
 scatter(dapc_canada1)
 ```
-![dapc_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_plot_dapc_canada_100_4.png)
+![dapc_canada1](../images_tutorial/02-day2_plot_dapc_canada_100_4.png)
 ```
 scatter(dapc_canada2)
 ```
-![dapc_canada2](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_plot_dapc_canada_200_4.png)
+![dapc_canada2](../images_tutorial/02-day2_plot_dapc_canada_200_4.png)
 
 
 If too few PCs (with respect to the number of individuals) are retained, useful information will be excluded from the
@@ -440,22 +440,22 @@ These analyses suggest I should use fewer PCs, around 50.
 ```
 dapc_canada1<-dapc(canada, n.da=4, n.pca=50)
 ```
-![dapc_canada2](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_plot_dapc_canada_50_4.png)
+![dapc_canada2](../images_tutorial/02-day2_plot_dapc_canada_50_4.png)
 
 
 Another way to see the effect of the choice of the number of PCs is from stucture-like plots made with the function ```compoplot```, which plots the assignemnt proportions of each individual.
 ```
 compoplot(dapc_canada1)
 ```
-![compoplot1_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_compoplot_dapc_canada1.png)
+![compoplot1_canada1](../images_tutorial/02-day2_compoplot_dapc_canada1.png)
 ```
 compoplot(dapc_canada2)
 ```
-![compoplot1_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_compoplot_dapc_canada2.png)
+![compoplot1_canada1](../images_tutorial/02-day2_compoplot_dapc_canada2.png)
 ```
 compoplot(dapc_canada3)
 ```
-![compoplot1_canada1](https://github.com/clairemerot/physalia_adaptation_course/blob/master/images_tutorial/02-day2_compoplot_dapc_canada3.png)
+![compoplot1_canada1](../images_tutorial/02-day2_compoplot_dapc_canada3.png)
 
 
 Although 200 PCs discriminate populations well, we know from low pairwise population F<sub>ST</sub> that differentiation is very low, which lead us to conclude that these high population assignments are the consequence of data over-fitting. On the other hand, the poor population assignemnt you obtain from 50 PCs is indicative of the weak population structure among the Canadian populations.
