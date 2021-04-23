@@ -69,7 +69,7 @@ wc -l file.fastq
 and divide by 4.
 Or 
 ```
-zcat -f A_01.fq | sed -n '2~4p' | wc -l
+zcat -f A_01.fq.gz | sed -n '2~4p' | wc -l
 ```
 directly from compressed fastq files, or 
 ```
