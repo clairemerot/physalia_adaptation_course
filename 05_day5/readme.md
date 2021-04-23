@@ -5,7 +5,7 @@ Today, we will explore the annotation of the genome, to see if some of the outli
 First of all, like previous days please copy into your directory the folder 05_day5, open it and we will work from there all day.
 
 ```
-~/Share/physalia_adaptation_course/05_day5 .
+cp -r ~/Share/physalia_adaptation_course/05_day5 .
 cd 05_day5
 ```
 
@@ -32,7 +32,7 @@ If you want to, you can look at the database by doing:
 ```
 java -jar ~/Share/ressources/snpEff/snpEff.jar dump genome_mallotus_dummy | less
 ```
-To exit "less" simply press "q"
+It may take a minute to open. To exit "less" simply press "q"
 
 #### Annotate the vcf 
 Now we can annotate our vcf. As you are getting used to now, we use a raw vcf file in the folder 02_data and will write the output into the folder 04_snpEff in which we will have all subsequent files related to the snpEff analyses
