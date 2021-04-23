@@ -463,18 +463,11 @@ Although 200 PCs discriminate populations well, we know from low pairwise popula
 You can change pretty much everything in your plot and the authors of adegenet have put together a great tutorial <https://adegenet.r-forge.r-project.org/files/tutorial-dapc.pdf>
 
 
+###  Investigate structure in relation with geography
+Before considering which variation of the genome is shaped by selection, we need to think about what is shaped by neutral processes and the interplay of drift, mutation and gene flow. One of the basic thing to do is thus to assess the genetic structure in our sampled area. This is something that you did yesterday, first on the two lineages, and then on the 12 populations from Canada.
 
-### Repeat analyses for geographic structure on different genomic regions/chromosomes
-#### Making a vcf without Chr 4 and Chr5 (on the server, via the terminal)
-As you saw on the PCa, chr4 (likely with an inversion) and chr5 (with sex-linked loci) are messing up with our structure.
+It can be done by looking into PCA or STRUCTURE/ADMIXTURE analysis, as well as by looking into pairwise Fst between populations.
+Last year, we had a tutorial about how to get a matrix of pairwise Fst and assess whether this genetic differentiation was correlated with geographic distance (Isolation-by-distance), we remove it to keep the day shorter and focus on finding putatively-adaptive loci. Yet you can still refer to that tutorial if you wish under that link:
 
-We can use the filtering options of vcftools to exclude the chromosomes 4 and 5:
+[FST by pair and IBD tutorial - extra](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/00_documents/IBD.md)
 
-```
-vcftools --vcf population.can.random.snp.vcf --not-chr Chr4 --not-chr Chr5 --recode --out population.can.random.snp.without45
-```
-
-If you want to play or if you finish early, you can look at how excluding just a region of Chr4...
-
-#### RE-run the geographic structure analysis for Canadian population on the reduced vcf
-Time to apply what you learnt earlier today!
