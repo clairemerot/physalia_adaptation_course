@@ -129,7 +129,7 @@ Now, move to your home folder, make a new folder for the alignment files and cre
 cd 
 mkdir bamfiles
 cd bamfiles
-ln -s ~/Share/physalia_adaptation_course/01_day1/04_aligned_files/*.bam .
+ln -s ~/Share/bamfiles/*.bam .
 ```
 
 #### SAM/BAM
