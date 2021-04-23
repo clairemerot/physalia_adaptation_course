@@ -599,7 +599,7 @@ library(dplyr)
 outlier_temp_rda<-read.table("06_rda/outlier_temp_rda.txt", header=T)
 head(outlier_temp_rda)
 nRDA<-dim(outlier_temp_rda)[1]
-nRDa #how many outliers?
+nRDA #how many outliers?
 
 outlier_temp_bp<-read.table("05_baypass/outlier_temp_bp.txt", header =T)
 head(outlier_temp_bp)
