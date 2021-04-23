@@ -196,7 +196,9 @@ argv <- commandArgs(T)
 option1 <- argv[1]
 option2 <- argv[2]
 ```
-## Step 2 Genotype the individuals for the haploblocks
+## Step 2 Explore the putative haploblock
+
+### Genotype the individuals for the haploblocks
 Thanks to our local PCA exploration on day 2, we know that there are non-recombining haploblocks which may be an inversion on chromosome 4.
 We located the breakpoints approximately from 4.8MB to 16.6MB. We can make a PCa in that region only and use k-means approaches to classify the individuals into 3 groups. 
 
@@ -207,7 +209,7 @@ If you are interested in the code, you can have a look in this file
 
 ![pca](06_images/pca_cluster.png)
 
-## Step 3 Study linkage disequilibrium
+### Study linkage disequilibrium
 
 #### On the server: calculate Ld with Plink
 To calculate LD we will use plink, but not in pruning mode. We want all pairwise LD on each chromosome.
@@ -292,7 +294,7 @@ ggplot(chr4.ld,aes(x=BP_A,y=BP_B, col=R2)) + theme_classic() +
 
 What do you think? do you observe the linkage possibly due to an inversion (or a non-recombining block?)? Is it also observed in the BB group?
 
-## Step4: Studying divergence with Fst (optional)
+### Studying divergence with Fst (optional)
 We may be interested in calculating several statistics for each haplogroup (diversity, divergence, etc). For instance we can calculate Fst between our groups, as you learnt to do on day 2 with vcftools, both as an overall Fst value and in sliding-windows along the genome
 Note that here, this is not ideal since it is better to have balanced sample size (and our group AA is pretty small).
 
@@ -312,7 +314,7 @@ Try to plot also the AA_AB and AB_BB contrasts.
 ![fst_AB_BB](06_images/Fst_ABvsBB.png)
 
 
-## Step 5 Studying heterozygosity with the % of heterozygotes in each group (optional)
+### Studying heterozygosity with the % of heterozygotes in each group (optional)
 We are also interested to figure out whether heterozygosity is indeed higher in our AB middle group. We will use the --hardy options for vcftools which tests hardy-weinberg equilibrium for each SNP and report the observed and expected fraction of heterozygotes at each position
 
 You can following the tutorial to do so here:
@@ -333,5 +335,5 @@ We can also visualize them with violin-plots
 In all cases, we nevertheless note the expected higher observed heterozygosity in AB around the middle of Chr4. 
 On Chr5, there is a region of high heterozygosity in all three groups, which may be driven by sex.
 
-## About haploblocks
+### About haploblocks
 Not all haploblocks detected by MDS will be rearrangements, low-recombination regions, introgression, linked selection or sex-determining loci can leav the same signature. If you are curious and if you have time, you may want to try exploring the Chr5 in the same way to see what's similar and what differs. Note that you won't need the first step to find clusters since we already have the sex information.
