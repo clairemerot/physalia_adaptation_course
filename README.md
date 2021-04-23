@@ -24,6 +24,14 @@ Raw reads: Obtained by GBS methods, sequenced with IonTorrent.
  
 ## Day2: Population structure and confounding factors
 
+2-1: Fst statistics with vcftools (optionnal: with Stacks)
+
+2-2: Principal component analysis (PCA)
+
+2-3: Discriminant Analysis of Principal Components (DAPC)
+
+2-4: (optional) Pairwise-Fst and isolation-by-Distance 
+
 ## Day3: Outlier detection - Environmental associations
 
 Data: We focus on 12 population from Canada for which there is almost no geographic structure but environmental variability
