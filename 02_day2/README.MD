@@ -464,10 +464,11 @@ You can change pretty much everything in your plot and the authors of adegenet h
 
 
 ###  Investigate structure in relation with geography
-Before considering which variation of the genome is shaped by selection, we need to think about what is shaped by neutral processes and the interplay of drift, mutation and gene flow. One of the basic thing to do is thus to assess the genetic structure in our sampled area. This is something that you did yesterday, first on the two lineages, and then on the 12 populations from Canada.
-
-It can be done by looking into PCA or STRUCTURE/ADMIXTURE analysis, as well as by looking into pairwise Fst between populations.
-Last year, we had a tutorial about how to get a matrix of pairwise Fst and assess whether this genetic differentiation was correlated with geographic distance (Isolation-by-distance), we remove it to keep the day shorter and focus on finding putatively-adaptive loci. Yet you can still refer to that tutorial if you wish under that link:
+To assess genetic structure related to geography and pre-existing partitions (e.g. sampling locations), we can also look into pairwise Fst between populations.
+Last year, we had a tutorial about how to get a matrix of pairwise Fst and assess whether this genetic differentiation was correlated with geographic distance (Isolation-by-distance), we remove it to keep the day shorter. Yet you can still refer to that tutorial if you wish under that link:
 
 [FST by pair and IBD tutorial - extra](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/00_documents/IBD.md)
 
+Here is an overview of the results:
+
+**I will insert figures** and a few coments
