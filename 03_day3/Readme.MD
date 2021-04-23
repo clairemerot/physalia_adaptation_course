@@ -272,57 +272,39 @@ python Toolbox/reshaper_baypass.py 02_data/canada.pruned.recode.vcf 02_data/popm
 
 #### run baypass basic
 
-```
-/home/scripts/g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
--outprefix 05_baypass/allsnps.output -nthreads 1
-```
-We can have a look at the output. the most importnat are the omega matrix, which is covariance between populations and the xtx value which represent a kind of value associated to each SNP. the higher it gets, the more this snps differentiate the populations.
-Please copy those files so that we can look at them in Rstudio on your local computer while the next step will run on the server
+
 
 ####  run baypass controlled for population structure
-We want again to pinpoint the outlier that differ from the basic structure of the population. This is not a big deal in our example but it may be in other system. 
-Best practices suggest to first run baypass on the LD-pruned vcf and to extract the covariance matrix between population (mat_omega), and then use it as a covariate in the baypass model
+We want to pinpoint the outlier that differ from the basic structure of the population. This is not a big deal in our example but it may be in other system. 
+Best practices suggest to first run baypass on the LD-pruned vcf and to extract the covariance matrix between population (mat_omega), and then use it as a covariate in the baypass model. This will take a few minutes to run.
 
 ```
 #run on pruned snps
-/home/scripts/g_baypass -npop 12 -gfile 05_baypass/canada.pruned.baypass \
--outprefix 05_baypass/prunedsnps.output -nthreads 1
+g_baypass -npop 12 -gfile 05_baypass/canada.pruned.baypass -outprefix 05_baypass/prunedsnps.output -nthreads 2
 
 #controlled run
-/home/scripts/g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
+g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
--outprefix 05_baypass/allsnps.controlled.output -nthreads 1
-
+-outprefix 05_baypass/allsnps.controlled.output -nthreads 2
 ```
-Please copy the controlled output on your local computer.
+
+Please copy the controlled output on your local computer. We can have a look at the output. the most importnat are the omega matrix, which is covariance between populations and the xtx value which represent a kind of value associated to each SNP. the higher it gets, the more this snps differentiate the populations.
+
+If we don't want to control for population structure, we could have run it directly (please do not run now ) ``` g_baypass -npop 12 -gfile 05_baypass/canada.baypass -outprefix 05_baypass/allsnps.output -nthreads 1 ```
 
 #### Have a threshold for the xtx value
 While this runs, we can prepare our subsequent analysis. We need to know above which xtx threhold value we can consider a locus to be an outlier of population differentiation
 To look for that, the authors suggest to simulate a neutral distribution with a small R function, run baypass on the simulated genotypes, and extract the distribution of XtX values. We can then chose a threshold of the 95% quantile, 99% quantile, etc... 
 
-Open R in your terminal and let's simulate genotypes
+To do so we have simulated genotypes in R using a program provided with Baypass.
+I did that for you to save some time and the file is here 05_baypass/G.simulates_pods 
+
+If you want to see how to do, the code is here.
+[simulate_baypass](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/00_documents/simulate_baypass.md) 
+
 ```
-args = commandArgs(trailingOnly=TRUE)
-
-#source functions from Gautier file
-source("/home/ubuntu/00-softwares/baypass_2.2/utils/baypass_utils.R")
-
-#load omega matrix
-omega = as.matrix(read.table("05_baypass/prunedsnps.output_mat_omega.out"))
-
-#load beta parameters
-pi.beta.coef=read.table("05_baypass/allsnps.output_summary_beta_params.out", h=T)$Mean
-
-#create the POD - simulate
-simu.bta <- simulate.baypass(omega.mat=omega, nsnp=500,beta.pi=pi.beta.coef, suffix="simulates_pods")
-```
-You can now quit R, mv the simulated file into the folder baypass and run baypass on the simulated data 
-```
-mv G.simulates_pods 05_baypass/
-/home/scripts/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods  -outprefix 05_baypass/simulate.output -nthreads 1
-
-#controlled run on simu dataset
-/home/scripts/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
+#controlled run on the simu dataset
+g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/simulate_controlled.output -nthreads 1
 ```
@@ -331,6 +313,7 @@ Please copy the output on the simulated dataset on your local computer.
 #### A note
 For best results, it is recommended to make several independant runs and take the median value for xtx or BF.
 We dont have time and resource to do that today but you can try for your data with a loop and random starting seed
+(please do not run it now)
 ```
 # run model for 5 repetitions
 for i in 1 2 3 4 5 
@@ -346,9 +329,9 @@ If you are curious, you can explore the different file, look at the omega matrix
 We will focus on xtx values
 ```
 #load xtx values
-xtx_allsnps<-read.table("05_baypass/allsnps.output_summary_pi_xtx.out", header = T)
+xtx_allsnps<-read.table("05_baypass/allsnps.controlled.output_summary_pi_xtx.out", header = T)
 head(xtx_allsnps)
-#we will mostly work with M_WtX
+#we will mostly work with M_XtX
 
 #load position info about the SNPs.
 SNP_pos<-read.table("02_data/SNP_pos.txt", header=T)
@@ -366,7 +349,7 @@ ggplot(xtx_pos, aes(x=position, y=M_XtX, colour=chromosome))+
 Now we realised that we really need to know at which value we put the threshold
 ```
 #load xtx values from simulatd data
-xtx_simu<-read.table("05_baypass/simulate.output_summary_pi_xtx.out", header=T)
+xtx_simu<-read.table("05_baypass/simulate_controlled.output_summary_pi_xtx.out", header=T)
 head(xtx_simu)
 
 #calculate the threshold
@@ -385,9 +368,10 @@ ggplot(xtx_pos, aes(x=position, y=M_XtX, colour=chromosome))+
 xtx_pos[xtx_pos$M_XtX>= threshold_fdr0.05,]
 ```
 
-Now you may want to do the same for the analysis controlled by population structure. Compare the results. What do you think? 
-![xtx_uncontrolled](07_img_readme/xtx_uncontrolled.png)
+Here are the results for the analysis controlled by population structure (that you did, following best practices) and what you could have done without controlling (appropriate under certain circunstanes). Compare the results. What do you think? 
 ![xtx_controlled](07_img_readme/xtx_controlled.png)
+![xtx_uncontrolled](07_img_readme/xtx_uncontrolled.png)
+
 
 ## 3 Environmental association
 ### 3.1 With Baypass (locus by locus)
@@ -396,44 +380,31 @@ This means that we will no longer look at overall average differentiation betwee
 
 It is exactly the same procedure as before, except that we add the -efile option
 
-####  format env file 
+####  get environmental data and format env file 
+Today we will be interested in using temeprature. I have used the database MarSPEC to extract it. bioOracle is also a good option, as well as WorldClim.
+Here is a script that may be useful is you want to do it yourself
+[extract clim variables](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/tuto_worldclim.R)
+
 Baypass wants the environment as one line per env variable and one column per population. no header.
-We can use our file 02_data/info_pop_geo_eco.txt to extract that. We will be interested in the temperature variable today.
-As I did not pay attention to order the population alphabetically at the beginning of STACKS (sorry), we need to make really sure that our env file is exactly in the same order as the population are in the geno file. This is why there is a "order" column...
+I have used the file 02_data/info_pop_geo_eco.txt to format it in R. This is the file 05_baypass/env.txt.
+We also need to make really sure that our env file is exactly in the same order as the population are in the geno file.
 
-So please just go in R and try to output the env file well formatted for baypass.
-R
-```
-#read file
-info_pop<-read.table("02_data/info_pop_geo_eco.txt", header =T)
-head(info_pop)
-#env vector and its transpose form
-info_pop$temperature
-t(info_pop$temperature)
-write.table (t(info_pop$temperature), "05_baypass/env.txt", sep="\t", quote=F, row.names=F, col.names=F)
-quit()
-```
 Now we can run baypass with the environment file on both the real dataset and the simulated dataset.
-Here is the example with and without the covariate matrix controlling for a possible underlying structure but depending on your system you may want to control or not, or do both to compare
+Here is the example with the covariate matrix controlling for a possible underlying structure but depending on your system you may want to control or not, or do both to compare (to remove the control by population structure, just remove "-omegafile 05_baypass/prunedsnps.output_mat_omega.out")
+
+This may take a few minutes
 ```
-g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
--efile 05_baypass/env.txt  \
--outprefix 05_baypass/simulate_env.output -scalecov -nthreads 1
-
-g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
--efile 05_baypass/env.txt  \
--outprefix 05_baypass/allsnps_env.output -scalecov -nthreads 1
-
 g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -efile 05_baypass/env.txt \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
--outprefix 05_baypass/simulate_env.controlled.output -scalecov -nthreads 1
+-outprefix 05_baypass/simulate_env.controlled.output -scalecov -nthreads 2
 
 g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -efile 05_baypass/env.txt \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
--outprefix 05_baypass/allsnps.controlled_env.output -scalecov -nthreads 1
+-outprefix 05_baypass/allsnps_env.controlled.output -scalecov -nthreads 1
 ```
+
 #### Visualising results on Rstudio on your local computer
 Like we did before we can plot the xtx but we will mostly be interested in the BF value (Bayesian factor of association with an environmental variable)
 You will find it in the betai_reg.out in the column BF.dB.
@@ -463,14 +434,14 @@ Controlled model
 
 So on the data we have today, we find very few putative outlier SNPs associated with temperature. It may be that we don't have the power to detect some, we have only 12 populations and a reduced representation of the genome. It may be that given the high gene flow, very few regions of the genome are under  selection that is strong enough to show detectable differences in allelic frequencies.
 
-We can export the list of outlier SNPs for subsequent analysis on day 5. Here is the code for uncontrolled models. You can do it for controlled models too.
+We can export the list of outlier SNPs for subsequent analysis on day 5. Here is the code for controlled models .
 ```
 #load bf values
-bf_allsnps<-read.table("05_baypass/allsnps_env.output_summary_betai_reg.out", header = T)
+bf_allsnps<-read.table("05_baypass/allsnps_env.controlled.output_summary_betai_reg.out", header = T)
 bf_pos<-cbind(SNP_pos, bf_allsnps)
 
 #load bf values from simulatd data
-bf_simu<-read.table("05_baypass/simulate_env.output_summary_betai_reg.out", header=T)
+bf_simu<-read.table("05_baypass/simulate_env.controlled.output_summary_betai_reg.out", header=T)
 
 #calculate the threshold from simu (or you cna use BF = 10)
 threshold_fdr0.01 = quantile(bf_simu$BF.dB,probs=0.99)
