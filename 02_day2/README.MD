@@ -4,7 +4,7 @@ If you have no access to the server, please note that you can find all the files
 The popmap text files can be found in [here](../00_documents).
 
 ## Step 1: Calculating F-statistics
-### With VCFtools
+
 If you had any problems yesterday, or are not sure you used the correct settings, you can copy in your folder the files that I generated for each of three datasets. If you have generated some and want to avoid confusion with overwriting existing files you can remove the folders you have produced with ```rm -fr folder_name```
 ```
 cd stacks
