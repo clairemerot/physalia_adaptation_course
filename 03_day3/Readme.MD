@@ -1,5 +1,5 @@
 # Day3: Detecting putatively adaptive loci
-Today, we will restrain our analysis on the Canadian 12 populations which belong to the same lineage and for which we have environmental data.
+Yesterday, we observed that our dataset included two highly-divergent lineages (Canda vs. Greenland) so to study environmental associations, we will restrain our analysis on the Canadian 12 populations which belong to the same lineage 
 
 To start, please copy the folder Day 3 into your home directory adn open it with cd
 ```
