@@ -342,7 +342,7 @@ Anyhow, you know how to do it!
 
 If you wish, you can repeat the analysis on the outliers from baypass, or joined BP/rda, or on the outliers of divergence found on chr4 and chr5. 
 
-## Step4 Annotation of repeated regions and CNV
+## Optional: Step4 Annotation of repeated regions and CNV
 I have run a programm called RepeatMasker http://www.repeatmasker.org/ which uses databases of transposable elements and detection of repeated pattern to annotate the genome for those interspersed repeats and low-complexity DNA sequences. Because we are on afish, I use the database Danio rerio (Zebrafish). The command is very easy
 [do not run] ```RepeatMasker genome_mallotus_dummy.fasta -pa $N_CPU -species Danio```
 
