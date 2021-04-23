@@ -53,77 +53,23 @@ head -n 25 04_snpEff/SNP_annotated_formatted.txt
 #look at the last lines
 tail 04_snpEff/SNP_annotated_formatted.txt
 ```
-
-### On your computer, in R studio
-Please copy *the whole folder 05_day5* to your local computer, and set in Rstudio your working directory as 05_day5.
-
-We will quickly look into our snps annotation. 
-
-First, let's open the whole list of SNPs and look how many introns, UTR, intergenic regions, etc we had in our dataset:
+This is what it looks like:
 
 ```
-#load library
-library(dplyr)
-
-#open file
-snpEff_db<-read.table("04_snpEff/SNP_annotated_formatted.txt", header=F) 
-head(snpEff_db)
-
-#simplify the data
-snpEff_db<-snpEff_db[,c(1,2,3,9)] 
-
-#put informative col names
-colnames(snpEff_db)<-c("chr","position","id_snp","category")
-head(snpEff_db)
-
-#count how many of each variant category
-#with Rbase
-all_snps_repartition<-as.matrix(table(snpEff_db$category))
-all_snps_repartition
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT
+Chr1    53559   49:9:-  C       G       .       PASS    ANN=G   upstream_gene_variant
+Chr1    94208   95:21:+ A       G       .       PASS    ANN=G   intergenic_region
+Chr1    308478  248:57:+        T       G       .       PASS    ANN=G   downstream_gene_variant
+Chr1    510235  370:36:+        G       A       .       PASS    ANN=A   intergenic_region
+Chr1    586674  438:51:-        T       A       .       PASS    ANN=A   splice_region_variant&intron_variant!
 ```
-We can now look at one of our outliers' list and use the magic function from dplyr to match snp_id and annotate our outliers
-```
-#load data
-outlier_temp_rda<-read.table("03_outliers/outlier_temp_rda.txt", header=T)
-head(outlier_temp_rda)
 
-#use inner-join function to match the two datatable and keep only rows in common
+Now we have much more information about each SNP. What can we do with that? Many things, we could choose only intergenic SNPs if we want a putatively-neutral subset, we can look at the repartition of outliers in different categories (regulatory regions, exons, etc)
 
-outlier_annotated<-inner_join(outlier_temp_rda,snpEff_db)
-head(outlier_annotated)
+Here is a small tutorial (optional) to look at SNP repartition:
 
-#count how many of each variant category
-#with Rbase
-outlier_repartition<-as.matrix(table(outlier_annotated$category))
-outlier_repartition
-```
-we can join both matrix of repartition to have a look:
-```
-joined_repartition1<-as.data.frame(cbind(as.matrix(table(snpEff_db$category)),as.matrix(table(outlier_annotated$category))))
-colnames(joined_repartition1)<-c("n_all_snps","n_oulier")
-joined_repartition1$category<-as.character(row.names(joined_repartition1))
-joined_repartition1
-```
-And we can use Fisher exact test to ask whether one category of variant is enriched in our outlires
-```
-total_snp<-dim(snpEff_db)[1]
-total_outlier<-dim(outlier_annotated)[1]
+[SNP_repartition](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/05_day5/SNP_repartition.md)
 
-# for row i (category i)
-i=1
-joined_repartition1$category[i]
-
-#build the contigency table
-cont_tab<-rbind(c(joined_repartition1$n_oulier[i],total_outlier),
-                c(joined_repartition1$n_all_snps[i],total_snp))
-cont_tab
-
-#run Fisher test
-cont_tab[ which(is.na(cont_tab))]<-0
-fish_res<-fisher.test(cont_tab,alternative = "greater")
-fish_res
-```
-You can change Fisher alternative hypothesis to "two.sided", "greater" or "less"
 
 ## Step 2 Bedtools : find the intersection between SNPs and genes
 Bedtools is a program that is great to find the intersection between two files. It usually works on a specific bedformat which have at least three columns (Chromosome, FromPosition, ToPosition) and 12 columns to the maximum.
@@ -138,7 +84,7 @@ less -S 05_bed/genome_mallotus_dummy_annotation_simplified.bed
 If you remember our outliers files they were not formatted as such... Because we do not cover all the genome, we will look for genes in a window of X kb around the SNP position. The size of this window should ideally be adjust depending on LD decay in your organism (which can be assessed by plotting LD against distance with the output of plink that we found yesterday... For today we will choos 10 kb but if you are curious you can explore different size.
 To prepare the files, we will use R. 
 
-### In R (either on Rstudio in your computer or in a R terminal on the server)
+### In R (in a R terminal on the server)
 
 ```
 #load file
@@ -178,7 +124,7 @@ write.table(all_snps_bed, "05_bed/all_snps.bed", row.names=F, sep="\t", quote=F,
 
 And you can do the same for the outliers from baypass, or the outliers of divergence on chr4 or chr5... (if you are late skip)
 
-### on the server
+### on the server (quit R)
 If you did the bedfiles in Rstudio, Please copy back your formatted outliers and snp bedfiles into the 05_day5/05_bed folder on the server. 
 We will now run bedtools. The command intersect will look for overlap between the file givne with -a, and the file given with -b, the argument -wb will print the information coming from the annotation file (gene names, gene ontology, uniprot ID, etc)
 the command ">" redirect the output in the file of your choice
@@ -222,6 +168,8 @@ For information about proteins, you can look at https://www.uniprot.org/
 Note: This script was built with the help or Dr. E. Berdan (U. Stockholm)
 
 This part will only be in Rstudio on your computer.
+Please copy *the whole folder 05_day5* to your local computer, and set in Rstudio your working directory as 05_day5.
+
 Please install the library goseq ( https://bioconductor.org/packages/release/bioc/html/goseq.html)
 Disclaimer: I admit that this library is a pain because you will see that it requires many little twists like putting the transcripts in row.names, etc that makes it difficult to prepare the data... Hopefully there will be simpler versions or maybe one of you knows an easier tool that he/she may recommend...
 
@@ -277,7 +225,7 @@ head(all_transcripts)
 ```
 
 Now we want to add the information about the size of the gene, as a way to correct for bias that one is more likely to fall inside a long gene than a short one .
-We will use the left_join command from dplyr library which is super handy. It will match by transcript name and add the rest of the table, matching rows (magi function to remmebmber!)
+We will use the left_join command from dplyr library which is super handy. It will match by transcript name and add the rest of the table, matching rows (magic function to remember!)
 
 ```
 library(dplyr)
@@ -343,55 +291,6 @@ Anyhow, you know how to do it!
 If you wish, you can repeat the analysis on the outliers from baypass, or joined BP/rda, or on the outliers of divergence found on chr4 and chr5. 
 
 ## Optional: Step4 Annotation of repeated regions and CNV
-I have run a programm called RepeatMasker http://www.repeatmasker.org/ which uses databases of transposable elements and detection of repeated pattern to annotate the genome for those interspersed repeats and low-complexity DNA sequences. Because we are on afish, I use the database Danio rerio (Zebrafish). The command is very easy
-[do not run] ```RepeatMasker genome_mallotus_dummy.fasta -pa $N_CPU -species Danio```
+Tranposable elements and repeated regions are frequent source of duplicated loci in RAD-seq data, and in CNVs in general. We may want to see which fraction of the CNVs detected yesterday overlap with them. If you are interested in this aspect, please find the detailled tutorial here:
 
-Another possibility is to build the database of TE and repeats for your species. A good programm for that is RepeatModeler2 (Flynn et al PNAS 2020 https://doi.org/10.1073/pnas.1921046117)
-
-So RepeatMasker outputs both a masked version of the genome and a file .out in which there is a list of repeated elements and TE with their position. I have arranged a little that file to make it into a bed format. you can see it in the folder 07_TE
-``` head 07_TE/genome_mallotus_dummy_repeat.bed ```
-
-Now we will look into the loci that we identified as being duplicated (CNVs). Yann puts back for you the CNV matrix in the 07_TE folder so don't bother looking at yesterday's files :-)
-
-We will use R to convert the full matrix and the matrix of outliers into bed format. Please open R either in the terminal or  on your own computer (but you will need to move files between server and and local).
-We will choose a window of 500 bp around the CNV locus to see if this locus may belong to a repeated element.
-
-```
-#load data
- CNV<-read.table("07_TE/caplelin_NWA_list_of_CNVs_loci.txt", header=T)
- head(CNV)
- 
- window=500
- #calculate start adn stop of the window around the CNV loci
- CNV$start<-CNV$POS-(window/2)
- CNV$start[CNV$start<0]<-0
- CNV$stop<-CNV$POS+(window/2)
- 
- #subset the matrix of outliers
- CNV_outlier<-CNV[CNV$outlier=="TRUE",]
- head(CNV_outlier)
-
-#format for bedtools
-CNV.bed<-CNV[,c(2,5,6,1)]
-CNV_outlier.bed<-CNV_outlier[,c(2,5,6,1)]
-write.table(CNV.bed, "07_TE/CNV.bed", row.names=F, col.names=F, sep="\t", quote=F)
-write.table(CNV_outlier.bed, "07_TE/CNV_outlier.bed", row.names=F, col.names=F, sep="\t", quote=F)
-```
-
-Now we can run bedtools to output the intersection of the CNV positions with the annotated repeats
-```
-bedtools intersect -a 07_TE/CNV.bed  -b 07_TE/genome_mallotus_dummy_repeat.bed -wb > 07_TE/CNV_repeat.intersect
-cat 07_TE/CNV_repeat.intersect | wc -l
-head 07_TE/CNV_repeat.intersect
-
-bedtools intersect -a 07_TE/CNV_outlier.bed  -b 07_TE/genome_mallotus_dummy_repeat.bed -wb > 07_TE/CNV_outlier_repeat.intersect
-cat 07_TE/CNV_outlier_repeat.intersect | wc -l
-cat 07_TE/CNV_outlier_repeat.intersect
-```
-
-And you can now have a look at your results with a text editor and investigate the composition of your detected loci in different class of TE with R. 
-
-As you see, maybe our window of 1000bp was a bit wide, sometimes the CNV intersect with several simple_repeat regions... Maybe this is also a sign that some of them occur in this kind of area? 
-
-We could also have looked at the intersect between CNV and genes by running bedtools with the annotated genome as we did earlier.
-
+[CNV_TE](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/05_day5/CNV_repeats.md)
