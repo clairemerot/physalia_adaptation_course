@@ -36,20 +36,11 @@ or ```head -n 25 02_data/file``` to look at the first 25 lines
 
 We will work from the 03_day3 folder and we will try to always our data within their folder (for instance 'head 02_data/file') and ouput in the folder of the analysis for instance (> 03_fst/output)
 
-## 1 Overall genetic structure
+## 1 Overall genetic structure & making a LD-pruned vcf
 
-### 1.1 Investigate structure in relation with geography
-Before considering which variation of the genome is shaped by selection, we need to think about what is shaped by neutral processes and the interplay of drift, mutation and gene flow. One of the basic thing to do is thus to assess the genetic structure in our sampled area. This is something that you did yesterday, first on the two lineages, and then on the 12 populations from Canada.
+Before considering which variation of the genome is shaped by selection, we need to think about what is shaped by neutral processes and the interplay of drift, mutation and gene flow. One of the basic thing to do is thus to assess the genetic structure in our sampled area. It can be done by looking into PCA or STRUCTURE/ADMIXTURE analysis, as well as by looking into pairwise Fst between populations. This is something that you did yesterday, first on the two lineages, and then on the 12 populations from Canada.
 
-It can be done by looking into PCA or STRUCTURE/ADMIXTURE analysis, as well as by looking into pairwise Fst between populations.
-Last year, we had a tutorial about how to get a matrix of pairwise Fst and assess whether this genetic differentiation was correlated with geographic distance (Isolation-by-distance), we remove it to keep the day shorter and focus on finding putatively-adaptive loci. Yet you can still refer to that tutorial if you wish under that link:
-
-[FST by pair and IBD tutorial - extra](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/00_documents/IBD.md)
-
-If you had time to go up to that point yesterday, you should have observed that there is basically no geographic structure in our 12 populations, which is somehow expected in a marine species. However, we saw with that a region of chromosome 4 and sex-linked markers on chr 5 were overwhelming the structure. Will that influence our analyses? Possibly
-
-
-### 1.2 Making a LD-pruned vcf
+Because we don't want to mix 2 lineages, tofay we will only work on the 12 canadian populations. If you had time to go up to that point yesterday, you should have observed that there is basically no geographic structure in our 12 populations, which is somehow expected in a marine species. However, we saw with that a region of chromosome 4 and sex-linked markers on chr 5 were overwhelming the structure. We will keep that in mind when interpreting our results
 
 Linkage disequilibrium can particularly bias the structure, whether this is due to regions of low-recombination, variable SNP density, structural rearrangements, selection, etc. this will be particularly true with whole-genome data. So a good practice to assess neutral structure is to use a LD-pruned set of SNPs. This will also be taken by some of the outlier detection methods that we use hereafter
 
