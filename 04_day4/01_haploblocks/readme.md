@@ -7,13 +7,14 @@ cd 04_day4/01_haploblocks
 ```
 We will run all commands from here
 
-## Step 0 Sliding PCA 
+## Step 1 Local PCA along the genome to detect non-recombining haploblocks
 As you saw on day 2, the PCA performed on the 240 samples from the 12 populations from Canada display a very unexpected pattern. The loadings indicate that some portion of the genome are overwhelmingly driving the structure.We suspect there may be sex-linked markers and/or chromosomal rearrangements
 
 To get a better sense of what's going on, we will be doing PCA again, but along the genome by window of X SNPs.For this we will use  R package * lostruct* available here https://github.com/petrelharp/local_pca and presented in this publication https://www.genetics.org/content/211/1/289
 
 ####  prepare files
-We will jump over the preparation of the file and the 1st steps of lostruct to read and prepare the windows because R does not communicate with bcftools on the AWS and we wan tto save you time to see all the analysis. So keep in mind that there are preparative steps if you want to re-do the analysis on your dataset. You can look into this file to see them: https://github.com/clairemerot/physalia_adaptation_course/blob/master/04_day4/01_haploblocks/step0_filepreparation.md
+We will jump over the preparation of the file and the 1st steps of lostruct to read and prepare the windows because R does not communicate with bcftools on the AWS and we wan tto save you time to see all the analysis. So keep in mind that there are preparative steps if you want to re-do the analysis on your dataset. You can look into this file to see them
+[preparation_lostruct](https://github.com/clairemerot/physalia_adaptation_course/blob/master/04_day4/01_haploblocks/step0_filepreparation.md)
 
 Briefly, this analysis is more powerful if we keep all SNPs including those in LD so we will use the vcf unfiltered (before we took one random SNP per RADlocus) for the 12 canadian populations. We do several steps to convert into a bcf. Then we use a function in lostruct to make windows of your chosen size. We suggest to use window of 100 snp since we are not very dense (RAD data) and we don't have a lot of snps.Typically with whole genome you may first run by windows of 1000 or 5000 snps for a first look, and then refine with smaller windows. The analysis can be run chromosome by chromosome (as in the paper) or on the entire genome. Here, we are going for the entire genome.
 
@@ -64,6 +65,10 @@ Back on our local computer in R studio, we will look at all those local PCA.
 Set your working directory as 04_day4/01_haploblocks, load useful libraries (ggplot2) and the matrix of pca
 
 ```
+setwd("MY_LOCAL_PATH/04_day4/01_haploblocks")
+library(ggplot2)
+
+#load pca matrix
 pca_matrix<-read.table("00_localPCA/pca_matrix.txt", header=TRUE)
 pca_matrix[1:10,1:10]
 n_windows<-dim(pca_matrix)[1] # the number of windows we have
@@ -79,7 +84,7 @@ Look at the format. We have 3 columns for position, total eigen values, eigvalue
 4   Chr1  557463  664701  7.9826780 1.707709 1.4688195  0.00317093 -0.027442327 -0.003586276 -0.025939893
 ```
 
-So to get information for a window we can fo something like:
+So to get information for a window we can do something like:
 ```
 Nind<-240
 i=15 #for the 15th window
@@ -96,7 +101,7 @@ plot(pc1_i, pc2_i, pch=20, xlab=paste("PC1", var1 , "%"), ylab=paste("PC2", var2
 
 Not super clean but it works. Building on  that you can do anything to reformat your matrix of PC, eigen values, etc...
 
-Now what do we want to know, we want to look which windows explain the pattern observed in the global pca. We can look at correlation between global PCs and PC1 of each local PCA. I propose to take the PCA performed on the 12 NWA populations, and look at the correlation between PC1 of the global PCA and PC1 of each local PCA. (then you can do the same with PC2 of the global PCA and PC1 of each local PCA...) To help, I put the geno-transformed matrix inside your folder so that you don't go back to vcftools but the .012 file has been done exactly as shown on day2
+Now what do we want to know, we want to look which windows explain the pattern observed in the global pca (the 3 haplogroups). We can look at correlation between global PCs and PC1 of each local PCA. I propose to take the PCA performed on the 12 NWA populations, and look at the correlation between PC1 of the global PCA and PC1 of each local PCA. (then you can do the same with PC2 of the global PCA and PC1 of each local PCA...) To help, I put the geno-transformed matrix inside your folder so that you don't go back to vcftools but the .012 file has been done exactly as shown on day2
 
 I suggest below a very basic loop to store the correlation by windows. You can probably do something more fancy :-)
 Please note here that we could also have used the genotype correlation, for instance call 0/1 or 0/1/2 the cluster observed on the global pca and then look for each snps at the correlation between genotypes and gneotype for the cluster identified.
@@ -106,7 +111,7 @@ geno <- read.table("00_localPCA/canada.012")[,-1] #load geno
 geno[1:6,1:6] #check the geno matrix
 global.pca<-prcomp(geno) #run the pca
 plot(global.pca$x[,1],global.pca$x[,2]) # plot the pca
-PC_of_interest<-global_pca$x[,1] #if you want to look at correlation with PC1
+PC_of_interest<-global.pca$x[,1] #if you want to look at correlation with PC1
 
 #initialise the vector
 corr_vector<- vector(length=n_windows)
@@ -141,7 +146,7 @@ Here that was easy, because we knew there was something weird on PC1 and PC2. Bu
 
 Let's load the mds and plot the first axes
 ```
-mds_matrix<-read.table("mds_matrix.txt", header=TRUE)
+mds_matrix<-read.table("00_localPCA/mds_matrix.txt", header=TRUE)
 head(mds_matrix)
 mds_matrix$midpos<-(mds_matrix$start+mds_matrix$end)/2
 
@@ -177,18 +182,18 @@ argv <- commandArgs(T)
 option1 <- argv[1]
 option2 <- argv[2]
 ```
-## Step 1 Genotype the individuals for the haploblocks
+## Step 2 Genotype the individuals for the haploblocks
 Thanks to our local PCA exploration on day 2, we know that there are non-recombining haploblocks which may be an inversion on chromosome 4.
 We located the breakpoints approximately from 4.8MB to 16.6MB. We can make a PCa in that region only and use k-means approaches to classify the individuals into 3 groups. 
 
 To save time I did this for you and put the AA.list, AB.list and BB. list into the 02_data folder. 
 
 If you are interested in the code, you can have a look in this file
-https://github.com/clairemerot/physalia_adaptation_course/blob/master/04_day4/01_haploblocks/Step1_tuto.md
+[extract_genotypes_from_pca](https://github.com/clairemerot/physalia_adaptation_course/blob/master/04_day4/01_haploblocks/Step1_tuto.md)
 
 ![pca](06_images/pca_cluster.png)
 
-## Step 2 Study linkage disequilibrium
+## Step 3 Study linkage disequilibrium
 
 #### On the server: calculate Ld with Plink
 To calculate LD we will use plink, but not in pruning mode. We want all pairwise LD on each chromosome.
@@ -273,177 +278,47 @@ ggplot(chr4.ld,aes(x=BP_A,y=BP_B, col=R2)) + theme_classic() +
 
 What do you think? do you observe the linkage possibly due to an inversion (or a non-recombining block?)? Is it also observed in the BB group?
 
-## Step 3 Studying divergence (Fst)
-to calculate Fst between our groups, we will do exactly as your did on day 2 with vcftools.
+## Step4: Studying divergence with Fst (optional)
+We may be interested in calculating several statistics for each haplogroup (diversity, divergence, etc). For instance we can calculate Fst between our groups, as you learnt to do on day 2 with vcftools, both as an overall Fst value and in sliding-windows along the genome
 Note that here, this is not ideal since it is better to have balanced sample size (and our group AA is pretty small).
 
-#### On the server: get Fst and FSt by windows
-```
-vcftools --vcf 02_data/canada.vcf --weir-fst-pop 02_data/AA.list --weir-fst-pop 02_data/AB.list --out 04_divergence/AA_AB
-vcftools --vcf 02_data/canada.vcf --weir-fst-pop 02_data/AA.list --weir-fst-pop 02_data/BB.list --out 04_divergence/AA_BB
-vcftools --vcf 02_data/canada.vcf --weir-fst-pop 02_data/AB.list --weir-fst-pop 02_data/BB.list --out 04_divergence/AB_BB
-```
+This is the result: 
 
-We can also do it by windows:
-```
-WINDOW=100000
-WINDOW_STEP=25000
-vcftools --vcf 02_data/canada.vcf --weir-fst-pop 02_data/AA.list --weir-fst-pop 02_data/AB.list --fst-window-size $WINDOW --fst-window-step $WINDOW_STEP --out 04_divergence/AA_AB
-vcftools --vcf 02_data/canada.vcf --weir-fst-pop 02_data/AA.list --weir-fst-pop 02_data/BB.list --fst-window-size $WINDOW --fst-window-step $WINDOW_STEP --out 04_divergence/AA_BB
-vcftools --vcf 02_data/canada.vcf --weir-fst-pop 02_data/AB.list --weir-fst-pop 02_data/BB.list --fst-window-size $WINDOW --fst-window-step $WINDOW_STEP --out 04_divergence/AB_BB
-```
-
-#### On your computer: visualise
-
-```
-#load data
-AA_BB<-read.table("04_divergence/AA_BB.weir.fst", header=T)
-head(AA_BB)
-
-#plotFst_AAvsBB
-ggplot(AA_BB, aes(x=POS/1000000, y=WEIR_AND_COCKERHAM_FST, col=CHROM))+
-  geom_point()+ geom_smooth()+
-  theme_classic()+
-  facet_grid(cols = vars(CHROM), scales = "free_x", space="free_x")+
-  labs(  x = "position (in MB)")
-  
-#load data
-AA_BB.win<-read.table("04_divergence/AA_BB.windowed.weir.fst", header=T)
-head(AA_BB.win)
-```
 ![fst](06_images/Fst_AAvsBB.png)
+
 As you can note within our region of interest on Chr4, some SNP have a super high Fst (up to 1), suggesting fixed alleles and extremely high divergence
 You may have noticed that some FSt values are negatives.. This is likely driven by very low frequency alleles and inbalanced sample sizes. We also observe NA in the calculation of FSt by site
 
 Try to plot also the AA_AB and AB_BB contrasts. 
 
-We can also look at the values summarized by Fst
-```
-#calculate the position of the mid window
-AA_BB.win$BIN_MID<-(AA_BB.win$BIN_START+AA_BB.win$BIN_END)/2
+![fst_AB_BB](06_images/Fst_ABvsBB.png)
 
-#plot
-ggplot(AA_BB.win, aes(x=BIN_MID/1000000, y=MEAN_FST, col=CHROM))+
-  geom_point()+ geom_smooth()+
-  theme_classic()+
-  facet_grid(cols = vars(CHROM), scales = "free_x", space="free_x")+
-  labs(  x = "position (in MB)")
-```
-We will keep a list of the most outliers SNPs differentiating the haplotypes. Because BB is a small group, differentiation AA vs BB may highlight false outliers. We will thus rather extract the SNPs with the highest Fst between AA and AB.
+If you are interested in following this extra tutorial, you will find all details here:
 
-```
-AA_AB<-read.table("04_divergence/AA_AB.weir.fst", header=T)
-head(AA_AB)
-outlier_Chr4<-AA_AB[AA_AB$WEIR_AND_COCKERHAM_FST>=0.1,]
-write.table(outlier_Chr4, "04_divergence/outlier_Chr4.txt", row.names=F, quote=F, sep="\t")
-```
+[Fst_sliding_windows](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/04_day4/01_haploblocks/Step4_fst.md)
 
-## Step 4 Studying heterozygosity
 
-We will now try to figure out whether heterozygosity is indeed higher in our Ab groups. We will use the --hardy options for vcftools which tests hardy-weinberg equilibrium for each SNP and report the observed and expected fraction of heterozygotes at that position
+## Step 5 Studying heterozygosity with the % of hterozygots in each group (optional)
 
-#### On the server: get H-W stats and number of heterozygotes
-We will  use vcftools to create a vcf for each group 
+We are also interested to figure out whether heterozygosity is indeed higher in our AB middle group. We will use the --hardy options for vcftools which tests hardy-weinberg equilibrium for each SNP and report the observed and expected fraction of heterozygotes at each position
 
-```
-vcftools --vcf 02_data/canada.vcf --keep 02_data/AA.list --recode --out 02_data/AA
-vcftools --vcf 02_data/canada.vcf --keep 02_data/AB.list --recode --out 02_data/AB
-vcftools --vcf 02_data/canada.vcf --keep 02_data/BB.list --recode --out 02_data/BB
-ls 02_data
-```
+This is what the results look like:
 
-We will only keep SNPs with maf above 5% since rare SNP won't be super informative in terms of heterozygotes (high stochasticity due to sampling a low number of heterozygotes)
-
-```
-vcftools --vcf 02_data/BB.recode.vcf --maf 0.05 --hardy --out 05_heterozygosity/BB
-vcftools --vcf 02_data/AB.recode.vcf --maf 0.05 --hardy --out 05_heterozygosity/AB
-vcftools --vcf 02_data/AA.recode.vcf --maf 0.05 --hardy --out 05_heterozygosity/AA
-```
-
-You can look at the files ``` head 05_heterozygosity/AA.hwe ``` . As you see, it is really annoying to have a symbol "/" at the middle of our column. We will use a simple awk command to get a better format for subsequent R analysis
-
-```
-cat 05_heterozygosity/AA.hwe | awk -F"/" '$1=$1' OFS="\t" > 05_heterozygosity/AA_formatted.hwe
-head 05_heterozygosity/AA_formatted.hwe
-cat 05_heterozygosity/AB.hwe | awk -F"/" '$1=$1' OFS="\t" > 05_heterozygosity/AB_formatted.hwe
-cat 05_heterozygosity/BB.hwe | awk -F"/" '$1=$1' OFS="\t" > 05_heterozygosity/BB_formatted.hwe
-```
-
-#### On your local computer: visualize results
-Please copy the outputs (_formatted.hwe) on your local computer in the folder 05_heterozygosity and let's go into Rstudio to extract the information
-For today, we will only be interested in the first 3 columns with the nnumber of observed homozygotes and heterozygotes but you may find useful to look at H-W stats for other purpose
-So after loading the data, we will calculate the % of heterozygotes and plot that along the genome
-And plot the data with our usual ggplot command
-
-```
-#load data
-AB.hwe<-read.table("05_heterozygosity/AB_formatted.hwe", header = T)
-#rename columns
-colnames(AB.hwe)<-c("CHR","POS","Homo1_obs", "Het_Obs", "Homo2_Obs", "Homo1_Exp", "Het_Exp","Homo2_Exp","Chisq_HWE","P_HWE","P_HET_DEFICIT", "P_HET_EXCESS")
-head(AB.hwe)
-#calculate the fraction of observed heterozygotes
-AB.hwe$het_fraction<-AB.hwe$Het_Obs/(AB.hwe$Homo1_obs+AB.hwe$Het_Obs+AB.hwe$Homo2_Obs)
-
-#plot
-ggplot(AB.hwe, aes(x=POS/1000000, y=het_fraction, col=CHR))+
-  geom_point(alpha=0.5)+ geom_smooth()+
-  theme_classic()+
-  facet_grid(cols = vars(CHR), scales = "free_x", space="free_x")+
-  labs(  x = "position (in MB)")
-```
-You can do the same for AA and BB. Now let's try to visualise the three of them together
-
-```
-#keep genotype information before joining the three tables
-BB.hwe$geno<-"BB"
-AB.hwe$geno<-"AB"
-AA.hwe$geno<-"AA"
-all.hwe<-rbind(AA.hwe, AB.hwe, BB.hwe)
-head(all.hwe)
-
-#plot, colouring by genotype
-ggplot(all.hwe, aes(x=POS/1000000, y=het_fraction, group=geno, col=geno))+
-  geom_point(alpha=0.5)+geom_smooth()+
-  theme_classic()+
-  facet_grid(cols = vars(CHR), scales = "free_x", space="free_x")+
-  labs(  x = "position (in MB)")
-```
 ![Hobs_all](06_images/Hobs_all.png)
 
-We could also do violin plots by chromosome and by groups. And if you want to do something more advanced, you can try a violinplot of the region inside the inversion vs. outside 
-```
-ggplot(all.hwe, aes(x=geno, y=het_fraction, col=geno))+
-  geom_violin()+
-  stat_summary(fun=median, geom="point", size=2) +
-  facet_grid(cols = vars(CHR))+
-  theme_classic()
-```
-![Hobs_violin](06_images/Hobs_violin.png)
-
 As you observed on the Manhattan plots, there is a lot of heterogeneity between SNPs. Perhaps it might be worth looking at results by sliding-windows?
-Our case is not ideal because SNPs are sparese (RAD-seq) but with shole-genome data you would have no choice bu doing windows.
+Our case is not ideal because SNPs are sparese (RAD-seq) but with whole-genome data you would have no choice but doing windows.
 
-We will use an easy function provided in the package windowscannr. It is not super fast but with our data, that should be ok.
-If you have not installed it already you can do with 
-```
-library(devtools)
-install_github('tavareshugo/windowscanr')
-library(windowscannr)
-```
-As argument you can give the window size, step and whether it is doing the mean (or another summary statistics) within each window.
-We need to give groups = chromosomes to avoid joining positions on different chromosomes!
+![Hobs_sliding](06_images/Hobs_sliding.png)
 
-```
-WINDOW<-500000
-WINDOW_STEP<-100000
-BB.hwe_win <- winScan(x = BB.hwe,groups = "CHR", position = "POS",values = c("het_fraction"),win_size = WINDOW,win_step = WINDOW_STEP,funs = c("mean"))
-head(BB.hwe_win)
-```
-
-You can perform the window summary on AA and AB, try plotting as above group by group, or all groups together.
-It is slightly more readable. 
+We can also visualize them with violin-plots
+![Hobs_violin](06_images/Hobs_violin.png)
 
 In all cases, we nevertheless note the expected higher observed heterozygosity in AB around the middle of Chr4. 
 On Chr5, there is a region of high heterozygosity in all three groups, which may be driven by sex.
 
-If you are curious and if you have time, you may want to try exploring the Chr5 in the same way. Note that you won't need the first step to find clusters since we already have the sex information.
+You can following the tutorial to do so here:
+[Hobs_sliding_windows](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/04_day4/01_haploblocks/Step5_Hobs.md)
+This tutorial also includes how to subset vcf with vcftools, filter for MAF, extract H-W statistics, etc and some re-formatting.
+
+If you are curious and if you have time, you may want to try exploring the Chr5 in the same way as we explore chr4. Note that you won't need the first step to find clusters since we already have the sex information.
