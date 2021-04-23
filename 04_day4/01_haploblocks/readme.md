@@ -326,7 +326,6 @@ These are the results:
 As you observed on the Manhattan plots, there is a lot of heterogeneity between SNPs. Perhaps it might be worth looking at results by sliding-windows?
 Our case is not ideal because SNPs are sparese (RAD-seq) but with whole-genome data you would have no choice but doing windows.
 
-![Hobs_sliding](06_images/Hobs_sliding.png)
 
 We can also visualize them with violin-plots
 ![Hobs_violin](06_images/Hobs_violin.png)
