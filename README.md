@@ -52,3 +52,10 @@ This tutorial include working on local PCA, but also calculation of LD, Fst and 
 
 ## Day5: Functional approaches
 
+5-1: SNPeff annotate SNPs for coding & regulatory regions
+
+5-2: Intersection between SNPs and genes with bedtools
+
+5-3: Gene ontology enrichment
+
+5-4: Intersection between CNVs and repeats/TE
