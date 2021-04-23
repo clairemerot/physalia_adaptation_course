@@ -1,6 +1,6 @@
 # Day2: Population structure and differentiation
 
-If you have no access to the server, please note that you can find all the files that you need for today's tutorial (vcf, structure and F<sub>ST</sub> files) in each of the three folders we generated from ```populations``` yesterday.
+If you have no access to the server, please note that you can find all the files that you need for today's tutorial (vcf, structure and F<sub>ST</sub> files) in each of the three folders we generated from ```populations``` yesterday (populations_2lin_random, populations_canada_random, populations_all_random).
 The popmap text files can be found in [here](../00_documents).
 
 ## Step 1: Calculating F-statistics
