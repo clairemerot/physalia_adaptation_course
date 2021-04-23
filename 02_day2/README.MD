@@ -4,8 +4,8 @@ If you have no access to the server, please note that we put all the essential f
 The popmap text files can be found in ../00_documents
 
 ## Step 1: Calculating F-statistics
-### With Stacks
-If you had any problems yesterday, or are not sure you used the correct settings, you can copy in your folder the files that I generated for each of three datasets. If you have generated some and want to avois confusion with overwriting existing files you can remove the folders you have produced with ```rm -fr folder_name```
+### With VCFtools
+If you had any problems yesterday, or are not sure you used the correct settings, you can copy in your folder the files that I generated for each of three datasets. If you have generated some and want to avoid confusion with overwriting existing files you can remove the folders you have produced with ```rm -fr folder_name```
 ```
 cd stacks
 cp -r ~/Share/populations_* ./
@@ -13,78 +13,7 @@ cp -r ~/Share/populations_* ./
 
 As you can see if you ```cd``` in one of the folders storing the output from your ```populations``` runs, STACKS produces many output files. The manual provides a thorough explanation of all the different file formats. Go to <https://catchenlab.life.illinois.edu/stacks/manual/> and scroll down to section 6.6. For each output type, open the corresponding file on the server, and take your time to explore them.
 
-One statistics we are interested in F<sub>ST</sub>, a relative measure of differentiation between populations. Let's look at one of these files in more detail
-```
-cd ~/stacks/populations_2lin_random
-head -n 30 populations.fst_NWA-GRE.tsv
-```
-F<sub>ST</sub> for each locus is at the 8<sup>th</sup> column. We can look at the 20 most differentiated SNPs with
-```
-grep -v "^#" populations.fst_NWA-GRE.tsv | sort -rk8,8 | head -n 20
-```
-```grep -v``` exclude lines that start with #, then you sort the file by values of F<sub>ST</sub> from the highest to the lowest (```-r```), and print to the screen the top 20 SNPs.
-
-If you have more than two populations, STACKS will print out ```populations.fst_POP1-POP2.tsv``` for each unique combination of populations. Look into the ```populations_canada_random``` folder. 
-```
-cat populations.fst_*.tsv | grep -v "^#" - | sort -rk8,8 | head -n 20
-```
-
-Have a look at this list. Are these SNPs randomly distributed across the 5 chromosomes?
-
-
-Here we can create a list of the 100 most differentiated SNPs among all populations with this one-liner
-```
-cat populations.fst_*.tsv | grep -v "^#" - | sort -rk8,8 | head -n 1000 | sort -un -k1,1 -k2,2 -s | sort -rk8,8 | cut -f 1,6 | tail -n +2 | head -n 100 | sort -n > high_fst.whitelist.tsv
-```
-which is mostly based on commands that we've just used above, with the difference that you merge all files containing population pairwise information and print only the SNP information. Note that even though the data are mapped to a reference genome, STACKS has built a catalog of loci and uses locus ID and position within the locus (stored in columns 1 and 6 in this file) to retrieve information on these SNPs (i.e. STACKS doesn't use chromosome and position to identify SNPs).
-
-Now that we have created a 'whitelist', we can rerun populations and generate F-statistics and input files for these 100 highly differentiated SNPs only.
-```
-cd ~/stacks
-mkdir populations_canada_random_highfst
-populations -t 16 -P ~/stacks/gstacks/ -M ~/scripts/popmap_canada.txt -O populations_canada_random_highfst --fstats --vcf --genepop --structure -W ~/stacks/populations_canada_random/high_fst.whitelist.tsv
-```
-
-
-Whitelists and blacklists are very useful to select or discard loci for analysis. For quick data exploration, or for analysis that don't require, or can't handle, large datasets, you can use a similar code to create a whitelist with a random subset of SNPs. For 1000 SNPs for example
-```
-grep -v "^#" populations.sumstats.tsv | cut -f 1,4 | sort | uniq | shuf | head -n 1000 | sort -n > 1000snps_whitelist.tsv
-```
-Note that STACKS keep into account the whole locus, rather than just the random SNP we selected in each locus, for many statistics. Open ```populations.sumstats_summary.tsv``` for example. To help visualization you can download the file and import it in excel. Additionally, STACKS provides many haplotype-based statistics. Although we won't delve into these today, these are important to obtain estimates of D<sub>xy</sub>, a measure of absolute divergence, gene and haplotype diversity, and to phase SNPs, which can provide additional important information for both evolutionary questions and conservation applications.
-
-See following review on the use of haplotype information in conservation genomics
-```
-Leitwein, M., Duranton, M., Rougemont, Q., Gagnaire, P.A. and Bernatchez, L., 2020.
-Using haplotype information for conservation genomics.
-Trends in Ecology & Evolution, 35(3), pp.245-258.
-```
-
-Note also that statistics will be different depending on whether you look at all SNPs in one locus or only one random SNP. See below
-
-Statistics from ~/stacks/populations_2lin/populations.log, which includes all SNPs
-```
-Population summary statistics (more detail in populations.sumstats_summary.tsv):
-  NWA: 39.172 samples per locus; pi: 0.054733; all/variant/polymorphic sites: 770730/45238/25848; private alleles: 18011
-  GRE: 39.138 samples per locus; pi: 0.054095; all/variant/polymorphic sites: 770730/45238/27188; private alleles: 19351
-
-Population pair divergence statistics (more in populations.fst_summary.tsv and populations.phistats_summary.tsv):
-  NWA-GRE: mean Fst: 0.024875; mean Phi_st: 0.077792; mean Fst': 0.074473; mean Dxy: 0.0049455
-```
-Statistics from ~/stacks/populations_2lin_random/populations.log, which includes only one random SNP/locus.
-```
-Population summary statistics (more detail in populations.sumstats_summary.tsv):
-  NWA: 39.161 samples per locus; pi: 0.051743; all/variant/polymorphic sites: 770730/8530/4634; private alleles: 3345
-  GRE: 39.12 samples per locus; pi: 0.054156; all/variant/polymorphic sites: 770730/8530/5171; private alleles: 3882
-
-Population pair divergence statistics (more in populations.fst_summary.tsv and populations.phistats_summary.tsv):
-  NWA-GRE: mean Fst: 0.028809; mean Phi_st: 0.033052; mean Fst': 0.020139; mean Dxy: 0.00092926
-```
-
-Here, the value of π are not very different because they are averaged over only the polymorphic sites (which is NOT how we should estimate π anyway). Same for F<sub>ST</sub>. Do you see how different the haplotype-based estimates are? They are all lower in the random-SNP dataset because STACKS computes these statistics as if there was only one polymorphic site in each of these loci.
-
-
-### With VCFtools
-To calculate F<sub>ST</sub> in VCFtools you need to provide the list of samples for each population to include in the calculation. For the reduced dataset, including only 80 individuals from Greenland and Canada, you will find the list of samples for each of the two lineages in the ```~/scripts``` folder
+To calculate F<sub>ST</sub> in VCFtools you need to provide the list of samples for each population to include in the calculation and a VCF file. For the reduced dataset, including only 80 individuals from Greenland and Canada, you will find the list of samples for each of the two lineages in the ```~/scripts``` folder. the VCF file name will be saved as ```populations.snps.vcf```, one for each of the datsets we analyzed. For example, to calculate F<sub>ST</sub> in the smallest of the three datsets we produced, type
 ```
 vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop ~/scripts/pop_canada40.txt --weir-fst-pop ~/scripts/pop_greenland40.txt  --out fst_2lin
 ```
@@ -126,6 +55,14 @@ However, these single-site estimates of π are not very meaningful. π is define
 
 #### Important! There are many different ways to estimate FST and you should always report the program and the methods used.
 For example, STACKS adopts an AMOVA F<sub>ST</sub> by Weir (from Genetic Data Analysis II, chapter 5, "F Statistics," pp166-167) and VCFtools uses the F<sub>ST</sub> estimate by Weir and Cocherham (1984). These two, as you can see from the analyses above, will give you slightly different estimates. Furthermore, VCFtools provided a weighted estimate of F<sub>ST</sub> that may be better suited to capture genome-wide population differentiatiation.
+
+
+### With Stacks
+We can calculate F<sub>ST</sub> and other summary statistics also directly from Stacks. 
+See examples scripts here below.
+
+[Calculate F<sub>ST</sub> and other summary stats in Stacks](./summary_stats_stacks.md)
+
 
 ## Step 2. Assessing population structure
 ### Structure with faststructure
