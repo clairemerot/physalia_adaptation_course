@@ -127,7 +127,7 @@ You can change Fisher alternative hypothesis to "two.sided", "greater" or "less"
 
 You can loop over the categories with a loop and store the results
 ```
-for (i in 1 : length(joined_repartition1$category)
+for (i in 1 : length(joined_repartition1$category))
 {
 cat(joined_repartition1$category[i])
 
