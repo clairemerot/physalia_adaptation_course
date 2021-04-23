@@ -88,7 +88,7 @@ If you have not installed it already you can do with
 ```
 library(devtools)
 install_github('tavareshugo/windowscanr')
-library(windowscannr)
+library(windowscanr)
 ```
 As argument you can give the window size, step and whether it is doing the mean (or another summary statistics) within each window.
 We need to give groups = chromosomes to avoid joining positions on different chromosomes!
