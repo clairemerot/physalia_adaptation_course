@@ -80,7 +80,10 @@ from decompressed fastq files.
 When we have paired reads, they are generally stored in two separate files and are paired by position: the first read in ```read1.fastq``` is paired with the first read in ```read2.fastq```, the second read in ```read1.fastq``` is paired with the second read in ```read2.fastq```, and so on. One way to check if your files are intact is to ensure that the two read files have the same amount of lines/reads.
 
 ### Mapping data to a reference genome
-As we're analyzing a large dataset that would take many hours to align to the reference genome, we also did the mapping for you using this script ```physalia_adaptation_course/01_day1/01_scripts/utilities/04_bwa_mem_align_ionproton.sh``` (also on the server at ```~/Share/physalia_adaptation_course/01_day1/01_scripts/utilities/04_bwa_mem_align_ionproton.sh```). 
+As we're analyzing a large dataset that would take many hours to align to the reference genome, we also did the mapping for you. 
+To find the script that we used and a step-by-step breakdown of that script, click on the link below.
+[Mapping to a reference genome](physalia_adaptation_course/01_day/script_mapping)
+using this script ```physalia_adaptation_course/01_day1/01_scripts/utilities/04_bwa_mem_align_ionproton.sh``` (also on the server at ```~/Share/physalia_adaptation_course/01_day1/01_scripts/utilities/04_bwa_mem_align_ionproton.sh```). 
 Here I will provide you with a step-by-step breakdown of that script.
 The file starts with the line
 ```
