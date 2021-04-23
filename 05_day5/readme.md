@@ -44,7 +44,7 @@ Let's look at the new vcf
 less -S 04_snpEff/canada_annotated.vcf
 ```
 As you see it kepts the vcf format with its specific header but this is not easy to use as it is now if we want to import SNP information in R.
-We will use a few bash command and awk to spli the information by the symbol "|" and rather make different column separated by tab
+We will use a few bash command and awk to split the information by the symbol "|" and rather make different column separated by tab
 
 ```
 cat 04_snpEff/canada_annotated.vcf | awk -F"|" '$1=$1' OFS="\t" | cut -f 1-9 > 04_snpEff/SNP_annotated_formatted.txt
@@ -125,26 +125,6 @@ fish_res
 ```
 You can change Fisher alternative hypothesis to "two.sided", "greater" or "less"
 
-You can loop over the categories with a loop and store the results
-```
-for (i in 1 : length(joined_repartition1$category))
-{
-cat(joined_repartition1$category[i])
-
-#build the contigency table
-cont_tab<-rbind(c(joined_repartition1$n_oulier[i],total_outlier),
-                c(joined_repartition1$n_all_snps[i],total_snp))
-cat(cont_tab)
-
-#run Fisher test
-cont_tab[ which(is.na(cont_tab))]<-0
-fish_res<-fisher.test(cont_tab,alternative = "greater")
-cat(fish_res)
-}
-```
-
-
-
 ## Step 2 Bedtools : find the intersection between SNPs and genes
 Bedtools is a program that is great to find the intersection between two files. It usually works on a specific bedformat which have at least three columns (Chromosome, FromPosition, ToPosition) and 12 columns to the maximum.
 It won't like having header. We will try to keeep a 4th column with SNP id.
@@ -154,8 +134,8 @@ I have prepared for your the annotation file of the genome in a bed-readable for
 less -S 05_bed/genome_mallotus_dummy_annotation_simplified.bed
 ```
 (q to exit from less)
-q
-If you remember our outliers files they were not formatted as such... Because we do not cover all the genome, we will look for genes in a window of X kb around the SNP position. The size of this window should ideally be adjust depending on LD decay in your organism (which can be assessed by plotting LD against distance with the output of plink that we found yesterday... For today we will choos 10 kb but if you are curious you cna explore different size.
+
+If you remember our outliers files they were not formatted as such... Because we do not cover all the genome, we will look for genes in a window of X kb around the SNP position. The size of this window should ideally be adjust depending on LD decay in your organism (which can be assessed by plotting LD against distance with the output of plink that we found yesterday... For today we will choos 10 kb but if you are curious you can explore different size.
 To prepare the files, we will use R. 
 
 ### In R (either on Rstudio in your computer or in a R terminal on the server)
@@ -306,7 +286,7 @@ all_transcripts<-left_join(all_transcripts,transcript_info[,c(1,3)])
 dim(all_transcripts)
 head(all_transcripts)
 ```
-Now a problem is that some transcripts are listed twice, it could be that the same gene matches at several places in the genome, that we have two snps in the same gene, etc. So we will use a finction to remove duplicated rows. (magic function of dplyr again!)
+Now a problem is that some transcripts are listed twice, it could be that the same gene matches at several places in the genome, that we have two snps in the same gene, etc. So we will use a fonction to remove duplicated rows. (magic function of dplyr again!)
 ```
 #make unique
 all_transcripts_unique<- all_transcripts %>% distinct(TranscriptName,.keep_all = TRUE)
@@ -351,7 +331,7 @@ enrich_outliers$over_represented_padjust<-p.adjust(enrich_outliers$over_represen
 head(enrich_outliers)
 write.table(enrich_outliers, "06_go/GO_enrich_temp_RDA.txt", sep="\t")
 ```
-all go terms are presented in this matrix.We ahev exported it so you can look at it in an editor.
+all go terms are presented in this matrix.We have exported it so you can look at it in an editor.
 
 But we may want to see only the the significant enrichments:
 ```
