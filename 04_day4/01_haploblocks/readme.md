@@ -165,6 +165,20 @@ ggplot(mds_matrix, aes(x=mds3, y=mds4, colour=chrom))+
 As you see, MDS 1 and 2 are largely driven by Chr 4 and Chr5. Let's look at mds scores along the genome to pinpoint those regions
 Building on what we did before, you can probably make a Manhattan plot with a midposition as x, and mds1 or mds2 as y.
 
+```
+mds_matrix$midpos<-(mds_matrix$start+mds_matrix$end)/2
+
+ggplot(mds_matrix, aes(x=midpos, y=mds1, colour=chrom))+
+  geom_point()+
+  theme_classic()+
+  facet_grid(cols = vars(chrom), scales = "free_x", space="free_x")
+  
+ggplot(mds_matrix, aes(x=midpos, y=mds2, colour=chrom))+
+  geom_point()+
+  theme_classic()+
+  facet_grid(cols = vars(chrom), scales = "free_x", space="free_x")
+```
+
 This is the output for MDS2
 ![mds2_manhattan_plot](00_localPCA/images/mds2_position.png)
 
