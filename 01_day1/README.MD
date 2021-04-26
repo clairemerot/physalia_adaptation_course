@@ -102,7 +102,7 @@ With the pipe sign ```|```, we pipe the output of the first command into the sec
 The first few lines starting with ```@``` is the header. If you have a lot of scaffolds in your reference the header can be very long. If you want to see the first few alignments remove ```-h``` from the command above.
         
 ## Step 3: Call variants in STACKS
-STACKS <http://catchenlab.life.illinois.edu/stacks/> is a bioinformatic pipeline for building loci from short-read data from GBS/RADseq libraries and calling variants for population genomics, phylogenomics and linkage maps. STACKS includes two main pipelines: ```denovo_map.pl``` to build a catalog of loci *de novo*, i.e. it assembles loci from short-read data in absence of a reference genome, and ```ref_map.pl``` to call variants from data mapped to a reference genome. Each of the two pipelines includes several steps. Note that everything here is based on the latest version of STACKS (v.2.5.3)
+STACKS <http://catchenlab.life.illinois.edu/stacks/> is a bioinformatic pipeline for building loci from short-read data from GBS/RADseq libraries and calling variants for population genomics, phylogenomics and linkage maps. STACKS includes two main pipelines: ```denovo_map.pl``` to build a catalog of loci *de novo*, i.e. it assembles loci from short-read data in absence of a reference genome, and ```ref_map.pl``` to call variants from data mapped to a reference genome. Each of the two pipelines includes several steps. Note that everything here is based on STACKS v.2.5.3.
 
 ```denovo_map.pl``` = ```ustacks``` --> ```cstacks``` --> ```sstacks``` --> ```tsv2bam``` --> ```gstacks``` --> ```populations```
 
