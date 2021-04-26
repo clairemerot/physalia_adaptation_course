@@ -207,6 +207,6 @@ populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O population
  
 Make sure you print these outputs in each of these two folders ```populations_all_random``` and ```populations_canada_random```.
 
-If you are struggling with this last step, have a look at the solution [here](./populations_scripts.md).
+If you are struggling with this last step, have a look at the solution [here](./populations_script.md).
 
 ### The end.
