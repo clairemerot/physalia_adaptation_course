@@ -7,6 +7,8 @@ Python3+ (lib PANDAS)
 Baypass
 PLINK v1.9+
 tabix
+faststructure
+STACKS
 
 
 ## R packages
