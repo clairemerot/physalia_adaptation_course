@@ -29,7 +29,7 @@ vcf files will need to be unzipped wiht the command
 
 ```gunzip 02_data/canada.vcf.gz``` 
 
-```gunzip 02_data/canada_no45.vcf.gz``` .
+```gunzip 02_data/canada_no45.vcf.gz```
 
 To see the beginning of the vcf file it may be useful to use ```less -S 02_data/file```, which cut the right part of the file to fit your window, 
 or ```head -n 25 02_data/file``` to look at the first 25 lines
