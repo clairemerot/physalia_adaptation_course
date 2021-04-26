@@ -79,14 +79,11 @@ If you have problems activating faststructure please follow this procedure to fi
 3. tap ```conda activate faststructure```
 
 
-Now you can modify the ```-K``` parameters and test different different numbers of clusters.
-With this script you can test what number of populations/cluster best describes your dataset.
+Now you can modify the ```-K``` parameters and test different different numbers of clusters. Run faststructure with K ranging 2-n, with n being the number of populations in your dataset. With this script you can test what number of populations/cluster best describes your dataset.
 ```
 chooseK.py --input=capelin.all
 ```
-but the results are not very clear. Indeed, it can be hard to find the the number of cluster that best describes your dataset. The qualitative analyses of structure plots for several K is often the most informative approach.
-
-Run faststructure with K ranging 2-n, with n being the number of populations in your dataset and download the output with the ```.meanQ``` extension on your local computer. Then go to <http://pophelper.com/> and upload your ```.meanQ``` files. You can start exploring the one generated for K=2 while you run fastSTRUCTURE with the other K. pophelper is a very user-friendly, intuitive online app to visualize population structure data. To visualize the plots after you have uploaded the data, go to the 'Plot' tab and click on the dataset(s) you want to visualize on the left-hand panel. If you click on more than one, you're gonna visualize them in the same panel. You can play with colors and sizes, fonts, etc for hours and I'll leave you to explore those functions. Just a tip to add population labels. You can create the list you need with
+However, the results are not very clear. Indeed, it can be hard to find the the number of cluster that best describes your dataset. The qualitative analyses of structure plots for several K is often the most informative approach. Now download the output with the ```.meanQ``` extension on your local computer. Then go to <http://pophelper.com/> and upload your ```.meanQ``` files. You can start exploring the one generated for K=2 while you run fastSTRUCTURE with the other K. pophelper is a very user-friendly, intuitive online app to visualize population structure data. To visualize the plots after you have uploaded the data, go to the 'Plot' tab and click on the dataset(s) you want to visualize on the left-hand panel. If you click on more than one, you're gonna visualize them in the same panel. You can play with colors and sizes, fonts, etc for hours and I'll leave you to explore those functions. Just a tip to add population labels. You can create the list you need with
 ```
 cut -f 2 ~/scripts/popmap_all.txt ### or one of the other population maps
 ```
