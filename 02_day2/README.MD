@@ -169,16 +169,14 @@ L_11          0          1          0           0           0           0       
 L_12          0          0          0           0           0           0           0           0          -1
 ```
 #### Step 2: Impute missing data
-Missing data in 012.geno files from vcftools are coded with -1. We will change it for NAs
+Missing data in 012.geno files from vcftools are coded with -1. We will change it for NAs. And we will fill the NAs values by the most common genotype across all samples for a given SNP
 ```
 geno.012_2lin[geno.012_2lin == -1] <- NA
-```
-And we will fill the NAs values by the most common genotype across all samples for a given SNP
-```
+
 geno.012_2lin.imp <- apply(geno.012_2lin,2,function(x){
                            replace(x, is.na(x), as.numeric(names(which.max(table(x))))) })
 ```
-
+#### Step 3: Run adn visualise PCA
 Next, we are ready to perform the PCA. The code is very simple. Only one line !
 ```
 pca.2lin <- prcomp(geno.012_2lin.imp)
@@ -214,7 +212,7 @@ First, we have to make a synthetic dataframe which incorporate various features:
 * Populations info
 * any other caracteristics that you want, which are related to the samples (e.g. size, color, sex...)
 
-So how we do that ?
+And then plot with ggplot
 ```
 #prepare dataset to plot PCAs
 pca.2lin.sub <- pca.2lin$x[,1:4] %>% #retain the first four PCs
@@ -223,9 +221,7 @@ pca.2lin.sub <- pca.2lin$x[,1:4] %>% #retain the first four PCs
   dplyr::left_join(., popmap, by='id') #Here we use the left_join function
                                        #from dplyr to wrap the population vector
                                        #of our samples.
-```
-Almost done! Now we will use the ggplot library to make a super figure !
-```
+#plot
 ggplot(pca.2lin.sub) + aes(x=PC1, y=PC2, col=pop) +
   geom_hline(yintercept = 0, lty=2, col='grey50') + #add horiz line at y=0
   geom_vline(xintercept = 0, lty=2,col='grey50') +  #add vertical line at x=0
@@ -243,12 +239,9 @@ Done ! Good job.
 
 Now, the question is what do you see ?
 
+#### Step 4: Explore PCa loadings
 Ultimately, we will plot the PCA loadings of each SNPs among the main PC axies.
 ```
-# |---------|
-# | Step 4  | ================> Expolore PCA loadings
-# |---------|
-
 #prepare dataset
 loadings.melt <- reshape2::melt(abs(pca.2lin$rotation[,1:4])) %>% #get absolu teloadings values
   set_colnames(., c('SNPs','PC','loading')) %>% #set the colnames of the new dataframe
@@ -268,7 +261,8 @@ ggsave("PCA_loadings.png", height = 4, width = 15)
 
 Here we can observe that many SNPs account for an elevated loading which explain the structure of the PCA display above. Interestingly, we can observe that these SNPs with large loadings are spread over all the genome.
 
-Ok, that was easy no ? Now let's do the same work for the other dataset composed by the 12 populations.
+#### PCA on the Canadian dataset only
+Now let's do the same work for the other dataset composed by the 12 populations.
 Test it and tell us what are your conclusions about it. You can run exactly the same script, simply changing the input files. When running ggplot you will need more colour values for populations. you cna also try to colour by sex.
 
 Here is a script for the canadian populations, if you are stuck.
