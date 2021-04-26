@@ -64,7 +64,7 @@ The snippet above shows 3 reads, with each read coming with 4 lines of informati
 
 Knowing this, we can calculate the number of reads in a file by counting the number of lines
 ```
-zcat -f  ~/Share/physalia_adaptation_course/01_day1/03_raw_reads/A_01.fq.gz | wc -l file.fastq
+zcat -f  ~/Share/physalia_adaptation_course/01_day1/03_raw_reads/A_01.fq.gz | wc -l 
 ```
 and divide by 4.
 Or 
