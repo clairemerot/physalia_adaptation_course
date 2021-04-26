@@ -371,7 +371,7 @@ temp2 <- optim.a.score(dapc_canada2)
 ```
 These analyses suggest I should use fewer PCs, around 50.
 ```
-dapc_canada1<-dapc(canada, n.da=4, n.pca=50)
+dapc_canada3<-dapc(canada, n.da=4, n.pca=50)
 ```
 ![dapc_canada2](../images_tutorial/plot_dapc_canada1_4-50.jpeg)
 
