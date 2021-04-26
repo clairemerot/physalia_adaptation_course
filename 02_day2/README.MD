@@ -396,11 +396,10 @@ Although 200 PCs discriminate populations well, we know from low pairwise popula
 You can change pretty much everything in your plot and the authors of adegenet have put together a great tutorial <https://adegenet.r-forge.r-project.org/files/tutorial-dapc.pdf>
 
 
-###  Investigate structure in relation with geography
-To assess genetic structure related to geography and pre-existing partitions (e.g. sampling locations), we can also look into pairwise Fst between populations.
-Last year, we had a tutorial about how to get a matrix of pairwise Fst and assess whether this genetic differentiation was correlated with geographic distance (Isolation-by-distance), we remove it to keep the day shorter. Yet you can still refer to that tutorial if you wish under that link:
+###  Investigate structure in relation to geography
+To assess genetic structure in relation to geography and pre-existing partitions (e.g. sampling locations), we can also look into population pairwise F<sub>ST</sub>. Here is an extra tutorial to get a matrix of population pairwise F<sub>ST</sub> and assess whether genetic differentiation iscorrelated with geographic distance (e.g., isolation-by-distance). If you have extra time, or need it in the future, you can find the tutorial at this link below
 
-[FST by pair and IBD tutorial - extra](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/00_documents/IBD.md)
+[Population pairwise F<sub>ST</sub> and IBD tutorial - extra](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/00_documents/IBD.md)
 
 Here is an overview of the results:
 
