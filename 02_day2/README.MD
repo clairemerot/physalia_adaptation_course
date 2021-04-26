@@ -349,11 +349,11 @@ dapc_canada1<-dapc(canada, n.da=4, n.pca=100)
 dapc_canada2<-dapc(canada, n.da=4, n.pca=200)
 scatter(dapc_canada1)
 ```
-![dapc_canada1](../images_tutorial/02-day2_plot_dapc_canada_100_4.png)
+![dapc_canada1](../images_tutorial/plot_dapc_canada1.png)
 ```
 scatter(dapc_canada2)
 ```
-![dapc_canada2](../images_tutorial/02-day2_plot_dapc_canada_200_4.png)
+![dapc_canada2](../images_tutorial/plot_dapc_canada2.png)
 
 
 If too few PCs (with respect to the number of individuals) are retained, useful information will be excluded from the
