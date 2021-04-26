@@ -324,7 +324,7 @@ setwd("~/Desktop")
 twolin<-import2genind("populations_2lin_random/populations.str") # 80 ind and 8530 SNPs in my case, check your populations.log file to get the right number of SNPs
 ### This command will prompt questions about the structure of the file
 ```
-![convert4dapc](../images_tutorial/02-day2_adegenet_loaddata.png)
+![convert4dapc](../images_tutorial/02-day2_adegenet_loaddata_new.png)
 ```
 ### Once the dataset is loaded, you can proceed with the DAPC
 dapc_twolin<-dapc(twolin) ### choose 50 PCs and 1 distriminant function, as you did have a choice...
