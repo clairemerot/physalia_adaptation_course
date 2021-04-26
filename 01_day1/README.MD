@@ -28,7 +28,7 @@ Type
 nano popmap_2lin.txt
 ``` 
 and move around using the arrows on your keyboard.
-At the bottom of your screen are the shortcuts for different commands. For example, to modify the file and save it with a different name, write something in the first line, press ctlr + x and edit the name of the file into ```test_nano.txt```. Hit enter and the file will be saved.
+At the bottom of your screen are the shortcuts for different commands. For example, to modify the file and save it with a different name, write something in the first line, press ```ctlr + x``` and edit the name of the file into ```test_nano.txt```. Hit enter and the file will be saved.
 Now, let's remove this file with
 ```
 rm test_nano.txt
