@@ -95,14 +95,20 @@ Population structure leads to systematic patterns in measures of mean relatednes
 
 For this analysis, we will convert vcf files into geno format (matrix of genotypes) using the programm **vcftools**.
 Here, we will work with two vcf files
-* vcf file containing four populations (H,L,O and U)
-* vcf file containing 12 populations (A-L)
+* vcf file containing four populations with the two lineages (H,L,O and U)
+* vcf file containing 12 populations from Canada (A-L)
 
-So within your own folder in the Amazon server, use this two command (cmd) lines:
+To do a PCA, we want a matrix of 0,1,2 and we can restrict our matrix to the most frequent SNPs (Maf> 1%). We can do this thanks to vcf tools.
+First we will get organized and try to put evrything we need in a pca folder
+
 ```
-vcftools --vcf stacks/populations_2lin_random/populations.snps.vcf --012 --out populations_2lin_random
-vcftools --vcf stacks/populations_canada_random/populations.snps.vcf --012 --out populations_can_random
-
+cd 
+mkdir 02_day2
+cd 02_day2
+mkdir pca
+cd pca
+vcftools --vcf ~/Share/populations_2lin_random/populations.snps.vcf --maf 0.01 --012 --out populations_2lin_random
+vcftools --vcf ~/Share//populations_canada_random/populations.snps.vcf --maf 0.01 --012 --out populations_can_random
 ```
 Once this is done, you will see via the cmd line `ls` (for listing all files in the directory), that six new files have been generated.
 * Two files ending with only `.012` contain genotypes information (0 for Ref homozygous, 1 for heterozygous, 2 for Alt homozygous and -1 for misisng data)
@@ -110,11 +116,6 @@ Once this is done, you will see via the cmd line `ls` (for listing all files in 
 * Two files ending with `.012.indv` contain a list of samples ids from the vcf file
 
 So to work with this files, we will return in your local computer and download them.
-Before downloading these files in your local computer, open a new terminal and move into your current working folder for this course ``PATH/physalia/``.
-Then, you can download these files via the following command line :
-```
-scp -i PATH/boh.pem username@xx.xx.xx.xx:./*.012* ./02_day2/02-data/
-```
 
 Once the six files have been downloaded, open R studio and set your working directory to ``PATH/physalia/02_day2/``
 
