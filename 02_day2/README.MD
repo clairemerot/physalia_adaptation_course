@@ -380,15 +380,15 @@ Another way to see the effect of the choice of the number of PCs is from stuctur
 ```
 compoplot(dapc_canada1)
 ```
-![compoplot1_canada1](../images_tutorial/02-day2_compoplot_dapc_canada1.png)
+![compoplot1_canada1](../images_tutorial/compoplot_dapc_canada1.png)
 ```
 compoplot(dapc_canada2)
 ```
-![compoplot1_canada1](../images_tutorial/02-day2_compoplot_dapc_canada2.png)
+![compoplot1_canada1](../images_tutorial/compoplot_dapc_canada2.png)
 ```
 compoplot(dapc_canada3)
 ```
-![compoplot1_canada1](../images_tutorial/02-day2_compoplot_dapc_canada3.png)
+![compoplot1_canada1](../images_tutorial/compoplot_dapc_canada3.png)
 
 
 Although 200 PCs discriminate populations well, we know from low pairwise population F<sub>ST</sub> that differentiation is very low, which lead us to conclude that these high population assignments are the consequence of data over-fitting. On the other hand, the poor population assignemnt you obtain from 50 PCs is indicative of the weak population structure among the Canadian populations.
