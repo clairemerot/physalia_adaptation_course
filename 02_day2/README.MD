@@ -58,6 +58,10 @@ However, these single-site estimates of π are not very meaningful. π is define
 #### Important! Because there are so many different ways to estimate F<sub>ST</sub> and you should always report the program and the methods used.
 For example, STACKS adopts an AMOVA F<sub>ST</sub> by Weir (from Genetic Data Analysis II, chapter 5, "F Statistics," pp166-167) and VCFtools uses the F<sub>ST</sub> estimate by Weir and Cocherham (1984). These two will give you slightly different estimates. Furthermore, VCFtools provided a weighted estimate of F<sub>ST</sub> that may be better suited to capture genome-wide population differentiatiation.
 
+####  Investigate structure in relation to geography
+To assess genetic structure in relation to geography and pre-existing partitions (e.g. sampling locations), we can also look into population pairwise F<sub>ST</sub>. Here is an extra tutorial to get a matrix of population pairwise F<sub>ST</sub> (for the 12 Canadian populations) and assess whether genetic differentiation iscorrelated with geographic distance (e.g., isolation-by-distance). If you have extra time, or need it in the future, you can find the tutorial at this link below
+
+[Population pairwise F<sub>ST</sub> and IBD tutorial - extra](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/00_documents/IBD.md)
 
 
 ## Step 2. Assessing population structure
@@ -276,7 +280,7 @@ And here is what you will observe:
 
 ![loadings](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/figure2_correction_PCA_can.png)
 
-
+Long story short, what drives PC1 is likely a chromosomal rearrangement that we will better explore on day 4. PC2 is driven by sex. In weakly-structured species, this kind of rearrangements or sex-linked loci can realy drive the pattern, for the PCA, the Admixture/Structure analysis and Fst, so it is sometimes a good idea to exlude those regions or work on a subset of LD-pruned SNPs.
 
 
 ### DAPC
@@ -364,11 +368,4 @@ Although 200 PCs discriminate populations well, we know from low pairwise popula
 You can change pretty much everything in your plot and the authors of adegenet have put together a great tutorial <https://adegenet.r-forge.r-project.org/files/tutorial-dapc.pdf>
 
 
-###  Investigate structure in relation to geography
-To assess genetic structure in relation to geography and pre-existing partitions (e.g. sampling locations), we can also look into population pairwise F<sub>ST</sub>. Here is an extra tutorial to get a matrix of population pairwise F<sub>ST</sub> and assess whether genetic differentiation iscorrelated with geographic distance (e.g., isolation-by-distance). If you have extra time, or need it in the future, you can find the tutorial at this link below
 
-[Population pairwise F<sub>ST</sub> and IBD tutorial - extra](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/00_documents/IBD.md)
-
-Here is an overview of the results:
-
-**I will insert figures** and a few coments
