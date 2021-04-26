@@ -64,18 +64,14 @@ The snippet above shows 3 reads, with each read coming with 4 lines of informati
 
 Knowing this, we can calculate the number of reads in a file by counting the number of lines
 ```
-wc -l file.fastq
+zcat -f  ~/Share/physalia_adaptation_course/01_day1/03_raw_reads/A_01.fq.gz | wc -l file.fastq
 ```
 and divide by 4.
 Or 
 ```
-zcat -f A_01.fq.gz | sed -n '2~4p' | wc -l
+zcat -f  ~/Share/physalia_adaptation_course/01_day1/03_raw_reads/A_01.fq.gz | sed -n '2~4p' | wc -l
 ```
-directly from compressed fastq files, or 
-```
-cat A_01.fq | sed -n '2~4p' | wc -l
-```
-from decompressed fastq files.
+directly from compressed fastq files
 
 When we have paired reads, they are generally stored in two separate files and are paired by position: the first read in ```read1.fastq``` is paired with the first read in ```read2.fastq```, the second read in ```read1.fastq``` is paired with the second read in ```read2.fastq```, and so on. One way to check if your files are intact is to ensure that the two read files have the same amount of lines/reads.
 
@@ -100,6 +96,8 @@ samtools view -h A_01.bam | less
 ```
 With the pipe sign ```|```, we pipe the output of the first command into the second command.
 The first few lines starting with ```@``` is the header. If you have a lot of scaffolds in your reference the header can be very long. If you want to see the first few alignments remove ```-h``` from the command above.
+
+(exit less by pressing q)
         
 ## Step 3: Call variants in STACKS
 STACKS <http://catchenlab.life.illinois.edu/stacks/> is a bioinformatic pipeline for building loci from short-read data from GBS/RADseq libraries and calling variants for population genomics, phylogenomics and linkage maps. STACKS includes two main pipelines: ```denovo_map.pl``` to build a catalog of loci *de novo*, i.e. it assembles loci from short-read data in absence of a reference genome, and ```ref_map.pl``` to call variants from data mapped to a reference genome. Each of the two pipelines includes several steps. Note that everything here is based on STACKS v.2.5.3.
