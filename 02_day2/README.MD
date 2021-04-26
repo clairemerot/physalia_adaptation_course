@@ -344,7 +344,7 @@ What do you see now?
 If any structure is present among the Canadian populations, it may be hidden by the strong differentiation between the Canadian and Greenlandic lineages.
 So let's repeat the analysis including only the Canadian populations, and use this to explore how to select the right number of PCs. Run and visualize the DAPCs based on 100 and 200 PCs.
 ```
-canada<-import2genind("populations_canada_random/populations.str") # 240 ind and 8080 SNPs
+canada<-import2genind("populations_canada_random/populations.str") # 240 ind and 8018 SNPs
 dapc_canada1<-dapc(canada, n.da=4, n.pca=100)
 dapc_canada2<-dapc(canada, n.da=4, n.pca=200)
 scatter(dapc_canada1)
