@@ -13,7 +13,9 @@ cp -r ~/Share/populations_* ./
 
 As you can see if you ```cd``` in one of the folders storing the output from your ```populations``` runs, STACKS produces many output files. The manual provides a thorough explanation of all the different file formats. Go to <https://catchenlab.life.illinois.edu/stacks/manual/> and scroll down to section 6.6. For each output type, open the corresponding file on the server, and take your time to explore them.
 
-There are many ways, approaches, software and formulas to calculate F<sub>ST</sub>, a relatiec measure of population differentiation. Here we will use VCFtools but you'll find a  in VCFtools you need to provide the list of samples for each population to include in the calculation and a VCF file. For the reduced dataset, including only 80 individuals from Greenland and Canada, you will find the list of samples for each of the two lineages in the ```~/scripts``` folder. the VCF file name will be saved as ```populations.snps.vcf```, one for each of the datsets we analyzed. For example, to calculate F<sub>ST</sub> in the smallest of the three datsets we produced, type
+There are many ways, approaches, software and formulas to calculate F<sub>ST</sub>, a relative measure of population differentiation. Here we will use mainly VCFtools. If you want to explore Stacks for summary statistics in your spare time you will find a Stacks specific tutorial [here](./summary_stats_stacks.md)
+
+In VCFtools you need to provide the list of samples for each population to include in the calculation and a VCF file with all your variants and asscoiated information. For the reduced dataset, including only 80 individuals from Greenland and Canada, you will find the list of samples for each of the two lineages in the ```~/scripts``` folder. The VCF file name is saved as ```populations.snps.vcf```, one for each of the datsets we analyzed. For example, to calculate F<sub>ST</sub> in the smallest of the three datsets we produced, type
 ```
 vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop ~/scripts/pop_canada40.txt --weir-fst-pop ~/scripts/pop_greenland40.txt  --out fst_2lin
 ```
@@ -56,12 +58,6 @@ However, these single-site estimates of π are not very meaningful. π is define
 #### Important! There are many different ways to estimate FST and you should always report the program and the methods used.
 For example, STACKS adopts an AMOVA F<sub>ST</sub> by Weir (from Genetic Data Analysis II, chapter 5, "F Statistics," pp166-167) and VCFtools uses the F<sub>ST</sub> estimate by Weir and Cocherham (1984). These two, as you can see from the analyses above, will give you slightly different estimates. Furthermore, VCFtools provided a weighted estimate of F<sub>ST</sub> that may be better suited to capture genome-wide population differentiatiation.
 
-
-### With Stacks
-We can calculate F<sub>ST</sub> and other summary statistics also directly from Stacks. 
-See examples scripts here below.
-
-[Calculate F<sub>ST</sub> and other summary stats in Stacks](./summary_stats_stacks.md)
 
 
 ## Step 2. Assessing population structure
