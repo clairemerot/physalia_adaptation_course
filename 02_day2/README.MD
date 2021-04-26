@@ -93,19 +93,22 @@ and copy and paste in the the designated space in the left-hand panel.
 
 Population structure leads to systematic patterns in measures of mean relatedness between individuals in large genomic data sets, which are often discovered and visualized using dimension reduction techniques such as principal component analysis (PCA). The results of PCA can produce "maps" of population structure that may reflect the samples' geographic origin dirstored by rates of gene flow (November et al., 2008) or other intra-genome evolutionary processes that can bond or dispel certain groups of samples. Using PCA in genomics is quite simple without the need to diving into the math.
 
-For this analysis, we will convert vcf files into geno format (matrix of genotypes) using the programm **vcftools**.
+For this analysis, we will convert vcf files into geno format (matrix of genotypes : 0,1,2) using the programm **vcftools**.
 Here, we will work with two vcf files
 * vcf file containing four populations with the two lineages (H,L,O and U)
 * vcf file containing 12 populations from Canada (A-L)
 
-To do a PCA, we want a matrix of 0,1,2 and we can restrict our matrix to the most frequent SNPs (Maf> 1%). We can do this thanks to vcf tools.
-First we will get organized and try to put evrything we need in a pca folder
+In genomics, PCA are multivariate analyses which could be bias by ultra rare variants (i.e. only represented by one sample)
+>Linck, E., & Battey, C. J. (2019). Minor allele frequency thresholds strongly affect population structure inference with genomic data sets. Molecular Ecology Resources, 19(3), 639–647. doi: 10.1111/1755-0998.12995
+https://onlinelibrary.wiley.com/doi/abs/10.1111/1755-0998.12995
 
+So we will also restrict our matrix to the most frequent SNPs (Maf> 1%). We can do this thanks to vcf tools.
+
+First we will copy the folder of day2 and work within it
 ```
 cd 
-mkdir 02_day2
+cp cp -r ~/Share/physalia_adaptation_course/02_day2 .
 cd 02_day2
-mkdir pca
 cd pca
 vcftools --vcf ~/Share/populations_2lin_random/populations.snps.vcf --maf 0.01 --012 --out populations_2lin_random
 vcftools --vcf ~/Share//populations_canada_random/populations.snps.vcf --maf 0.01 --012 --out populations_can_random
@@ -115,9 +118,9 @@ Once this is done, you will see via the cmd line `ls` (for listing all files in 
 * Two files ending with `.012.pos` contain a list of SNP ids (Chromosme and Position) from the vcf file
 * Two files ending with `.012.indv` contain a list of samples ids from the vcf file
 
-So to work with this files, we will return in your local computer and download them.
+In this folder we also have all information about individuals. So to play with the pca, we will return in your local computer and simply download the whole pca folder.
 
-Once the six files have been downloaded, open R studio and set your working directory to ``PATH/physalia/02_day2/``
+Once the six files have been downloaded, open R studio and set your working directory to this folder ``02_day2/pca``
 
 #### Step 0: load the required libraries.
 ```
@@ -133,88 +136,48 @@ During the PCA tutorial, I will use the awesome ``%>%``. This code feature is a 
 #### Step 1: load initial required data files
 ```
 #1. load population map
-popmap <- read.table("../00_documents/info_samples.csv", h=T,sep=';')
+popmap <- read.table("info_samples.csv", h=T,sep=';')
 
 #2. load geno data for the 2lin
-geno.012_2lin.012 <- read.table('02-data/population.2lin.rand.snp.012')[,-1] #load genotype matrix
-geno.012_2lin.012.pos <- read.table('02-data/population.2lin.rand.snp.012.pos') %>% #load SNPs info
+geno.012_2lin <- read.table("populations_2lin_random.012")[,-1] #load genotype matrix
+geno.012_2lin.pos <- read.table("populations_2lin_random.012.pos") %>% #load SNPs info
   mutate(., locus=paste(V1,V2,sep='_')) #create a new column for SNP info name (CHR + position)
-geno.012_2lin.012.indv <- read.table('02-data/population.2lin.rand.snp.012.indv') #load individuals info
+geno.012_2lin.indv <- read.table("populations_2lin_random.012.indv") #load individuals info
 
-Set rownames and colnames to the geno matrix
-dimnames(geno.012_2lin.012) <- list(geno.012_2lin.012.indv$V1, geno.012_2lin.012.pos$locus)
+#Set rownames and colnames to the geno matrix
+dimnames(geno.012_2lin) <- list(geno.012_2lin.indv$V1, geno.012_2lin.pos$locus)
 #check the geno matrix
-geno.012_2lin.012[1:6,1:6]
+geno.012_2lin[1:12,1:9]
 ```
 ```
-Chr1_4669 Chr1_37123 Chr1_53559 Chr1_64218 Chr1_73377 Chr1_76193
-L_01         0          0          0          0          0          1
-L_02         0          0          0          0          0          0
-L_03         0          0          0          0          0          0
-L_04         0          0          0          0          0          0
-L_05         0          0          0          0          0         -1
-L_06         0          0          0          0          0          0
+     Chr1_37052 Chr1_53559 Chr1_76199 Chr1_102662 Chr1_116280 Chr1_144508 Chr1_223680 Chr1_225678 Chr1_264059
+L_01          0          0          0           0           0           0           0           0           0
+L_02          0          0          0           0           0           0           0           1           0
+L_03          0          0          0           0           0           1           0           0           0
+L_04          0          0          0           0           0           0           0           0           0
+L_05          0          0          0           0           0           0           0           0           0
+L_06          0          0          0           0           0           0           0           1           0
+L_07          0          0          0           0           0           0           0           0           0
+L_08          0          1          0           0           1           1           0           0           0
+L_09          0          0          0           0           0           0           0           0           0
+L_10          0          0          0           0           0           0           0           1           0
+L_11          0          1          0           0           0           0           0           1          -1
+L_12          0          0          0           0           0           0           0           0          -1
 ```
 #### Step 2: Impute missing data
 Missing data in 012.geno files from vcftools are coded with -1. We will change it for NAs
 ```
-geno.012_2lin.012[geno.012_2lin.012 == -1] <- NA
+geno.012_2lin[geno.012_2lin == -1] <- NA
 ```
+And we will fill the NAs values by the most common genotype across all samples for a given SNP
 ```
-Chr1_4669 Chr1_37123 Chr1_53559 Chr1_64218 Chr1_73377 Chr1_76193
-L_01         0          0          0          0          0          1
-L_02         0          0          0          0          0          0
-L_03         0          0          0          0          0          0
-L_04         0          0          0          0          0          0
-L_05         0          0          0          0          0         NA
-L_06         0          0          0          0          0          0
-```
-
-Here we will fill the NAs values by the most common genotype across all samples for a given SNP
-```
-geno.012_2lin.012.imp <- apply(geno.012_2lin.012,2,function(x){
+geno.012_2lin.imp <- apply(geno.012_2lin,2,function(x){
                            replace(x, is.na(x), as.numeric(names(which.max(table(x))))) })
 ```
-```
-Chr1_4669 Chr1_37123 Chr1_53559 Chr1_64218 Chr1_73377 Chr1_76193
-L_01         0          0          0          0          0          1
-L_02         0          0          0          0          0          0
-L_03         0          0          0          0          0          0
-L_04         0          0          0          0          0          0
-L_05         0          0          0          0          0          0
-L_06         0          0          0          0          0          0
-```
-
-In genomics, PCA are multivariate analyses which could be bias by ultra rare variants (i.e. only represented by one sample)
->Linck, E., & Battey, C. J. (2019). Minor allele frequency thresholds strongly affect population structure inference with genomic data sets. Molecular Ecology Resources, 19(3), 639–647. doi: 10.1111/1755-0998.12995
-https://onlinelibrary.wiley.com/doi/abs/10.1111/1755-0998.12995
-
-
-Based on this avenue, we will filter our geno matrix by keeping only SNPs where the alternative allele is represented by at least two samples.
-Usually, we name this filter as MAS for minimum number of samples with rare allele <int> eg: 2 or more.
-
-Here I give you a custom R function to use this filter:
-```
-MAS <- function(geno, MAS.thresh =2){
-#count number of samples which are heterozygous or rare homozygous
-  get_MAS_locus <- apply(geno,2,function(x) sum(table(x)[-1]))
-#get the list of locus that did not parse the threshold
-  blacklist <- get_MAS_locus[get_MAS_locus < MAS.thresh]
-#Print number of SNPs filtered out
-  message(length(blacklist)," SNPs removed")
-#return the filtered matrix
-  return(geno[,-which(colnames(geno) %in% names(blacklist))])
-}
-```
-To use it, this is simple.
-```
-geno.012_2lin.012.imp.MAS2 <- MAS(geno=geno.012_2lin.012.imp, MAS.thresh=2)
-```
-**Question : How many SNPs did not passed the MAS filter ?**
 
 Next, we are ready to perform the PCA. The code is very simple. Only one line !
 ```
-pca.2lin <- prcomp(geno.012_2lin.012.imp.MAS2, scale=T)
+pca.2lin <- prcomp(geno.012_2lin.imp)
 ```
 Now, we will look at some interesting stats from the PCA object. First we will plot the variances against the number of the principal component.
 ```
@@ -231,12 +194,12 @@ sum.pca <- summary(pca.2lin)
 sum.pca$importance[,1:5]
 ```
 ```
-                          PC1      PC2      PC3      PC4      PC5
-Standard deviation     17.66092 7.271187 7.180096 7.033057 6.972352
-Proportion of Variance  0.09911 0.016800 0.016380 0.015720 0.015450
-Cumulative Proportion   0.09911 0.115910 0.132290 0.148010 0.163460
+                            PC1      PC2      PC3      PC4      PC5
+Standard deviation     11.47642 2.867703 2.788018 2.730173 2.602429
+Proportion of Variance  0.26852 0.016770 0.015850 0.015200 0.013810
+Cumulative Proportion   0.26852 0.285290 0.301140 0.316330 0.330140
 ```
-Here you can see that the first PC axis (PC1), explain 9.91% of the total variance. Others PC axes explain about 1.5% of the variance.
+Here you can see that the first PC axis (PC1), explain 27% of the total variance. Others PC axes explain about 1.5% of the variance.
 
 OK ! now we are ready to make a plot of our PCA. To do this, there is so many ways and R libraries.
 I will present you my own with the R library ggplot2, which is a highly modulable way.
@@ -244,7 +207,7 @@ I will present you my own with the R library ggplot2, which is a highly modulabl
 First, we have to make a synthetic dataframe which incorporate various features:
 * Number of PCs that we want to examine. Usually I keep the first four PCs, but you can keep more.
 * Sample ids
-* Popupations info
+* Populations info
 * any other caracteristics that you want, which are related to the samples (e.g. size, color, sex...)
 
 So how we do that ?
@@ -269,7 +232,7 @@ ggplot(pca.2lin.sub) + aes(x=PC1, y=PC2, col=pop) +
         panel.grid = element_blank())
 
 #Print it !
-ggsave("03-analyses/02-PCA/PCA_biplpot_2lin_capelin.png", width = 6, height = 5)
+ggsave("PCA_biplot_2lin.png", width = 6, height = 5)
 ```
 Done ! Good job.
 ![PCA_img](../images_tutorial/02-day2_PCA_1_tutorial_capelin.png)
@@ -301,12 +264,19 @@ ggsave("PCA_loadings.png", height = 4, width = 15)
 
 Here we can observe that many SNPs account for an elevated loading which explain the structure of the PCA display above. Interestingly, we can observe that these SNPs with large loadings are spread over all the genome.
 
-* **Note:** Don't forget to save your script in your own local folder ``02_day2/00-scripts/``
+Ok, that was easy no ? Now let's do the same work for the other dataset composed by the 12 populations.
+Test it and tell us what are your conclusions about it. You can run exactly the same script, simply changing the input files. When running ggplot you will need more colour values for populations. you cna also try to colour by sex.
 
-Ok, that was easy no ? Well, I'm sure that you are able to do the same work for the other dataset composed by the 12 populations.
-Test it and tell us what are your conclusions about it ?
+Here is a script for the canadian populations, if you are stuck.
+[PCA_12canada](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/pca/script_pca_12canada.r)
 
-I think you should be able to do this in <20 minutes.
+And here is what you will observe: 
+
+![pca](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/figure1_correction_PCA_can.png)
+
+![loadings](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/figure2_correction_PCA_can.png)
+
+
 
 
 ### DAPC
