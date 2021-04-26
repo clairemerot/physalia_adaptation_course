@@ -270,18 +270,20 @@ We want to pinpoint the outlier that differ from the basic structure of the popu
 Best practices suggest to first run baypass on the LD-pruned vcf and to extract the covariance matrix between population (mat_omega), and then use it as a covariate in the baypass model. This will take a few minutes to run.
 
 ```
+#have the path to baypass
+PATH_TO_SOFT=../../ubuntu/baypass_2.2/sources
 #run on pruned snps
-g_baypass -npop 12 -gfile 05_baypass/canada.pruned.baypass -outprefix 05_baypass/prunedsnps.output -nthreads 2
+$PATH_TO_SOFT/g_baypass -npop 12 -gfile 05_baypass/canada.pruned.baypass -outprefix 05_baypass/prunedsnps.output -nthreads 2
 
 #controlled run
-g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
+$PATH_TO_SOFT/g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/allsnps.controlled.output -nthreads 2
 ```
 
 Please copy the controlled output on your local computer. We can have a look at the output. the most importnat are the omega matrix, which is covariance between populations and the xtx value which represent a kind of value associated to each SNP. the higher it gets, the more this snps differentiate the populations.
 
-If we don't want to control for population structure, we could have run it directly (please do not run now ) ``` g_baypass -npop 12 -gfile 05_baypass/canada.baypass -outprefix 05_baypass/allsnps.output -nthreads 1 ```
+If we don't want to control for population structure, we could have run it directly (please do not run now ) ``` $PATH_TO_SOFT/g_baypass -npop 12 -gfile 05_baypass/canada.baypass -outprefix 05_baypass/allsnps.output -nthreads 1 ```
 
 #### Have a threshold for the xtx value
 While this runs, we can prepare our subsequent analysis. We need to know above which xtx threhold value we can consider a locus to be an outlier of population differentiation
@@ -295,7 +297,7 @@ If you want to see how to do, the code is here.
 
 ```
 #controlled run on the simu dataset
-g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
+$PATH_TO_SOFT/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/simulate_controlled.output -nthreads 1
 ```
@@ -311,7 +313,7 @@ for i in 1 2 3 4 5
 do
 seed=$((1000 + RANDOM % 9999)) #set random seed
 echo "$seed"
-/home/scripts/g_baypass -npop $N_pop -gfile $geno -efile $env -omegafile $omega_mat -outprefix output"$i" -nthreads $N_CPU -npilot 25 -burnin 5000 -seed $seed
+$PATH_TO_SOFT/g_baypass -npop $N_pop -gfile $geno -efile $env -omegafile $omega_mat -outprefix output"$i" -nthreads $N_CPU -npilot 25 -burnin 5000 -seed $seed
 done
 ```
 
@@ -385,12 +387,12 @@ Here is the example with the covariate matrix controlling for a possible underly
 
 This may take a few minutes
 ```
-g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
+$PATH_TO_SOFT/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -efile 05_baypass/env.txt \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/simulate_env.controlled.output -scalecov -nthreads 2
 
-g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
+$PATH_TO_SOFT/g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -efile 05_baypass/env.txt \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/allsnps_env.controlled.output -scalecov -nthreads 1
