@@ -181,6 +181,7 @@ Let's break the scripts down to understand what ```populations``` is doing here.
 --fstats --vcf --genepop --structure for the file formats and stats
 
 --write-random-snp restrict data analysis to one random SNP per locus. This deserves a little more explanation. Most population genetics analyses work under the assumption that your markers are in linkage equilibrium. As you will have multiple SNPs for each locus, and linkage disequilibrium (LD) decays with increasing distance, we select one random SNP for each locus to minimize LD among SNPs. 
+
 It's important that you familiarize with software manuals. Go to <https://catchenlab.life.illinois.edu/stacks/comp/populations.php> and look at the complete list of settings. You can get it also from the terminal if you type ```populations``` (or the program command in general) without additional settings (sometimes ```-h``` or ```--help``` are required to visualize the complete list of settings). 
 
 Also note that the files within each folders have pretty standardized names (check with ```ls -lrth populations_2lin_random```). Pro: we don't need to taylor all our scripts to the individual file names, BUT if you don't specify the right folder you're gonna overwrite the existing files causing a lot of confusion on what setting and samples you used for a particular run.
