@@ -270,16 +270,16 @@ We want to pinpoint the outlier that differ from the basic structure of the popu
 Best practices suggest to first run baypass on the LD-pruned vcf and to extract the covariance matrix between population (mat_omega), and then use it as a covariate in the baypass model. This will take a few minutes to run.
 
 ```
-#have the path to baypass
-PATH_TO_SOFT=../../ubuntu/baypass_2.2/sources
 #run on pruned snps
-$PATH_TO_SOFT/g_baypass -npop 12 -gfile 05_baypass/canada.pruned.baypass -outprefix 05_baypass/prunedsnps.output -nthreads 2
+g_baypass -npop 12 -gfile 05_baypass/canada.pruned.baypass -outprefix 05_baypass/prunedsnps.output -nthreads 2
 
 #controlled run
-$PATH_TO_SOFT/g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
+g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/allsnps.controlled.output -nthreads 2
 ```
+On the server we have set up everything for you but if you try on your computer, you may have an error because it does not find Baypass
+You can set a path variable ```PATH_TO_SOFT=WhereItIs/baypass_2.2/sources``` and then do ```$PATH_TO_SOFT/g_baypass```, or add the path to your .bashrc
 
 Please copy the controlled output on your local computer. We can have a look at the output. the most importnat are the omega matrix, which is covariance between populations and the xtx value which represent a kind of value associated to each SNP. the higher it gets, the more this snps differentiate the populations.
 
@@ -387,12 +387,12 @@ Here is the example with the covariate matrix controlling for a possible underly
 
 This may take a few minutes
 ```
-$PATH_TO_SOFT/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
+g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -efile 05_baypass/env.txt \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/simulate_env.controlled.output -scalecov -nthreads 2
 
-$PATH_TO_SOFT/g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
+g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -efile 05_baypass/env.txt \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/allsnps_env.controlled.output -scalecov -nthreads 1
