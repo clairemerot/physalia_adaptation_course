@@ -7,7 +7,7 @@ Prepared by Anna Tigano, Yann Dorant and Claire Mérot for the course in May 202
 Except for day 1 in which you won't have the bam files, all the tutorial can be completed with the compressed files stored in the github page for each day (day 2 to day 5). Each daily tutorial can be run independantly of the other days.
 
 Here is the tentative schedule for the week. Within each block we'll keep some flexibility to have plenty of time for questions and discussion.
-![schedule](schedule 2021.png)
+![schedule](./images_tutorial/schedule 2021.png)
 
 
 ## Logging on the AWS server from your computer
