@@ -20,17 +20,21 @@ Capelin: Data taken from Cayuela et al,2020. Molecular Ecology https://doi.org/1
  
 Genome assembly: For this course, we made a dummy assembly of about 90 MB (instead of about 500 MB) and 5 chromosomes (instead of 24).
 
-Raw reads: Obtained by GBS methods, sequenced with IonTorrent.
+Raw reads: Obtained by GBS methods (= Rad-seq), sequenced with IonTorrent.
+
+1-1: Getting familiar with Unix environment
+
+1-2: From raw sequences to mapped reads
+
+1-3: Calling variants with Stacks
  
 ## Day2: Population structure and confounding factors
 
-2-1: Fst statistics with vcftools (optionnal: with Stacks)
+2-1: Fst statistics with vcftools (optionnal: with Stacks, optional: Pairwise-Fst and isolation-by-Distance )
 
 2-2: Principal component analysis (PCA)
 
 2-3: Discriminant Analysis of Principal Components (DAPC)
-
-2-4: (optional) Pairwise-Fst and isolation-by-Distance 
 
 ## Day3: Outlier detection - Environmental associations
 
@@ -44,18 +48,22 @@ Data: We focus on 12 population from Canada for which there is almost no geograp
 
 ## Day4: Accounting for Structural Variants
 
+We focus on 12 population from Canada. We recommend that you pick one of the two tutorials (haploblocks by local PCA or CNVs on RAD-seq data)
+
 4-1: Investigating haplotypes blocks ( ~inversions?)
 
 This tutorial include working on local PCA, but also calculation of LD, Fst and observed fraction of heterozygotes which may be useful in other contexts
 
 4-2: Filtering duplicated loci in RAD-seq data ( ~ Copy number variants)
 
+This tutorial show how to filter RAD loci to exclude duplicated ones (keep a reliable dataset for SNP analysis), and then how to analyse the duplicated loci for environmental associations.
+
 ## Day5: Functional approaches
 
-5-1: SNPeff annotate SNPs for coding & regulatory regions
+5-1: SNPeff annotation of SNPs for coding & regulatory regions
 
 5-2: Intersection between SNPs and genes with bedtools
 
 5-3: Gene ontology enrichment
 
-5-4: Intersection between CNVs and repeats/TE
+5-4: (Optional) Intersection between CNVs and repeats/TE
