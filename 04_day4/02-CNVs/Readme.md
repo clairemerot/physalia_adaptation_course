@@ -1,7 +1,7 @@
 # Day4 : Copy Number Variants
 
 ## Overview
-During this practical, you will search for putative copy number variants within a VCF file. Then, putative CNVs identified will be examined for environmental association with temperature. For this practical, we will use a lax filtered vcf file based on the 12 Canadian sampling sites.
+During this practical, you will search for putative copy number variants within a VCF file, using data from RAD-seq. Then, putative CNVs identified will be examined for environmental association with temperature. For this practical, we will use a lax filtered vcf file based on the 12 Canadian sampling sites.
 
 #### [On the Amazon server]
 ### Step 0: Set working directory and copy basic files
@@ -120,7 +120,7 @@ python 00-scripts/04_split_vcf_in_categories.py 02-data/capelin_canada_filtered_
 ```
 You can see the five created sub-vcf by the cmd line : ``ls 02-data/*.vcf``
 
-### Step 5: Extract read count information for CNVs data
+### (Optional) Step 5: Extract read count information for CNVs data
 To examine the CNVs data, we will use the read count information available for each SNP whithin a vcf file as a proxy to inform us about putative variability among samples/populations.
 
 To do so, we will extract the read count information from the vcf file containing duplicated SNPs using the software **vcftools**. The output is a matrix of read count where samples are distributed in rows and SNPs are distributed in columns.
@@ -143,7 +143,7 @@ Here is the list of required files:
 * CNVS_RADtag_ids.txt
 * 01-info_files/info_samples.csv
 
-### Step 6: CNVs read count normalization
+### (Optional) Step 6: CNVs read count normalization
 #### [On your local computer]
 As libraries sequenced at a greater depth will result in higher overall read counts, CNV locus read counts have to be normalized to account for differences in sequencing coverage among all samples. Normalization is performed using the trimmed mean of M-values method originally described for RNA-seq count normalization and implemented in the r package edgeR (Robinson & Oshlack, 2010). The correction accounts for the fact that for an individual with a higher copy number at a given locus, that locus will contribute proportionally more to the sequencing library than it will for an individual with lower copy number at that locus.
 
@@ -229,7 +229,7 @@ write.table(gdepth_normalized, "02-data/capelin_canada_CNVs_gdepth_normalized.tx
 The complete Rscript for CNV read count normalization is available in the folder ``00-scripts/00-corrections_scripts/``.
 
 
-### Step 7 : Test for CNVs-environment association
+### (Optional) Step 7 : Test for CNVs-environment association
 For this part, we will re-use the Redundancy Discriminante Analysis (RDA), already used during the day3. First of all, we will open a new Rscript file in Rstudio and load required packages.
 
 ```
@@ -318,7 +318,7 @@ write.table(list_of CNVs_loci, "list_of_CNVs_loci.txt",
               col.names=TRUE, row.names=FALSE, sep="\t", quote=FALSE)
 ```
 
-### Step 8: Explore adaptive population structure lead bu outliers CNVs loci.
+### (Optional) Step 8: Explore adaptive population structure led by outliers CNVs loci.
 
 Ultimately, we will explore a putative pattern of adaptive population structure related with outliers CNV loci associated with the temperature through a PCA.
 First, we have to filter the whole CNV matrix for only outliers loci detected by the RDA
