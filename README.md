@@ -1,9 +1,13 @@
-# Physalia adaptation course
+# Physalia Adaptation Genomics Course
 
+## Welcome to the Physalia Adaptation Genomics 2021 GitHub page
 This repository includes scripts and data associated with the practical sessions of the Physalia Course about Adaptation Genomics
 Prepared by Anna Tigano, Yann Dorant and Claire Mérot for the course in May 2021
 
 Except for day 1 in which you won't have the bam files, all the tutorial can be completed with the compressed files stored in the github page for each day (day 2 to day 5). Each daily tutorial can be run independantly of the other days.
+
+Here is the tentative schedule for the week. Within each block we'll keep some flexibility to have plenty of time for questions and discussion.
+![schedule](schedule 2021.png)
 
 
 ## Logging on the AWS server from your computer
