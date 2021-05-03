@@ -15,6 +15,7 @@ Here is the tentative schedule for the week. Within each block we'll keep some f
 [AWS for Mac OS X and Linux users](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/AWS_mac.md)
 
 For windows users, please use MobaXterm adn FilZilla following the document sent by Carlo.
+https://github.com/clairemerot/physalia_adaptation_course/blob/2021/Connection%20to%20the%20Amazon%20EC2%20service_.pdf
 
 This is a guide for windows but it uses different softwares (putty/winSCP) a bit more complex
 [AWS for windows users](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/AWS_windows.md)
