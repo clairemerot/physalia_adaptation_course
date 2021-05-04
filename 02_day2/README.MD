@@ -159,6 +159,8 @@ During the PCA tutorial, I will use the awesome ``%>%``. This code feature is a 
 ```
 #1. load population map
 popmap <- read.table("info_samples.csv", h=T,sep=';')
+#if this doesn't work, please import amnually or  try 
+popmap <- read.csv("info_samples.csv", sep=';')
 
 #2. load geno data for the 2lin
 geno.012_2lin <- read.table("populations_2lin_random.012")[,-1] #load genotype matrix
