@@ -205,7 +205,7 @@ Now, we will look at some interesting stats from the PCA object. First we will p
 ```
 screeplot(pca.2lin)
 ```
-![img](../images_tutorial/02-day2_screeplot_PCA_2lin.png)
+![img](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/screeplot.jpeg)
 
 From the screeplot we can see that the amount of variation explained drops dramatically after the first component. This suggests that just one component may be sufficient to summarise the data.
 Next, we will check for the proportion of variance explained by each PC axis.
@@ -255,7 +255,7 @@ ggplot(pca.2lin.sub) + aes(x=PC1, y=PC2, col=pop) +
 ggsave("PCA_biplot_2lin.png", width = 6, height = 5)
 ```
 Done ! Good job.
-![PCA_img](../images_tutorial/02-day2_PCA_1_tutorial_capelin.png)
+![PCA_img](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/pca_2lin.jpeg)
 
 Now, the question is what do you see ?
 
@@ -277,7 +277,7 @@ ggplot(data=loadings.melt) +
 #Print it !
 ggsave("PCA_loadings.png", height = 4, width = 15)
 ```
-![img_loadings](../images_tutorial/02-day2_PCA_loadings.png)
+![img_loadings](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/loading_2lin.jpeg)
 
 Here we can observe that many SNPs account for an elevated loading which explain the structure of the PCA display above. Interestingly, we can observe that these SNPs with large loadings are spread over all the genome.
 
@@ -290,9 +290,9 @@ Here is a script for the canadian populations, if you are stuck.
 
 And here is what you will observe: 
 
-![pca](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/figure1_correction_PCA_can.png)
+![pca](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/pca_canada.jpeg)
 
-![loadings](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/figure2_correction_PCA_can.png)
+![loadings](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/loadings_pca_canada.jpeg)
 
 Long story short, what drives PC1 is likely a chromosomal rearrangement that we will better explore on day 4. PC2 is driven by sex. In weakly-structured species, this kind of rearrangements or sex-linked loci can realy drive the pattern, for the PCA, the Admixture/Structure analysis and Fst, so it is sometimes a good idea to exlude those regions or work on a subset of LD-pruned SNPs.
 
