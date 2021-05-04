@@ -110,7 +110,7 @@ So we will also restrict our matrix to the most frequent SNPs (Maf> 1%). We can 
 First we will copy the folder of day2 and work within it
 ```
 cd 
-cp cp -r ~/Share/physalia_adaptation_course/02_day2 .
+cp -r ~/Share/physalia_adaptation_course/02_day2 .
 cd 02_day2
 cd pca
 vcftools --vcf ~/Share/populations_2lin_random/populations.snps.vcf --maf 0.01 --012 --out populations_2lin_random
