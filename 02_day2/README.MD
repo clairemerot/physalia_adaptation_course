@@ -291,9 +291,9 @@ Here is a script for the canadian populations, if you are stuck.
 And here is what you will observe: 
 
 ![pca](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/pca_canada.jpeg)
-![pca_sex](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/pca_canada.jpeg)
+![pca_sex](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/pca_can_bysex.jpeg)
 
-![loadings](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/loadings_pca_can_bysex.jpeg)
+![loadings](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/loadings_pca_canada.jpeg)
 
 Long story short, what drives PC1 is likely a chromosomal rearrangement that we will better explore on day 4. PC2 is driven by sex. In weakly-structured species, this kind of rearrangements or sex-linked loci can realy drive the pattern, for the PCA, the Admixture/Structure analysis and Fst, so it is sometimes a good idea to exlude those regions or work on a subset of LD-pruned SNPs.
 
