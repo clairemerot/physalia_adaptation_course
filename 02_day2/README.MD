@@ -65,7 +65,7 @@ ggplot(Fst, aes(x=midPos/1000000, y=WEIGHTED_FST, col=CHROM))+
 
 ```
 
-![fst_window] (https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/fst_window.jpeg)
+![fst_window](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/fst_window.jpeg)
 
 We can also calculate π in VCFtools with the command
 ```
