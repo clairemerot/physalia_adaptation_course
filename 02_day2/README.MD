@@ -47,6 +47,25 @@ If you have a reference genome and panel of SNPs dense enough (or whole genome r
 vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop ~/scripts/pop_canada40.txt --weir-fst-pop ~/scripts/pop_greenland40.txt  --out fst_2lin_win --fst-window-size 100000 --fst-window-step 100000
 ```
 In fact, window estimates are a practical way to summarize data and to reduce the number of datapoints to handle, which can be problematic for visualization.
+If you want to visualise it, you can download the file to your own computer and use R. To do Manhattan plot, there are great package like QQMan
+https://cran.r-project.org/web/packages/qqman/vignettes/qqman.html
+
+And you can also simply use ggplot if you have few Chromosomes
+```
+library(ggplot2)
+
+Fst<-read.table("fst_2lin_win.windowed.weir.fst", header=T)
+Fst$midPos<-(Fst$BIN_START+Fst$BIN_END)/2
+head(Fst)
+
+ggplot(Fst, aes(x=midPos/1000000, y=WEIGHTED_FST, col=CHROM))+
+	geom_point()+ geom_smooth()+ theme_classic()+
+	facet_grid(cols = vars(CHROM), scales = "free_x", space="free_x")+
+	labs(  x = "position (in MB)")
+
+```
+
+![fst_window] (https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/fst_window.jpeg)
 
 We can also calculate π in VCFtools with the command
 ```
