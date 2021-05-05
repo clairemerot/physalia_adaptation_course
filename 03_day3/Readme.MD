@@ -179,7 +179,7 @@ length(lines_trim)
 #run outFLANK on pruned SNPs
 #numberOfSamples is the number of populations
 #qthreshold is the false discovery rate
-out_trim <- OutFLANK(my_fst[which(id_snp %in% id_snp_pruned[,1]),], NumberOfSamples=20, qthreshold = 0.05, Hmin = 0.1)
+out_trim <- OutFLANK(my_fst[which(id_snp %in% id_snp_pruned[,1]),], NumberOfSamples=12, qthreshold = 0.05, Hmin = 0.1)
 str(out_trim)
 
 #have a look at the results
@@ -508,11 +508,13 @@ temp.rda <- rda(gen.imp ~ info$temperature, scale=T)
 temp.rda
 ```
 Since we have only one variable, only RDA1 (the 1st axis is meaningful)
-We can look at the fraction of variance explained by this RDA and its significance using permutation tests. 
+We can look at the fraction of variance explained by this RDA 
 
 ```
 RsquareAdj(temp.rda)
-
+```
+and then to its significance using permutation tests. 
+```
 temp.signif.full <- anova.cca(temp.rda, parallel=getOption("mc.cores")) # default is permutation=999
 temp.signif.full
 ```
