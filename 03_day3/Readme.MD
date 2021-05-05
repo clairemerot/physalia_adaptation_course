@@ -312,19 +312,6 @@ g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 ```
 Please copy the output on the simulated dataset on your local computer.
 
-#### A note
-For best results, it is recommended to make several independant runs and take the median value for xtx or BF.
-We dont have time and resource to do that today but you can try for your data with a loop and random starting seed
-(please do not run it now)
-```
-# run model for 5 repetitions
-for i in 1 2 3 4 5 
-do
-seed=$((1000 + RANDOM % 9999)) #set random seed
-echo "$seed"
-g_baypass -npop $N_pop -gfile $geno -efile $env -omegafile $omega_mat -outprefix output"$i" -nthreads $N_CPU -npilot 25 -burnin 5000 -seed $seed
-done
-```
 
 #### Visualising results on Rstudio on your local computer
 If you are curious, you can explore the different file, look at the omega matrix, etc, which will be more or less like the pairwise fst matrix that we look at earlier
@@ -374,6 +361,20 @@ Here are the results for the analysis controlled by population structure (that y
 ![xtx_controlled](07_img_readme/xtx_controlled.png)
 ![xtx_uncontrolled](07_img_readme/xtx_uncontrolled.png)
 
+note that repeating Baypass runs may lead to slightly different results. That means that your plot may differ from mine, and that in real life, you may want to run it 5 times and keep the median value of XtX
+
+For best results, it is recommended to make several independant runs and take the median value for xtx or BF.
+We dont have time and resource to do that today but you can try for your data with a loop and random starting seed
+(please do not run it now)
+```
+# run model for 5 repetitions
+for i in 1 2 3 4 5 
+do
+seed=$((1000 + RANDOM % 9999)) #set random seed
+echo "$seed"
+g_baypass -npop $N_pop -gfile $geno -efile $env -omegafile $omega_mat -outprefix output"$i" -nthreads $N_CPU -npilot 25 -burnin 5000 -seed $seed
+done
+```
 
 ## 3 Environmental association
 ### 3.1 With Baypass (locus by locus)
