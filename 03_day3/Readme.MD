@@ -82,18 +82,28 @@ We will more or less follow it today.
 
 ####  prepare the data
 Let's open R in our terminal (just type "R" to open and q() or quit() to escape) and convert our vcf to the outflank format:
-You may prefer to run it locally on your computer, feel free to do so but make sure you copy all the 03_day3 folder to keep using the same paths.
+You may prefer to run it locally on your computer (but be aware that you may have problems with R.4), feel free to do so but make sure you copy all the 03_day3 folder to keep using the same paths.
 
+1st intall the librairies. Please run each line one by one and answer "yes" if you are asked to install as a personal library.
 ```
-#1st intall the librairies
 if (!("BiocManager" %in% installed.packages())){install.packages("BiocManager")}
+```
+```
 if (!("devtools" %in% installed.packages())){install.packages(devtools)}
 library(devtools)
+```
+```
 if (!("qvalue" %in% installed.packages())){BiocManager::install("qvalue")}
 library(qvalue)
+```
+```
 if (!("vcfR" %in% installed.packages())){install.packages("vcfR")} 
+```
+```
 devtools::install_github("whitlock/OutFLANK")
-
+```
+Now let's convert our vcf
+```
 #we use the library vcfR to convert the vcf into the OutFLANK format
 library(OutFLANK)
 library(vcfR)
