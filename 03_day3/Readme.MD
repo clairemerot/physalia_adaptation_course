@@ -62,7 +62,7 @@ plink --bed 02_data/canada.bed \
 --indep $WINDOW['kb'] $SNP $VIF --allow-extra-chr \
 --out 02_data/canada
 ```
-You can have a look at the files 02_data/population.can.random.snp.prune.in and 02_data/population.can.random.snp.prune.out
+You can have a look at the files 02_data/canada.prune.in and 02_data/canada.prune.out
 
 They include a lit of SNP id as displayed in the vcf ("53:2:+") for instance. This list will be useful forour subsequent analyses in OutFLANK. For other purpose we may also want to have a vcf with only pruned marker. We are using again vcftools with the --exclude option (and recode)
 ```
