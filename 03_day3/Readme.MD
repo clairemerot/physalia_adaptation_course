@@ -81,7 +81,9 @@ It has a super good vignette here: https://htmlpreview.github.io/?https://github
 We will more or less follow it today.
 
 ####  prepare the data
-Let's open R in our terminal and convert our vcf to the outflank format:
+Let's open R in our terminal (just type "R") and convert our vcf to the outflank format:
+You may prefer to run it locally on your computer, feel free to do so but make sure you copy all the 03_day3 folder to keep using the same paths.
+
 ```
 #1st intall the librairies
 if (!("BiocManager" %in% installed.packages())){install.packages("BiocManager")}
@@ -131,7 +133,7 @@ G[1:10,1:10]
 #As it will be useful later, I suggest that we export it now
 write.table(G, "02_data/geno_matrix.txt", sep="\t", col.names=F, row.names=F)
 ```
-We obtain a matrix of genotypes with 9 as missing data, 8018 rows for each SNP, and 240 columns for each individual
+We obtain a matrix of genotypes with 9 as missing data, 1411 rows for each SNP, and 240 columns for each individual
 We will now ask outFLANK to calculate FST for eech locus. It needs the information about populations
 For OutFLANK we will keep only the pop column. Then we will calculate a FST value for each SNP
 ```
