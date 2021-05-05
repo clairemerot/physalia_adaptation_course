@@ -81,7 +81,7 @@ It has a super good vignette here: https://htmlpreview.github.io/?https://github
 We will more or less follow it today.
 
 ####  prepare the data
-Let's open R in our terminal (just type "R") and convert our vcf to the outflank format:
+Let's open R in our terminal (just type "R" to open and q() or quit() to escape) and convert our vcf to the outflank format:
 You may prefer to run it locally on your computer, feel free to do so but make sure you copy all the 03_day3 folder to keep using the same paths.
 
 ```
