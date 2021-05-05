@@ -84,10 +84,11 @@ We will more or less follow it today.
 Let's open R in our terminal and convert our vcf to the outflank format:
 ```
 #1st intall the librairies
-
+if (!("BiocManager" %in% installed.packages())){install.packages("BiocManager")}
 if (!("devtools" %in% installed.packages())){install.packages(devtools)}
 library(devtools)
 if (!("qvalue" %in% installed.packages())){BiocManager::install("qvalue")}
+library(qvalue)
 if (!("vcfR" %in% installed.packages())){install.packages("vcfR")} 
 devtools::install_github("whitlock/OutFLANK")
 
