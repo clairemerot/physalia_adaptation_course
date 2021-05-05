@@ -264,10 +264,6 @@ python Toolbox/reshaper_baypass.py 02_data/canada.vcf 02_data/popmap_canada.txt 
 python Toolbox/reshaper_baypass.py 02_data/canada.pruned.recode.vcf 02_data/popmap_canada.txt 05_baypass/canada.pruned.baypass
 ```
 
-#### run baypass basic
-
-
-
 ####  run baypass controlled for population structure
 We want to pinpoint the outlier that differ from the basic structure of the population. This is not a big deal in our example but it may be in other system. 
 Best practices suggest to first run baypass on the LD-pruned vcf and to extract the covariance matrix between population (mat_omega), and then use it as a covariate in the baypass model. This will take a few minutes to run.
