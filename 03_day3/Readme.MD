@@ -322,7 +322,7 @@ for i in 1 2 3 4 5
 do
 seed=$((1000 + RANDOM % 9999)) #set random seed
 echo "$seed"
-$PATH_TO_SOFT/g_baypass -npop $N_pop -gfile $geno -efile $env -omegafile $omega_mat -outprefix output"$i" -nthreads $N_CPU -npilot 25 -burnin 5000 -seed $seed
+g_baypass -npop $N_pop -gfile $geno -efile $env -omegafile $omega_mat -outprefix output"$i" -nthreads $N_CPU -npilot 25 -burnin 5000 -seed $seed
 done
 ```
 
