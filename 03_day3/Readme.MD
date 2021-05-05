@@ -306,7 +306,7 @@ If you want to see how to do, the code is here.
 
 ```
 #controlled run on the simu dataset
-$PATH_TO_SOFT/g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
+g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/simulate_controlled.output -nthreads 1
 ```
