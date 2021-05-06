@@ -69,7 +69,7 @@ In fact, each dataset is different, and defining SNPs categories require some ad
 To work with our own settings, we will copy the initial Rscript and then open it with Rstudio for modifications.
 
 ```
-cp 00-scripts/03-0_snp_categorization.R 00-scripts/03.1-snp_categorization_modif.R
+cp 00-scripts/03.0-snp_categorization.R 00-scripts/03.1-snp_categorization_modif.R
 ```
 
 **Let see which modifications we can add to better define our SNP categories. Open your copy of the script in Rstudio and change the following sections:
