@@ -47,11 +47,8 @@ First of all, we will use the following python script ``00-scripts/02_extract_sn
 python 00-scripts/02_extract_snp_duplication_info.py 02-data/capelin_canada_filtered_4_60_0_6.vcf 03-analyses/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
 ```
 Then, we will make some descriptive plots using R in order to explore the expective pattern of various SNP categories. To do that, we have a basic Rscript that we can run with default options for initial observations.
-Nevertheless, we will do this step at your local computer, where it should be easier to display and examine the figures.
 
-So, in your local working folder, please download the whole folder **04_day4/02-CNVs/** (with scp for linux, Cuperduck for MACos and Filezila for Windows):
 
-#### [On your local computer]
 Run the Rscript 03.0-snp_categorization.R.R with the cmd line below.
 ```
 Rscript 00-scripts/03.0-snp_categorization.R 03-analyses/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
@@ -61,12 +58,15 @@ Rscript 00-scripts/03.0-snp_categorization.R 03-analyses/capelin_canada_filtered
         73        852         20        319       8213
 ```
 
+To visualise the figure,  please download locally the whole folder **04_day4/02-CNVs/** (with scp for linux, Cuperduck for MACos and Filezila for Windows):
+
 ![img_dup_snps_brut1](05-readme_img/Figure1_dup_snp_brut.png)
 ![img_dup_snps_brut2](05-readme_img/Figure2_dup_snp_brut.png)
 
+
 Here, we can see that the default options are not quite fitting the expected patterns. Look at the numerous red points (duplicated SNPs), which are distributed within the singleton pattern (black cloud) for the plot MedRatio vs PropHet.
-In fact, each dataset is different, and defining SNPs categories require some adjustments to better fit with the expected pattern. So, we need to modify some options within the Rscript 03-0_snp_categorization.R.
-To work with our own settings, we will copy the initial Rscript and then open it with Rstudio for modifications.
+In fact, each dataset is different, and defining SNPs categories require some adjustments to better fit with the expected pattern. So, we need to modify some options within the Rscript 03.0-snp_categorization.R.
+To work with our own settings, we will copy the initial Rscript (cp command below) and then download it to modify on your local computer. (if you are happy to edit in the terminal, you can use nano or vim)
 
 ```
 cp 00-scripts/03.0-snp_categorization.R 00-scripts/03.1-snp_categorization_modif.R
@@ -94,9 +94,13 @@ d$Color[d$Fis > 0.4] = lowconf
 # Loci with high coverage
 d$Color[d$MedCovHom > 60 | d$MedCovHet > 60] = highcov
 ```
--------> save you modifications.
+-------> save you modifications and copy it back to the server inside the 00-scripts folder
 
-Ok, now before to re-run the Rscript with your modifications, renamed the initial figures in ``03-analyses/01-snp_duplication/capelin_47006_overmerged_loci.txt_XX.png``, with the suffix ``.backup.png``.
+Ok, now before to re-run the Rscript with your modifications, renamed the initial figures in ``03-analyses/capelin_47006_overmerged_loci.txt_XX.png``, with the suffix ``.backup.png``.
+```
+cp 03-analyses/capelin_47006_overmerged_loci.txt_*.png 03-analyses/capelin_47006_overmerged_loci.txt_*.backup.png
+```
+
 Once this is done, you can rerun the Rscript with the following command.
 ```
 Rscript 00-scripts/03.1-snp_categorization.R 03-analyses/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
