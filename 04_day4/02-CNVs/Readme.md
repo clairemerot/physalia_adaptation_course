@@ -52,7 +52,7 @@ Nevertheless, we will do this step at your local computer, where it should be ea
 So, in your local working folder, please download the whole folder **04_day4/02-CNVs/** (with scp for linux, Cuperduck for MACos and Filezila for Windows):
 
 #### [On your local computer]
-Run the Rscript 03.0_snp_categorization.R with the cmd line below.
+Run the Rscript 03-0_snp_categorization.R with the cmd line below.
 ```
 Rscript 00-scripts/03.0_snp_categorization.R 03-analyses/01-snp_duplication/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
 ```
