@@ -49,7 +49,7 @@ python 00-scripts/02_extract_snp_duplication_info.py 02-data/capelin_canada_filt
 Then, we will make some descriptive plots using R in order to explore the expective pattern of various SNP categories. To do that, we have a basic Rscript that we can run with default options for initial observations.
 Nevertheless, we will do this step at your local computer, where it should be easier to display and examine the figures.
 
-So, in your local working folder, please download the whole folder **04-day4/02-CNVs/** (with scp for linux, Cuperduck for MACos and Filezila for Windows):
+So, in your local working folder, please download the whole folder **04_day4/02-CNVs/** (with scp for linux, Cuperduck for MACos and Filezila for Windows):
 
 #### [On your local computer]
 Run the Rscript 03.0_snp_categorization.R with the cmd line below.
