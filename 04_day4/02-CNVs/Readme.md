@@ -52,9 +52,9 @@ Nevertheless, we will do this step at your local computer, where it should be ea
 So, in your local working folder, please download the whole folder **04_day4/02-CNVs/** (with scp for linux, Cuperduck for MACos and Filezila for Windows):
 
 #### [On your local computer]
-Run the Rscript 03-0_snp_categorization.R with the cmd line below.
+Run the Rscript 03.0-snp_categorization.R.R with the cmd line below.
 ```
-Rscript 00-scripts/03.0_snp_categorization.R 03-analyses/01-snp_duplication/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
+Rscript 00-scripts/03.0-snp_categorization.R 03-analyses/01-snp_duplication/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
 ```
 ```
   diverged duplicated    highcov    lowconf  singleton
@@ -65,11 +65,11 @@ Rscript 00-scripts/03.0_snp_categorization.R 03-analyses/01-snp_duplication/cape
 ![img_dup_snps_brut2](05-readme_img/Figure2_dup_snp_brut.png)
 
 Here, we can see that the default options are not quite fitting the expected patterns. Look at the numerous red points (duplicated SNPs), which are distributed within the singleton pattern (black cloud) for the plot MedRatio vs PropHet.
-In fact, each dataset is different, and defining SNPs categories require some adjustments to better fit with the expected pattern. So, we need to modify some options within the Rscript 03.0_snp_categorization.R.
+In fact, each dataset is different, and defining SNPs categories require some adjustments to better fit with the expected pattern. So, we need to modify some options within the Rscript 03-0_snp_categorization.R.
 To work with our own settings, we will copy the initial Rscript and then open it with Rstudio for modifications.
 
 ```
-cp 00-scripts/03.0_snp_categorization.R 00-scripts/03.1_snp_categorization_modif.R
+cp 00-scripts/03-0_snp_categorization.R 00-scripts/03.1_snp_categorization_modif.R
 ```
 
 **Let see which modifications we can add to better define our SNP categories. Open your copy of the script in Rstudio and change the following sections:
@@ -99,7 +99,7 @@ d$Color[d$MedCovHom > 60 | d$MedCovHet > 60] = highcov
 Ok, now before to re-run the Rscript with your modifications, renamed the initial figures in ``03-analyses/01-snp_duplication/capelin_47006_overmerged_loci.txt_XX.png``, with the suffix ``.backup.png``.
 Once this is done, you can rerun the Rscript with the following command.
 ```
-Rscript 00-scripts/03.1_snp_categorization.R 03-analyses/01-snp_duplication/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
+Rscript 00-scripts/03.0-snp_categorization.R 03-analyses/01-snp_duplication/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
 ```
 ```
 SNPs
