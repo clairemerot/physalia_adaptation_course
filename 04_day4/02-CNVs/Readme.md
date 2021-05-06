@@ -94,7 +94,7 @@ d$Color[d$Fis > 0.4] = lowconf
 # Loci with high coverage
 d$Color[d$MedCovHom > 60 | d$MedCovHet > 60] = highcov
 ```
--------> save you modifications and copy it back to the server inside the 00-scripts folder
+-------> save you modifications in this file ```00-scripts/03.1-snp_categorization.R``` and copy it back to the server inside the 00-scripts folder
 
 Ok, now before to re-run the Rscript with your modifications, renamed the initial figures in ``03-analyses/capelin_47006_overmerged_loci.txt_XX.png``, with the suffix ``.backup.png``.
 ```
