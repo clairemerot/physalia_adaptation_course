@@ -54,7 +54,7 @@ So, in your local working folder, please download the whole folder **04_day4/02-
 #### [On your local computer]
 Run the Rscript 03.0-snp_categorization.R.R with the cmd line below.
 ```
-Rscript 00-scripts/03.0-snp_categorization.R 03-analyses/01-snp_duplication/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
+Rscript 00-scripts/03.0-snp_categorization.R 03-analyses/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
 ```
 ```
   diverged duplicated    highcov    lowconf  singleton
@@ -99,7 +99,7 @@ d$Color[d$MedCovHom > 60 | d$MedCovHet > 60] = highcov
 Ok, now before to re-run the Rscript with your modifications, renamed the initial figures in ``03-analyses/01-snp_duplication/capelin_47006_overmerged_loci.txt_XX.png``, with the suffix ``.backup.png``.
 Once this is done, you can rerun the Rscript with the following command.
 ```
-Rscript 00-scripts/03.0-snp_categorization.R 03-analyses/01-snp_duplication/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
+Rscript 00-scripts/03.0-snp_categorization.R 03-analyses/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
 ```
 ```
 SNPs
