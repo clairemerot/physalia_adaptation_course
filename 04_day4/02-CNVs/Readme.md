@@ -277,7 +277,7 @@ CNVs_no_sex_chr.mat <- CNVs.mat[,!grepl('Chr5_', colnames(CNVs.mat))]
 Next, as for PCA, RDA does not accept missing data. So, we will use the same way that in day2 to impute the missing data (i.e. here using the average normalized read count overall samples for a given CNV locus).
 ```
 #Impute missing values with the average of norm. read count overall
-CNVs_no_sex_chr.imp.mat <- apply(CNVs_no_sex_chr.mat,2,function(x) replace(x, is.na(x), as.numeric(names(which.max(table(x))))))
+CNVs_no_sex_chr.imp.mat <- apply(CNVs_no_sex_chr.mat,2,function(x) replace(x, is.na(x), mean(x, na.rm=T)))
 CNVs_no_sex_chr.imp.mat[1:4,1:4]
 ```
 ```
