@@ -256,7 +256,7 @@ popmap <- read.table("01-info_files/info_samples.csv", h=T, sep=';') %>%
   dplyr::filter(., region == 'NWA') #keep only canadian sampling sites
 
 #2.import CNVs matrix format
-CNVs.mat <- read.table("02-data/capelin_CNVs_gdepth_normalized.txt")
+CNVs.mat <- read.table("02-data/capelin_canada_CNVs_gdepth_normalized.txt")
 
 CNVs.mat[1:4,1:4] #check the data
 ```
