@@ -69,7 +69,7 @@ In fact, each dataset is different, and defining SNPs categories require some ad
 To work with our own settings, we will copy the initial Rscript and then open it with Rstudio for modifications.
 
 ```
-cp 00-scripts/03-0_snp_categorization.R 00-scripts/03.1_snp_categorization_modif.R
+cp 00-scripts/03-0_snp_categorization.R 00-scripts/03.1-snp_categorization_modif.R
 ```
 
 **Let see which modifications we can add to better define our SNP categories. Open your copy of the script in Rstudio and change the following sections:
@@ -99,7 +99,7 @@ d$Color[d$MedCovHom > 60 | d$MedCovHet > 60] = highcov
 Ok, now before to re-run the Rscript with your modifications, renamed the initial figures in ``03-analyses/01-snp_duplication/capelin_47006_overmerged_loci.txt_XX.png``, with the suffix ``.backup.png``.
 Once this is done, you can rerun the Rscript with the following command.
 ```
-Rscript 00-scripts/03.0-snp_categorization.R 03-analyses/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
+Rscript 00-scripts/03.1-snp_categorization.R 03-analyses/capelin_canada_filtered_4_60_0_6_overmerged_loci.txt
 ```
 ```
 SNPs
