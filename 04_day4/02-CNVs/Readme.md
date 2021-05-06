@@ -171,7 +171,7 @@ CNVs_radTag <- read.table("CNVs_RADtag_IDs.txt") %>%
       mutate(., RadTag_all=paste(CHROM,POS,RadTag,sep='_'))
 
 #3. load gdepth file of duplicated SNPs (output from vcftools --geno-depth)
-gdepth_raw_data <- read.table("02-data/capelin_canada_filtered_4_60_0_6.gdepth", h=T) %>%
+gdepth_raw_data <- read.table("02-data/capelin_canada_filtered_4_60_0_6.duplicated.gdepth", h=T) %>%
                         mutate(.,  RadTag_all =  CNVs_radTag$RadTag_all) %>%
                         select(., CHROM, POS, RadTag_all, everything())
 
