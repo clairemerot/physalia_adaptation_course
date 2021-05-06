@@ -4,20 +4,20 @@
 During this practical, you will search for putative copy number variants within a VCF file, using data from RAD-seq. Then, putative CNVs identified will be examined for environmental association with temperature. For this practical, we will use a lax filtered vcf file based on the 12 Canadian sampling sites.
 
 #### [On the Amazon server]
-### Step 0: Set working directory and copy basic files
+### Step 1: Set working directory and copy basic files
 If you have not done this yet, please copy the folder 04_day4/ from the share directory to your own repository and open it (cp is used for files and cp -r for folders). The "." indicates that it will copy where you are (I guess the root of your home directory).
 Then, move to the folder for this tutorial --> ``cd 04_day4/02-CNVs/``
 
 In the folder ``00-scripts/``, you will find all the scripts that we will use to extract CNVs info. Note that all these scripts came from the [stacks_workflow](https://github.com/enormandeau/stacks_workflow) developed by Eric Normandeau.
 
-### Step 1: VCF filtering
+### Step 2: VCF filtering
 To make is easier, I shared you a raw vcf file outputed from stacks.
 This file is available in the folder : ``../../Share/ressources/capelin_NWA.vcf``. So, we will call this input file as such for the filtering process.
 
 You can access to the number of SNPs available in this VCF by the cmd line : ``grep -v "#" ../../Share/ressources/capelin_NWA.vcf | wc -l``
 
 Before analysis of CNV pattern, we will filter the raw vcf file in order to remove poor represented SNPs, which can introduce some bias in our analysis.
-To do so, we will use the custom python script ``00-scripts/01-filter_vcf_fast.py`` and set the following options:
+To do so, we will use the custom python script ``00-scripts/01_filter_vcf_fast.py`` and set the following options:
 * minimum allele coverage to keep genotype = **4**
 * minimum percent of genotype data per population = **60**
 * maximum number of populations that can fail percent_genotypes = **0**
