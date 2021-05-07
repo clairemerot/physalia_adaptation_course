@@ -205,6 +205,7 @@ head(go_split)
 
 ```
 library(data.table)
+library(dplyr)
 #linearize the matrix
 terms = colnames(select(go_split, contains("GeneGo")))
 go_long = melt(go_split,measure.vars=terms, id.vars = "contig", na.rm=TRUE)
