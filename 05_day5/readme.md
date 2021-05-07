@@ -124,7 +124,7 @@ write.table(all_snps_bed, "05_bed/all_snps.bed", row.names=F, sep="\t", quote=F,
 
 And you can do the same for the outliers from baypass, or the outliers of divergence on chr4 or chr5... (if you are late skip)
 
-### on the server (quit R)
+### on the server (quit R with the command q() or quit() )
 If you did the bedfiles in Rstudio, Please copy back your formatted outliers and snp bedfiles into the 05_day5/05_bed folder on the server. 
 We will now run bedtools. The command intersect will look for overlap between the file givne with -a, and the file given with -b, the argument -wb will print the information coming from the annotation file (gene names, gene ontology, uniprot ID, etc)
 the command ">" redirect the output in the file of your choice
