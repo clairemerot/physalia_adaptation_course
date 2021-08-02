@@ -24,7 +24,7 @@ press "q" to exit the less visualisation
 SNPeff is a program that uses the gff file and the position of each SNP to annotate the vcf.
 If you work on a model species which already has a database, you are lucky! If not, you need to build a database. 
 
-As it is a bit long, and takes space on the server, I have done it for you. It was not very straightforward, so I thought I will keep track of how I did and put it for you in this file https://github.com/clairemerot/physalia_adaptation_course/blob/master/05_day5/SNPeff_createDB (but do not try to run it on the server please)
+As it is a bit long, and takes space on the server, I have done it for you. It was not very straightforward, so I thought I will keep track of how I did and put it for you in this file https://github.com/clairemerot/physalia_adaptation_course/blob/master/05_day5/SNPeff_createDB.md (but do not try to run it on the server please)
 If you want to re-creat it, the .gff is inside the 02_data while the reference genome was in the folder 01_day1/02_genome
 
 If you want to, you can look at the database by doing:
