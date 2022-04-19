@@ -65,7 +65,7 @@ ggplot(Fst, aes(x=midPos/1000000, y=WEIGHTED_FST, col=CHROM))+
 
 ```
 
-![fst_window](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/fst_window.jpeg)
+![fst_window](04-correction_figures_PCA_practical/fst_window.jpeg)
 
 We can also calculate π in VCFtools with the command
 ```
@@ -80,38 +80,10 @@ For example, STACKS adopts an AMOVA F<sub>ST</sub> by Weir (from Genetic Data An
 ####  optional: Investigate structure in relation to geography
 To assess genetic structure in relation to geography and pre-existing partitions (e.g. sampling locations), we can also look into population pairwise F<sub>ST</sub>. Here is an extra tutorial to get a matrix of population pairwise F<sub>ST</sub> (for the 12 Canadian populations) and assess whether genetic differentiation iscorrelated with geographic distance (e.g., isolation-by-distance). If you have extra time, or need it in the future, you can find the tutorial at this link below
 
-[Population pairwise F<sub>ST</sub> and IBD tutorial - extra](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/00_documents/IBD.md)
+[Population pairwise F<sub>ST</sub> and IBD tutorial - extra](https://github.com/clairemerot/physalia_adaptation_course/blob/2022/03_day3/00_documents/IBD.md)
 
 
-## 2. Structure with faststructure
-STRUCTURE has been the most popular software for detecting and describing population structure since it was published 20 years ago. However, it was developed before we started genotyping thousands of markers at a time and it is therefore slow for large genomic datasets. fastSTRUCTURE (Raj eet al. 2014, Genetics) provides a much faster alternative for these datasets while it is based on a similar Bayesian framework.
-
-We'll use the ```.structure``` file created by ```populations```. The first 6 columns of the file will be ignored; these typically would include IDs, metadata, etc. so we need to have 6 dummy columns before the genotypes for each individual/locus. Note that this software only handles bi-allelic loci. The two alleles at each locus can be encoded as desired; however, missing data should be encoded as '-9' (also check https://rajanil.github.io/fastStructure/ for details). Below is a little script to prepare the file and run fastSTRUCTURE.
-```
-cd  populations_all_random ### or populations_2lin_random or populations_canada_random
-tail -n +3 populations.structure > populations.structure_nohead ### deletes first two rows
-cut -f1-2 populations.structure_nohead > twocolumns
-paste twocolumns twocolumns populations.structure_nohead | sed 's/\t0/\t-9/g' > populations.faststructure.str
-conda activate faststructure ### we need to activate a conda environment with a different version of Python where faststructure is installed
-structure.py -K 2 --input=populations.faststructure --output=capelin.all --format=str
-```
-If you have problems activating faststructure please follow this procedure to fix it.
-1. leave the server and reconnect
-2. tap ```conda init bash```
-3. tap ```conda activate faststructure```
-
-
-Now you can modify the ```-K``` parameters and test different different numbers of clusters. Run faststructure with K ranging 2-n, with n being the number of populations in your dataset. With this script you can test what number of populations/cluster best describes your dataset.
-```
-chooseK.py --input=capelin.all
-```
-However, the results are not very clear. Indeed, it can be hard to find the the number of cluster that best describes your dataset. The qualitative analyses of structure plots for several K is often the most informative approach. Now download the output with the ```.meanQ``` extension on your local computer. Then go to <http://pophelper.com/> and upload your ```.meanQ``` files. You can start exploring the one generated for K=2 while you run fastSTRUCTURE with the other K. pophelper is a very user-friendly, intuitive online app to visualize population structure data. To visualize the plots after you have uploaded the data, go to the 'Plot' tab and click on the dataset(s) you want to visualize on the left-hand panel. If you click on more than one, you're gonna visualize them in the same panel. You can play with colors and sizes, fonts, etc for hours and I'll leave you to explore those functions. Just a tip to add population labels. You can create the list you need with
-```
-cut -f 2 ~/scripts/popmap_all.txt ### or one of the other population maps
-```
-and copy and paste in the the designated space in the left-hand panel.
-
-## 3. PCA
+## 2. PCA
 
 Population structure leads to systematic patterns in measures of mean relatedness between individuals in large genomic data sets, which are often discovered and visualized using dimension reduction techniques such as principal component analysis (PCA). The results of PCA can produce "maps" of population structure that may reflect the samples' geographic origin dirstored by rates of gene flow (November et al., 2008) or other intra-genome evolutionary processes that can bond or dispel certain groups of samples. Using PCA in genomics is quite simple without the need to diving into the math.
 
@@ -205,7 +177,7 @@ Now, we will look at some interesting stats from the PCA object. First we will p
 ```
 screeplot(pca.2lin)
 ```
-![img](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/screeplot.jpeg)
+![img](04-correction_figures_PCA_practical/screeplot.jpeg)
 
 From the screeplot we can see that the amount of variation explained drops dramatically after the first component. This suggests that just one component may be sufficient to summarise the data.
 Next, we will check for the proportion of variance explained by each PC axis.
@@ -255,7 +227,7 @@ ggplot(pca.2lin.sub) + aes(x=PC1, y=PC2, col=pop) +
 ggsave("PCA_biplot_2lin.png", width = 6, height = 5)
 ```
 Done ! Good job.
-![PCA_img](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/pca_2lin.jpeg)
+![PCA_img](04-correction_figures_PCA_practical/pca_2lin.jpeg)
 
 Now, the question is what do you see ?
 
@@ -277,7 +249,7 @@ ggplot(data=loadings.melt) +
 #Print it !
 ggsave("PCA_loadings.png", height = 4, width = 15)
 ```
-![img_loadings](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/loading_2lin.jpeg)
+![img_loadings](04-correction_figures_PCA_practical/loading_2lin.jpeg)
 
 Here we can observe that many SNPs account for an elevated loading which explain the structure of the PCA display above. Interestingly, we can observe that these SNPs with large loadings are spread over all the genome.
 
@@ -286,16 +258,45 @@ Now let's do the same work for the other dataset composed by the 12 populations.
 Test it and tell us what are your conclusions about it. You can run exactly the same script, simply changing the input files. When running ggplot you will need more colour values for populations. you cna also try to colour by sex.
 
 Here is a script for the canadian populations, if you are stuck.
-[PCA_12canada](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/pca/script_pca_12canada.r)
+[PCA_12canada](pca/script_pca_12canada.r)
 
 And here is what you will observe: 
 
-![pca](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/pca_canada.jpeg)
-![pca_sex](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/pca_can_bysex.jpeg)
+![pca](04-correction_figures_PCA_practical/pca_canada.jpeg)
+![pca_sex](04-correction_figures_PCA_practical/pca_can_bysex.jpeg)
 
-![loadings](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/loadings_pca_canada.jpeg)
+![loadings](04-correction_figures_PCA_practical/loadings_pca_canada.jpeg)
 
 Long story short, what drives PC1 is likely a chromosomal rearrangement that we will better explore on day 4. PC2 is driven by sex. In weakly-structured species, this kind of rearrangements or sex-linked loci can realy drive the pattern, for the PCA, the Admixture/Structure analysis and Fst, so it is sometimes a good idea to exlude those regions or work on a subset of LD-pruned SNPs.
+
+
+## 3. Structure with faststructure
+STRUCTURE has been the most popular software for detecting and describing population structure since it was published 20 years ago. However, it was developed before we started genotyping thousands of markers at a time and it is therefore slow for large genomic datasets. fastSTRUCTURE (Raj eet al. 2014, Genetics) provides a much faster alternative for these datasets while it is based on a similar Bayesian framework.
+
+We'll use the ```.structure``` file created by ```populations```. The first 6 columns of the file will be ignored; these typically would include IDs, metadata, etc. so we need to have 6 dummy columns before the genotypes for each individual/locus. Note that this software only handles bi-allelic loci. The two alleles at each locus can be encoded as desired; however, missing data should be encoded as '-9' (also check https://rajanil.github.io/fastStructure/ for details). Below is a little script to prepare the file and run fastSTRUCTURE.
+```
+cd  populations_all_random ### or populations_2lin_random or populations_canada_random
+tail -n +3 populations.structure > populations.structure_nohead ### deletes first two rows
+cut -f1-2 populations.structure_nohead > twocolumns
+paste twocolumns twocolumns populations.structure_nohead | sed 's/\t0/\t-9/g' > populations.faststructure.str
+conda activate faststructure ### we need to activate a conda environment with a different version of Python where faststructure is installed
+structure.py -K 2 --input=populations.faststructure --output=capelin.all --format=str
+```
+If you have problems activating faststructure please follow this procedure to fix it.
+1. leave the server and reconnect
+2. tap ```conda init bash```
+3. tap ```conda activate faststructure```
+
+
+Now you can modify the ```-K``` parameters and test different different numbers of clusters. Run faststructure with K ranging 2-n, with n being the number of populations in your dataset. With this script you can test what number of populations/cluster best describes your dataset.
+```
+chooseK.py --input=capelin.all
+```
+However, the results are not very clear. Indeed, it can be hard to find the the number of cluster that best describes your dataset. The qualitative analyses of structure plots for several K is often the most informative approach. Now download the output with the ```.meanQ``` extension on your local computer. Then go to <http://pophelper.com/> and upload your ```.meanQ``` files. You can start exploring the one generated for K=2 while you run fastSTRUCTURE with the other K. pophelper is a very user-friendly, intuitive online app to visualize population structure data. To visualize the plots after you have uploaded the data, go to the 'Plot' tab and click on the dataset(s) you want to visualize on the left-hand panel. If you click on more than one, you're gonna visualize them in the same panel. You can play with colors and sizes, fonts, etc for hours and I'll leave you to explore those functions. Just a tip to add population labels. You can create the list you need with
+```
+cut -f 2 ~/scripts/popmap_all.txt ### or one of the other population maps
+```
+and copy and paste in the the designated space in the left-hand panel.
 
 
 ## 4. DAPC
@@ -318,7 +319,7 @@ dapc_twolin<-dapc(twolin) ### choose 50 PCs and 1 distriminant function, as you 
 ###To plot results
 scatter(dapc_twolin)
 ```
-![dapc_2lin](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/02_day2/04-correction_figures_PCA_practical/dapc_2lin.jpeg)
+![dapc_2lin](04-correction_figures_PCA_practical/dapc_2lin.jpeg)
 
 Because our dataset contains only two groups, NWA (Canada) and GRE (Greenland), we have only one discriminant function available. For this reason, we can plot our results across only one axis of variation. However, you can see that that's enough to sharply and unequivocally separate the Canadian and Greenlandic lineages.
 
