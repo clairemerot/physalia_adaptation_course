@@ -41,7 +41,9 @@ Raw reads: Obtained by GBS methods (= Rad-seq), sequenced with IonTorrent.
 
 2-2: Principal component analysis (PCA)
 
-2-3: Discriminant Analysis of Principal Components (DAPC)
+2-3: Population clustering with FastStructure
+
+2-4: Discriminant Analysis of Principal Components (DAPC)
 
 ## Day3: Outlier detection - Environmental associations
 
@@ -64,6 +66,8 @@ This tutorial include working on local PCA, but also calculation of LD, Fst and 
 4-2: Filtering duplicated loci in RAD-seq data ( ~ Copy number variants)
 
 This tutorial show how to filter RAD loci to exclude duplicated ones (keep a reliable dataset for SNP analysis), and then how to analyse the duplicated loci for environmental associations.
+
+4-3: Detecting SV with Delly ??
 
 ## Day5: Functional approaches
 
