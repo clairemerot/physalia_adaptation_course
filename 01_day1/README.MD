@@ -1,4 +1,4 @@
-# Day1: Handling NGS data: From raw reads to SNPs matrix
+# Day1 - tutorial 2: Handling NGS data: From raw reads to SNPs matrix
 
 ## Step 1: Getting familiar with the UNIX environment
 Although you should have familiarized with working on a UNIX environment before the beginning of the course, here below are the commands that we will use most commonly. When you log in, you're in your home folder. You can go back here any time by typing ```cd``` (and pressing return).
