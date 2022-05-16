@@ -1,4 +1,5 @@
-# Day2: Population structure and differentiation
+# Day 2: Population structure and differentiation
+# Tutorial 1
 
 If you have no access to the server, please note that you can find all the files that you need for today's tutorial (vcf, structure and F<sub>ST</sub> files) in each of the three folders we generated from ```populations``` yesterday (populations_2lin_random, populations_canada_random, populations_all_random).
 The popmap text files can be found in [here](../00_documents).
@@ -269,7 +270,7 @@ And here is what you will observe:
 
 Long story short, what drives PC1 is likely a chromosomal rearrangement that we will better explore on day 4. PC2 is driven by sex. In weakly-structured species, this kind of rearrangements or sex-linked loci can realy drive the pattern, for the PCA, the Admixture/Structure analysis and Fst, so it is sometimes a good idea to exlude those regions or work on a subset of LD-pruned SNPs.
 
-
+# Tutorial 2
 ## 3. Structure with faststructure
 STRUCTURE has been the most popular software for detecting and describing population structure since it was published 20 years ago. However, it was developed before we started genotyping thousands of markers at a time and it is therefore slow for large genomic datasets. fastSTRUCTURE (Raj eet al. 2014, Genetics) provides a much faster alternative for these datasets while it is based on a similar Bayesian framework.
 
