@@ -1,4 +1,5 @@
-# Day3: Detecting putatively adaptive loci
+# Day 3: Detecting putatively adaptive loci
+# Tutorial 1
 Yesterday, we observed that our dataset included two highly divergent lineages (Canda vs. Greenland) so to study environmental associations, we will restrain our analysis on the Canadian 12 populations which belong to the same lineage 
 
 To start, please copy the folder Day 3 into your home directory adn open it with cd
@@ -375,7 +376,7 @@ echo "$seed"
 g_baypass -npop $N_pop -gfile $geno -efile $env -omegafile $omega_mat -outprefix output"$i" -nthreads $N_CPU -npilot 25 -burnin 5000 -seed $seed
 done
 ```
-
+# Tutorial 2
 ## 3 Environmental association
 ### 3.1 With Baypass (locus by locus)
 Baypass can also integrate environmental matrix or phenotypic matrix to run associations.
