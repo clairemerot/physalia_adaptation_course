@@ -379,19 +379,19 @@ done
 # Tutorial 2
 ## 3 Environmental association
 ### 3.1 With Baypass (locus by locus)
-Baypass can also integrate environmental matrix or phenotypic matrix to run associations.
-This means that we will no longer look at overall average differentiation between populations, but really ask which SNPs co-vary in frequency with environmental variables, in other words makes sens of differentiation between population along ecological gradients or look for phenotype/genotype association.
+Baypass can also test for coorelations between the genotypic data and environmental or pehnotypic data.
+This means that we will no longer look at overall average differentiation between populations, but test whether allele frequencies at each given SNP are correlated with phenotypic or environmental variation. With this approach, we can identify SNPs that are associated with a given phenotype or an enviornmental variable. 
 
-It is exactly the same procedure as before, except that we add the -efile option
+To test for environenmental association with Baypass, we will use the same script as before and just add the '-efile' option to provide a file summarizing environmental variation.
 
-####  get environmental data and format env file 
-Today we will be interested in using temeprature. I have used the database MarSPEC to extract it. bioOracle is also a good option, as well as WorldClim.
-Here is a script that may be useful is you want to do it yourself
+####  Get environmental data and format env file 
+Today we will test for correlations between genotypes and temperature, which I have extracted for each population location from the database MarSPEC (for marine environments). bioOracle is another good option for marine environments, whereas WorldClim is a commonly used database for terrestrial environments. 
+Here is an example script to extract environmental variables for each location of interest.
 [extract clim variables](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/tuto_worldclim.R)
 
-Baypass wants the environment as one line per env variable and one column per population. no header.
-I have used the file 02_data/info_pop_geo_eco.txt to format it in R. This is the file 05_baypass/env.txt.
-We also need to make really sure that our env file is exactly in the same order as the population are in the geno file.
+The format of the environmental data file is one row for each environmenral variable and one column for each population location, without header.
+I have used the file 02_data/info_pop_geo_eco.txt as input and format it in R to produce the file 05_baypass/env.txt.
+We also need to make sure that our env file is exactly in the same order as the population are in the geno file.
 
 Now we can run baypass with the environment file on both the real dataset and the simulated dataset.
 Here is the example with the covariate matrix controlling for a possible underlying structure but depending on your system you may want to control or not, or do both to compare (to remove the control by population structure, just remove "-omegafile 05_baypass/prunedsnps.output_mat_omega.out")
