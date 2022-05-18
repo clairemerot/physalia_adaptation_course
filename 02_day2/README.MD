@@ -271,36 +271,10 @@ And here is what you will observe:
 Long story short, what drives PC1 is likely a chromosomal rearrangement that we will better explore on day 4. PC2 is driven by sex. In weakly-structured species, this kind of rearrangements or sex-linked loci can realy drive the pattern, for the PCA, the Admixture/Structure analysis and Fst, so it is sometimes a good idea to exlude those regions or work on a subset of LD-pruned SNPs.
 
 # Tutorial 2
-## 3. Structure with faststructure
-STRUCTURE has been the most popular software for detecting and describing population structure since it was published 20 years ago. However, it was developed before we started genotyping thousands of markers at a time and it is therefore slow for large genomic datasets. fastSTRUCTURE (Raj eet al. 2014, Genetics) provides a much faster alternative for these datasets while it is based on a similar Bayesian framework.
-
-We'll use the ```.structure``` file created by ```populations```. The first 6 columns of the file will be ignored; these typically would include IDs, metadata, etc. so we need to have 6 dummy columns before the genotypes for each individual/locus. Note that this software only handles bi-allelic loci. The two alleles at each locus can be encoded as desired; however, missing data should be encoded as '-9' (also check https://rajanil.github.io/fastStructure/ for details). Below is a little script to prepare the file and run fastSTRUCTURE.
-```
-cd  populations_all_random ### or populations_2lin_random or populations_canada_random
-tail -n +3 populations.structure > populations.structure_nohead ### deletes first two rows
-cut -f1-2 populations.structure_nohead > twocolumns
-paste twocolumns twocolumns populations.structure_nohead | sed 's/\t0/\t-9/g' > populations.faststructure.str
-conda activate faststructure ### we need to activate a conda environment with a different version of Python where faststructure is installed
-structure.py -K 2 --input=populations.faststructure --output=capelin.all --format=str
-```
-If you have problems activating faststructure please follow this procedure to fix it.
-1. leave the server and reconnect
-2. tap ```conda init bash```
-3. tap ```conda activate faststructure```
+## 3. Structure with LEA
 
 
-Now you can modify the ```-K``` parameters and test different different numbers of clusters. Run faststructure with K ranging 2-n, with n being the number of populations in your dataset. With this script you can test what number of populations/cluster best describes your dataset.
-```
-chooseK.py --input=capelin.all
-```
-However, the results are not very clear. Indeed, it can be hard to find the the number of cluster that best describes your dataset. The qualitative analyses of structure plots for several K is often the most informative approach. Now download the output with the ```.meanQ``` extension on your local computer. Then go to <http://pophelper.com/> and upload your ```.meanQ``` files. You can start exploring the one generated for K=2 while you run fastSTRUCTURE with the other K. pophelper is a very user-friendly, intuitive online app to visualize population structure data. To visualize the plots after you have uploaded the data, go to the 'Plot' tab and click on the dataset(s) you want to visualize on the left-hand panel. If you click on more than one, you're gonna visualize them in the same panel. You can play with colors and sizes, fonts, etc for hours and I'll leave you to explore those functions. Just a tip to add population labels. You can create the list you need with
-```
-cut -f 2 ~/scripts/popmap_all.txt ### or one of the other population maps
-```
-and copy and paste in the the designated space in the left-hand panel.
-
-
-## 4. DAPC
+## 4. Structure with DAPC (Adegenet)
 A Discriminant Analysis of Principal Components is a multivariate approach that merges a Principal Component Analysis (PCA) and a Discriminant Analysis (DA). A PCA aims to summarize the variation among individuals and it runs very fast, also on large datasets. However, it is not powerful at discriminating groups because it doesn't use any a priori information on grouping, and intra-group variation can overwhelm inter-group variation. A DA, on the other hand, tries to summarize the variation among groups, while minimizing the variatoin within groups. Thus, a DAPC takes the best of the two analyses to describe population structure. Also, compared to structure-like analysis it is not based on strict model assumptions and is more powerful at describing isolation-by-distance and hierarchical structure that the Bayesian approaches implemented in STRUCTRURE, fastSTRUCTURE, or ADMIXTURE.
 
 On your desktop, create three new folders named ```populations_2lin_random```, ```populations_all_random``` and  ```populations_canada_random``` and download the file ```populations.structure``` from each of three corresponding ```populations``` folders on the server. Change extension ```.structure```to ```.str``` of each of three files and open R Studio. Let's start analyzing the reduced dataset including 80 individuals from Canada and Greenland.
