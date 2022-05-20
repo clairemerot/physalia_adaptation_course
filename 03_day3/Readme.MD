@@ -379,10 +379,10 @@ done
 # Tutorial 2
 ## 3 Environmental association
 ### 3.1 With Baypass (locus by locus)
-Baypass can also test for coorelations between the genotypic data and environmental or pehnotypic data.
+Baypass can also test for correlations between the genotypic data and environmental or pehnotypic data.
 This means that we will no longer look at overall average differentiation between populations, but test whether allele frequencies at each given SNP are correlated with phenotypic or environmental variation. With this approach, we can identify SNPs that are associated with a given phenotype or an enviornmental variable. 
 
-To test for environenmental association with Baypass, we will use the same script as before and just add the '-efile' option to provide a file summarizing environmental variation.
+To test for environnmental associations with Baypass, we will use the same script as before and just add the '-efile' option to provide a file summarizing environmental variation.
 
 ####  Get environmental data and format env file 
 Today we will test for correlations between genotypes and temperature, which I have extracted for each population location from the database MarSPEC (for marine environments). bioOracle is another good option for marine environments, whereas WorldClim is a commonly used database for terrestrial environments. 
@@ -398,6 +398,7 @@ Here is the example with the covariate matrix controlling for a possible underly
 
 This may take a few minutes
 ```
+cd 03_day3
 g_baypass -npop 12 -gfile 05_baypass/G.simulates_pods \
 -efile 05_baypass/env.txt \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
@@ -410,15 +411,15 @@ g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 ```
 
 #### Visualising results on Rstudio on your local computer
-Like we did before we can plot the xtx but we will mostly be interested in the BF value (Bayesian factor of association with an environmental variable)
-You will find it in the betai_reg.out in the column BF.dB.
+Like we did before we can plot the xtx but we will mostly be interested in the BF value (Bayesian factor of association with an environmental variable).
+You will find it in the files ending with `betai_reg.out` in the column BF.dB.
 "the Bayes Factor (column BF(dB)) in dB units (i.e., 10 × log10(BF)) measuring the support of the association of each SNP with each population covariable and the corresponding regression coefficients βi (column Beta_is)"
 BF can be informative in itself, good candidate are usually above 20. 
 Following the rule of Jeffrey, we can consider BF as meaning
 * < 3 nothing
 * 3 to 10 weak support
 * 10 to 20 interesting
-* >20 strong support
+* > 20 strong support
 
 See Jeffreys, H. (1961). Theory of probability (3rd ed.). Oxford: Oxford University Press, Clarendon Press. https://global.oup.com/academic/product/theory-of-probability-9780198503682?cc=ca&lang=en&
  and Robert E. Kass & Adrian E. Raftery (1995): Bayes Factors, Journal of the American Statistical Association, 90:430, 773-795 http://dx.doi.org/10.1080/01621459.1995.10476572
@@ -436,9 +437,9 @@ Controlled model
 
 ![bf_controlled](07_img_readme/bf_controlled.png)
 
-So on the data we have today, we find very few putative outlier SNPs associated with temperature. It may be that we don't have the power to detect some, we have only 12 populations and a reduced representation of the genome. It may be that given the high gene flow, very few regions of the genome are under  selection that is strong enough to show detectable differences in allelic frequencies.
+In the datset we analized today we find very few putative outlier SNPs associated with temperature. It may be that 1) we don't have the power to detect significant associations, 2) we have only 12 populations and 3) a reduced representation of the genome, and 4) given the presence of high gene flow among populations, very few regions of the genome are under selection that is strong enough to result in detectable differences in allelic frequencies among populations exposed to different temperatures.
 
-We can export the list of outlier SNPs for subsequent analysis on day 5. Here is the code for controlled models .
+We can export the list of outlier SNPs for subsequent analysis on day 5. Here is the code for the controlled models.
 ```
 #load bf values
 bf_allsnps<-read.table("05_baypass/allsnps_env.controlled.output_summary_betai_reg.out", header = T)
@@ -447,7 +448,7 @@ bf_pos<-cbind(SNP_pos, bf_allsnps)
 #load bf values from simulatd data
 bf_simu<-read.table("05_baypass/simulate_env.controlled.output_summary_betai_reg.out", header=T)
 
-#calculate the threshold from simu (or you cna use BF = 10)
+#calculate the threshold from simulations (or you can use BF = 10)
 threshold_fdr0.01 = quantile(bf_simu$BF.dB,probs=0.99)
 threshold_fdr0.05 = quantile(bf_simu$BF.dB,probs=0.95)
 
