@@ -289,7 +289,7 @@ To conduct population structure analyses, LEA needs its own input format (LEA ge
 
 ```
 #change vcf to geno 
-LEA::vcf2geno("02-data/02-NWA/populations.snps.vcf",
+LEA::vcf2geno("populations_2lin_random/populations.snps.vcf",
               output.file = "LEA/population_2lin_random.geno")
               
 ```
@@ -299,7 +299,7 @@ In short, this function provides results very close programs such as STRUCTURE o
 The results will allow us to determine what is the best K value, i.e. the most likely number of genetic clusters.
 ```
 #testing K populations: from K=1 to K=10
-obj <- snmf("NWA_pop_singletons.geno", K = 1:10, ploidy = 2,
+obj <- snmf("LEA/population_2lin_random.geno", K = 1:10, ploidy = 2,
             entropy = T, CPU =4, project = "new")
 ```
 The snmf function computes an entropy criterion, which assess the fit of the statistical model to the data using a cross-validation approach. The entropy criterion can help choosing the number of ancestral populations that best explains the genotypic data.
