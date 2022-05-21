@@ -272,7 +272,58 @@ Long story short, what drives PC1 is likely a chromosomal rearrangement that we 
 
 # Tutorial 2
 ## 3. Structure with LEA
+Here, we will investigate population structure using LEA. Briefely, LEA is an R package developped by Eric Frichot and Olivier Fraņcois (Grenoble University, France), which is dedicated to landscape genomics and ecological associ-ation tests. This package embed many tools such as missing imputation, genome scans, testing for association between genotypes and environment and analyses of population structure. Here we only tested the population structure approach which is very easy to implement.
+If you want to learn more about LEA, you feel free to visit the R vignette at here "https://www.bioconductor.org/packages/devel/bioc/vignettes/LEA/inst/doc/LEA.pdf"
 
+### Step 0: Prepare working folder
+To keep clarity in our working folder, we will create a new folder for LEA analysis.
+So, add a new folder named LEA in you working directory.
+
+Here, we will screen for population structure among two datasets, the population_2lin_random and the population_canada_random
+To be functional, we have to unziped the datasets. So please, get only the ".vcf" file extension.
+
+Here, I will show you only the guidelines for the population_2lin_random.vcf dataset. Next, I let you to practice for the second one. 
+
+### Step 1: Prepare input files
+To conduct population structure analyses, LEA needs its own input format (LEA geno-like format). Great, the authors of the R package give us a useful function to do it easely !
+
+```
+#change vcf to geno 
+LEA::vcf2geno("02-data/02-NWA/populations.snps.vcf",
+              output.file = "LEA/population_2lin_random.geno")
+              
+```
+### Step 2: modeling Ancestry proportions
+Now that we've our input file ready, we will perform the inference of individual admixture coefficients using snmf function.
+In short, The function provides results very close to Bayesian clustering programs such as STRUCTURE or Admixture. Assuming K ancestral populations, the function snmf provides least-squares estimates of ancestry proportions rather than maximum likelihood estimates Frichot_2014. 
+The results will allow us to determine what is the best K value, i.e. the most likely number of genetic clusters.
+```
+#testing K populations: from K=1 to K=10
+obj <- snmf("NWA_pop_singletons.geno", K = 1:10, ploidy = 2,
+            entropy = T, CPU =4, project = "new")
+```
+The snmf function computes an entropy criterion, which assess the fit of the statistical model to the data using a cross-validation approach. The entropy criterion can help choosing the number of ancestral populations that best explains the genotypic data.
+### Step 3: Find the best K
+```
+#plot cross-entropy
+  plot(obj, col = "blue4", cex = 1.4, pch = 19) #---best is 6 here
+  #choose the best LEA run
+  best = which.min(cross.entropy(obj, K = 2))
+```
+![LEA_2lin_CV](04-correction_figures_PCA_practical/LEA_crossentropy_populations_2lin.png)
+
+Here we have a clear minimum at K = 2, suggesting 2 genetic clusters within the dataset. Often, the plot shows a less clear pattern, and choosing the "knee" point is a generally good approach.
+The next step is to display a barplot for the Ancestry matrix (also called the Q-matrix).
+### Step 4: Plot ancestry proportions across samples
+```
+barchart(obj, K=2,run=best,border=NA,space=0,
+         col=my.col,
+         xlab = "Individuals", ylab = "Ancestry proportions (K=2)", main = "Capelin lineages")
+```
+![LEA_2lin_barchart](04-correction_figures_PCA_practical/results_LEA_2lin.png)
+
+Well done ! 
+Next step, practice with the second dataset. What's your feeling about results ?
 
 ## 4. Structure with DAPC (Adegenet)
 A Discriminant Analysis of Principal Components is a multivariate approach that merges a Principal Component Analysis (PCA) and a Discriminant Analysis (DA). A PCA aims to summarize the variation among individuals and it runs very fast, also on large datasets. However, it is not powerful at discriminating groups because it doesn't use any a priori information on grouping, and intra-group variation can overwhelm inter-group variation. A DA, on the other hand, tries to summarize the variation among groups, while minimizing the variatoin within groups. Thus, a DAPC takes the best of the two analyses to describe population structure. Also, compared to structure-like analysis it is not based on strict model assumptions and is more powerful at describing isolation-by-distance and hierarchical structure that the Bayesian approaches implemented in STRUCTRURE, fastSTRUCTURE, or ADMIXTURE.
