@@ -310,7 +310,7 @@ The snmf function computes an entropy criterion, which assess the fit of the sta
   #choose the best LEA run
   best = which.min(cross.entropy(obj, K = 2))
 ```
-![LEA_2lin_CV](04-correction_figures_PCA_practical/LEA_crossentropy_populations_2lin.png)
+<img src="04-correction_figures_PCA_practical/LEA_crossentropy_populations_2lin.png" width="400" height="300">
 
 Here we have a clear minimum at K = 2, suggesting two genetic clusters within the dataset. Often, the plot shows a less clear pattern, and choosing the "knee" point is a generally good approach.
 The next step is to display a barplot for the Ancestry matrix (also called the Q-matrix).
