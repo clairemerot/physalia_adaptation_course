@@ -194,6 +194,8 @@ In this case % of missing data are below 5%, so we don't need to discard any ind
 
 #### Congratulations! You have all the input files ready for downstream analyses (plus a bunch of statistics) for the reduced dataset!
 
+As you can see if you  do ```ls``` to list the files in one of the folders storing the output from your ```populations``` runs, STACKS produces many output files. The manual provides a thorough explanation of all the different file formats. Go to <https://catchenlab.life.illinois.edu/stacks/manual/> and scroll down to section 6.6. For each output type, open the corresponding file on the server, and take your time to explore them.
+
 Here you've executed the pipeline on 80 individuals. Before we wrap up today, you need to create the same input files for the full dataset (280 individuals listed in popmap_all.txt) and the Canada dataset (240 individuals listed in popmap_canada.txt). 
 You should have already run the script ```~/scripts/gstacks_stacks.sh```. 
 Now, run ```populations``` on the new catalog twice, once for all individuals, and once for just the Canadian samples. What do you need to modify here?
