@@ -7,8 +7,8 @@ First, we'll create a folder and copy some of the files we will need today in th
 ```
 mkdir scripts
 cd scripts
-cp ~/Share/physalia_adaptation_course/00_documents/* ./ ###this command copies all the files in the folder 00_documents into the folder you're currently in
-cp ~/Share/physalia_adaptation_course/01_day1/01_scripts/* ./
+cp -r ~/Share/physalia_adaptation_course/00_documents . ###this command copies a folder (note the -r juste after the command "cp" in the folder 00_documents into the folder you're currently in
+cp -r ~/Share/physalia_adaptation_course/01_day1/01_scripts .
 ```
 Use ```ls``` to get a list of the files we have copied over, and look at the content of one of those files with
 ```
