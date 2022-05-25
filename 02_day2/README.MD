@@ -1,13 +1,16 @@
 # Day 2: Population structure and differentiation
 # Tutorial 1
 
-If you have no access to the server, please note that you can find all the files that you need for today's tutorial (vcf, structure and F<sub>ST</sub> files) in each of the three folders we generated from ```populations``` yesterday (populations_2lin_random, populations_canada_random, populations_all_random).
-The popmap text files can be found in [here](../00_documents).
-
+If you have no access to the server, please note that you can find all the files that you need for today's tutorial compressed
 ## 1: Calculating F-statistics
 
-If you had any problems yesterday, or are not sure you used the correct settings, you can copy in your folder the files that I generated for each of three datasets. If you have generated some and want to avoid confusion with overwriting existing files you can remove the folders you have produced with ```rm -fr folder_name```
+If you had any problems yesterday, or are not sure you used the correct settings, you can copy in your folder the files that I generated for each of three datasets. If you have generated some and want to avoid confusion with overwriting existing files you can remove the folders you have produced with ```rm -fr folder_name``
+
+First we will copy the folder of day2 and work within it
 ```
+cd 
+cp -r ~/Share/physalia_adaptation_course/02_day2 .
+cd 02_day2
 cd stacks
 cp -r ~/Share/populations_* ./
 ```
