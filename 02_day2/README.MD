@@ -1,6 +1,8 @@
 # Day 2: Population structure and differentiation
 ## 1: Calculating F-statistics
-First we will copy the folder of day2 and work within it. We have put inside that folder the similar files that you produced yesterday with Stacks. So if you have not managed to finish the tutorial or if you forgot where the files were generated yesterday, don't worry they are here.
+First we will copy the folder of day2 and work within it. 
+
+We have put inside that folder the similar files that you produced yesterday with Stacks, except that they are compressed to fit on github. So if you have not managed to finish the tutorial, if you forgot where the files were generated yesterday (and even if you doon't have access to the server and work on your own computer), don't worry they are here.
 
 ```
 cd #make sure you are at the root of the directory 
@@ -13,9 +15,13 @@ There are many ways, approaches, software and formulas to calculate F<sub>ST</su
 
 In VCFtools you need to provide the list of samples for each population to include in the calculation and a VCF file with all your variants and asscoiated information. For the reduced dataset, including only 80 individuals from Greenland and Canada, you will find the list of samples for each of the two lineages in the ```~/scripts``` folder. The VCF file name is saved as ```populations.snps.vcf```, one for each of the datsets we analyzed. For example, to calculate F<sub>ST</sub> in the smallest of the three datsets we produced, type
 ```
-vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop ~/scripts/pop_canada40.txt --weir-fst-pop ~/scripts/pop_greenland40.txt  --out fst_2lin
+gunzip populations_2lin_random/populations.snps.vcf.gz
+vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop documents/pop_canada40.txt --weir-fst-pop documents/pop_greenland40.txt  --out FST/fst_2lin
 ```
-As stdout you get
+
+Note that we directed all the vcf output inside the FST folder.
+In the terminal, you get
+
 ```
 VCFtools - 0.1.16
 (C) Adam Auton and Anthony Marcketta 2009
@@ -40,10 +46,13 @@ The calculation is very fast, and in addition to per-site estimates you get mean
 
 If you have a reference genome and panel of SNPs dense enough (or whole genome resequencing data) you can calculate window estimates with
 ```
-vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop ~/scripts/pop_canada40.txt --weir-fst-pop ~/scripts/pop_greenland40.txt  --out fst_2lin_win --fst-window-size 100000 --fst-window-step 100000
+vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop documents/pop_canada40.txt --weir-fst-pop documents/pop_greenland40.txt  --out FST/fst_2lin_win --fst-window-size 100000 --fst-window-step 100000
 ```
 In fact, window estimates are a practical way to summarize data and to reduce the number of datapoints to handle, which can be problematic for visualization.
-If you want to visualise it, you can download the file to your own computer and use R. To do Manhattan plot, there are great package like QQMan
+If you want to visualise it, you can download the file to your own computer and use R. 
+
+
+To do Manhattan plot, there are great package like QQMan
 https://cran.r-project.org/web/packages/qqman/vignettes/qqman.html
 
 And you can also simply use ggplot if you have few Chromosomes
@@ -65,8 +74,7 @@ ggplot(Fst, aes(x=midPos/1000000, y=WEIGHTED_FST, col=CHROM))+
 
 We can also calculate π in VCFtools with the command
 ```
-cd ~/stacks
-vcftools --vcf populations_2lin_random/populations.snps.vcf --site-pi --keep ~/scripts/pop_canada40.txt --out pi_canada
+vcftools --vcf populations_2lin_random/populations.snps.vcf --site-pi --keep documents/pop_canada40.txt --out FST/pi_canada
 ```
 However, these single-site estimates of π are not very meaningful. π is defined as the average number of nucleotide differences per site between two DNA sequences in all possible pairs in the sample population. That is the same reason why π averaged across polymorphic sites in STACKS is not meaningful either. π must be averaged across the whole length of the sequence you are analyzing, whether it is a collection of RAD loci or whole chromosomes.
 
@@ -94,11 +102,7 @@ https://onlinelibrary.wiley.com/doi/abs/10.1111/1755-0998.12995
 
 So we will also restrict our matrix to the most frequent SNPs (Maf> 1%). We can do this thanks to vcf tools.
 
-First we will copy the folder of day2 and work within it
 ```
-cd 
-cp -r ~/Share/physalia_adaptation_course/02_day2 .
-cd 02_day2
 cd pca
 vcftools --vcf ~/Share/populations_2lin_random/populations.snps.vcf --maf 0.01 --012 --out populations_2lin_random
 vcftools --vcf ~/Share//populations_canada_random/populations.snps.vcf --maf 0.01 --012 --out populations_can_random
@@ -164,7 +168,7 @@ geno.012_2lin[geno.012_2lin == -1] <- NA
 geno.012_2lin.imp <- apply(geno.012_2lin,2,function(x){
                            replace(x, is.na(x), as.numeric(names(which.max(table(x))))) })
 ```
-#### Step 3: Run adn visualise PCA
+#### Step 3: Run and visualise PCA
 Next, we are ready to perform the PCA. The code is very simple. Only one line !
 ```
 pca.2lin <- prcomp(geno.012_2lin.imp)
@@ -271,11 +275,7 @@ Here, we will investigate population structure using LEA. Briefely, LEA is an R 
 If you want to learn more about LEA, you feel free to visit the R vignette at "https://www.bioconductor.org/packages/devel/bioc/vignettes/LEA/inst/doc/LEA.pdf"
 
 ### Step 0: Prepare working folder
-To keep clarity in our working folder, we will create a new folder for LEA analysis.
-So, add a new folder named LEA in your working directory.
-
 Here, we will screen for population structure among populations two datasets, the population_2lin_random and the population_canada_random.
-To be functional, we have to unzipped the vcf files.
 
 Today, I will show you only the guidelines for the population_2lin_random.vcf dataset. Next, I let you to practice for the second one. 
 
