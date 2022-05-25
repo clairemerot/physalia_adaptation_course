@@ -1,21 +1,13 @@
 # Day 2: Population structure and differentiation
-# Tutorial 1
-
-If you have no access to the server, please note that you can find all the files that you need for today's tutorial compressed
 ## 1: Calculating F-statistics
+First we will copy the folder of day2 and work within it. We have put inside that folder the similar files that you produced yesterday with Stacks. So if you have not managed to finish the tutorial or if you forgot where the files were generated yesterday, don't worry they are here.
 
-If you had any problems yesterday, or are not sure you used the correct settings, you can copy in your folder the files that I generated for each of three datasets. If you have generated some and want to avoid confusion with overwriting existing files you can remove the folders you have produced with ```rm -fr folder_name``
-
-First we will copy the folder of day2 and work within it
 ```
-cd 
+cd #make sure you are at the root of the directory 
 cp -r ~/Share/physalia_adaptation_course/02_day2 .
 cd 02_day2
-cd stacks
-cp -r ~/Share/populations_* ./
 ```
 
-As you can see if you ```cd``` in one of the folders storing the output from your ```populations``` runs, STACKS produces many output files. The manual provides a thorough explanation of all the different file formats. Go to <https://catchenlab.life.illinois.edu/stacks/manual/> and scroll down to section 6.6. For each output type, open the corresponding file on the server, and take your time to explore them.
 
 There are many ways, approaches, software and formulas to calculate F<sub>ST</sub>, a relative measure of population differentiation. Here we will use mainly VCFtools. If you want to explore Stacks for summary statistics in your spare time you will find a Stacks specific tutorial [here](./summary_stats_stacks.md)
 
