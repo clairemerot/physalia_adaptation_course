@@ -103,11 +103,13 @@ https://onlinelibrary.wiley.com/doi/abs/10.1111/1755-0998.12995
 So we will also restrict our matrix to the most frequent SNPs (Maf> 1%). We can do this thanks to vcf tools.
 
 ```
-cd pca
-vcftools --vcf ~/Share/populations_2lin_random/populations.snps.vcf --maf 0.01 --012 --out populations_2lin_random
-vcftools --vcf ~/Share//populations_canada_random/populations.snps.vcf --maf 0.01 --012 --out populations_can_random
+vcftools --vcf populations_2lin_random/populations.snps.vcf --maf 0.01 --012 --out pca/populations_2lin_random
+
+#if the second file is not unzip use:
+gunzip populations_canada_random/populations.snps.vcf
+vcftools --vcf populations_canada_random/populations.snps.vcf --maf 0.01 --012 --out pca/populations_can_random
 ```
-Once this is done, you will see via the cmd line `ls` (for listing all files in the directory), that six new files have been generated.
+Once this is done, you will see via the cmd line `ls pca` (for listing all files in the directory), that six new files have been generated.
 * Two files ending with only `.012` contain genotypes information (0 for Ref homozygous, 1 for heterozygous, 2 for Alt homozygous and -1 for misisng data)
 * Two files ending with `.012.pos` contain a list of SNP ids (Chromosme and Position) from the vcf file
 * Two files ending with `.012.indv` contain a list of samples ids from the vcf file
@@ -274,10 +276,12 @@ Long story short, what drives PC1 is likely a chromosomal rearrangement that we 
 Here, we will investigate population structure using LEA. Briefely, LEA is an R package developped by Eric Frichot and Olivier Fraņcois (Grenoble University, France), which is dedicated to landscape genomics and ecological association tests. This package includes many tools such as missing data imputation, genome scan for selection, testing for association between genotypes and environment and analyses of population structure. Here, we only test the population structure approach, which is very easy to implement.
 If you want to learn more about LEA, you feel free to visit the R vignette at "https://www.bioconductor.org/packages/devel/bioc/vignettes/LEA/inst/doc/LEA.pdf"
 
-### Step 0: Prepare working folder
+
 Here, we will screen for population structure among populations two datasets, the population_2lin_random and the population_canada_random.
 
 Today, I will show you only the guidelines for the population_2lin_random.vcf dataset. Next, I let you to practice for the second one. 
+
+Because LEA is a R package, you need to work in R environment on the server (just write `R') or on your own computer.
 
 ### Step 1: Prepare input files
 To conduct population structure analyses, LEA needs its own input format (LEA geno-like format). Great 👍, the authors of the R package give us a useful function to do it easely !
