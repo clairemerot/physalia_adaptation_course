@@ -49,5 +49,7 @@ grep -v ^\#\# snps_bcftools/capelin_wgs_filtered.vcf | wc -l
 
 What is the proportion of SNPs surviving filters? How many are left? According to your dataset and needs, you may want to change or tweak these filters.
 
+### 2. Analysis of sequence variation
+As we have highlighted several times, a VCF is a VCF, whether the variants are called from RADseq or WGR data, whether you call hundreds or millions of variants, so you can repeat all the analyses we presented to you during the course using this new WGR dataset. For this tutorial we will focus on the visualization of genomic variation with PCA.
 
 
