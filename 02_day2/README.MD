@@ -345,18 +345,26 @@ Next step, practice with the second dataset. What's your feeling about results ?
 A Discriminant Analysis of Principal Components is a multivariate approach that merges a Principal Component Analysis (PCA) and a Discriminant Analysis (DA). A PCA aims to summarize the variation among individuals and it runs very fast, also on large datasets. However, it is not powerful at discriminating groups because it doesn't use any a priori information on grouping, and intra-group variation can overwhelm inter-group variation. A DA, on the other hand, tries to summarize the variation among groups, while minimizing the variatoin within groups. Thus, a DAPC takes the best of the two analyses to describe population structure. Also, compared to structure-like analysis it is not based on strict model assumptions and is more powerful at describing isolation-by-distance and hierarchical structure that the Bayesian approaches implemented in STRUCTRURE, fastSTRUCTURE, or ADMIXTURE.
 
 On your desktop, create three new folders named ```populations_2lin_random```, ```populations_all_random``` and  ```populations_canada_random``` and download the file ```populations.structure``` from each of three corresponding ```populations``` folders on the server. Change extension ```.structure```to ```.str``` of each of three files and open R Studio. Let's start analyzing the reduced dataset including 80 individuals from Canada and Greenland.
+
+please be careful to copy the command line by line, as it will prompt questions.
+
 ```
 ### load adegenet package
 library(adegenet)
 
 ### load dataset and convert it from structure to genind format
-twolin<-import2genind("populations_2lin_random/populations.str") # 80 ind and 8530 SNPs in my case, check your populations.log file to get the right number of SNPs
+twolin<-import2genind("populations_2lin_random/populations.str") 
 ### This command will prompt questions about the structure of the file
+# 80 ind and 8530 SNPs if you have used the file given
+
 ```
 ![convert4dapc](../images_tutorial/02-day2_adegenet_loaddata_new.png)
 ```
 ### Once the dataset is loaded, you can proceed with the DAPC
-dapc_twolin<-dapc(twolin) ### choose 50 PCs and 1 distriminant function, as you did have a choice...
+dapc_twolin<-dapc(twolin) 
+
+### again the command prompt question
+#choose 50 PCs and 1 distriminant function, as you did have a choice...
 ###To plot results
 scatter(dapc_twolin)
 ```
@@ -366,8 +374,12 @@ Because our dataset contains only two groups, NWA (Canada) and GRE (Greenland), 
 
 You can repeat this analysis with the full dataset ```populations_all_random/populations.str```.
 ```
-all<-import2genind("populations_all_random/populations.str") # 280 ind and 7943 SNPs
-dapc_all<-dapc(all) ### play with number of PC and DF
+all<-import2genind("populations_all_random/populations.str") 
+# 280 ind and 7943 SNPs
+
+dapc_all<-dapc(all) 
+### play with number of PC and DF
+
 scatter(dapc_all)
 ```
 What do you see now?
@@ -375,7 +387,8 @@ What do you see now?
 If any structure is present among the Canadian populations, it may be hidden by the strong differentiation between the Canadian and Greenlandic lineages.
 So let's repeat the analysis including only the Canadian populations, and use this to explore how to select the right number of PCs. Run and visualize the DAPCs based on 100 and 200 PCs.
 ```
-canada<-import2genind("populations_canada_random/populations.str") # 240 ind and 8018 SNPs
+canada<-import2genind("populations_canada_random/populations.str") 
+# 240 ind and 8018 SNPs
 dapc_canada1<-dapc(canada, n.da=4, n.pca=100)
 dapc_canada2<-dapc(canada, n.da=4, n.pca=200)
 scatter(dapc_canada1)
