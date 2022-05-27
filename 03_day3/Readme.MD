@@ -276,7 +276,17 @@ python Toolbox/reshaper_baypass.py 02_data/canada.pruned.recode.vcf 02_data/popm
 ```
 
 ####  run baypass controlled for population structure
-We want to pinpoint the outlier that differ from the basic structure of the population. This is not a big deal in our example but it may be in other system. 
+We installed Baypass on the ```Share/``` folder. However, your working session doesn't know where it have been installed. So we have to add the path to baypass. In such, use the following command line : ```èxport PATH=$PATH:~/Share/baypass_2.3/sources/```
+
+Then test that Baypass is well referenced for your session by typing ```g_baypass```. This will give you :
+```
+BayPass Version 2.3
+Reading and checking input data
+ERROR: Please provide a genotyping file
+```
+Here, we are ready to run Baypass !
+
+We want to pinpoint the outliers SNPs that differ from the basic structure of the population. This is not a big deal in our example but it may be in other system. 
 Best practices suggest to first run baypass on the LD-pruned vcf and to extract the covariance matrix between population (mat_omega), and then use it as a covariate in the baypass model. This will take a few minutes to run.
 
 ```
@@ -288,8 +298,7 @@ g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 -omegafile 05_baypass/prunedsnps.output_mat_omega.out \
 -outprefix 05_baypass/allsnps.controlled.output -nthreads 2
 ```
-On the server we have set up everything for you but if you try on your computer, you may have an error because it does not find Baypass
-You can set a path variable ```PATH_TO_SOFT=WhereItIs/baypass_2.2/sources``` and then do ```$PATH_TO_SOFT/g_baypass```, or add the path to your .bashrc
+
 
 Please copy the controlled output on your local computer. We can have a look at the output. the most importnat are the omega matrix, which is covariance between populations and the xtx value which represent a kind of value associated to each SNP. the higher it gets, the more this snps differentiate the populations.
 
