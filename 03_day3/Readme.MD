@@ -541,7 +541,7 @@ Here, the SNPs are in red (in the center of each plot), and the individuals are 
 ```
 jpeg("06_rda/rda1_triplot.jpeg")
 plot(temp.rda, scaling=3) 
-points(temp.rda, display="sites", pch=20, cex=1.3, col=info$pop, scaling=3)
+points(temp.rda, display="sites", pch=20, cex=1.3, col=as.factor(info$pop), scaling=3)
 dev.off()
 ```
 
