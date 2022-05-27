@@ -51,8 +51,11 @@ If you have a reference genome and panel of SNPs dense enough (or whole genome r
 vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop documents/pop_canada40.txt --weir-fst-pop documents/pop_greenland40.txt  --out FST/fst_2lin_win --fst-window-size 100000 --fst-window-step 100000
 ```
 In fact, window estimates are a practical way to summarize data and to reduce the number of datapoints to handle, which can be problematic for visualization.
-If you want to visualise it, you can download the file to your own computer and use R. 
 
+
+Now, to visualise it, we recommend that you can download the file to your own computer and use R. The best is to download the whole folder 02-day2, so that you will always work with the same folder/file names and hierarchy as the rest of the group.
+
+On your local computer, in R studio, simply set your working directory to 02-day2
 
 To do Manhattan plot, there are great package like QQMan
 https://cran.r-project.org/web/packages/qqman/vignettes/qqman.html
@@ -61,7 +64,7 @@ And you can also simply use ggplot if you have few Chromosomes
 ```
 library(ggplot2)
 
-Fst<-read.table("fst_2lin_win.windowed.weir.fst", header=T)
+Fst<-read.table("FST/fst_2lin_win.windowed.weir.fst", header=T)
 Fst$midPos<-(Fst$BIN_START+Fst$BIN_END)/2
 head(Fst)
 
@@ -73,6 +76,9 @@ ggplot(Fst, aes(x=midPos/1000000, y=WEIGHTED_FST, col=CHROM))+
 ```
 
 ![fst_window](04-correction_figures_PCA_practical/fst_window.jpeg)
+
+
+Back on the server:
 
 We can also calculate π in VCFtools with the command
 ```
@@ -93,7 +99,8 @@ To assess genetic structure in relation to geography and pre-existing partitions
 
 Population structure leads to systematic patterns in measures of mean relatedness between individuals in large genomic data sets, which are often discovered and visualized using dimension reduction techniques such as principal component analysis (PCA). The results of PCA can produce "maps" of population structure that may reflect the samples' geographic origin dirstored by rates of gene flow (November et al., 2008) or other intra-genome evolutionary processes that can bond or dispel certain groups of samples. Using PCA in genomics is quite simple without the need to diving into the math.
 
-For this analysis, we will convert vcf files into geno format (matrix of genotypes : 0,1,2) using the programm **vcftools**.
+For this analysis, we will convert vcf files into geno format (matrix of genotypes : 0,1,2) using the programm **vcftools** on the server.
+
 Here, we will work with two vcf files
 * vcf file containing four populations with the two lineages (H,L,O and U)
 * vcf file containing 12 populations from Canada (A-L)
@@ -118,7 +125,9 @@ Once this is done, you will see via the cmd line `ls pca` (for listing all files
 
 In this folder we also have all information about individuals. So to play with the pca, we will return in your local computer and simply download the whole pca folder.
 
-Once the six files have been downloaded, open R studio and set your working directory to this folder ``02_day2/pca``
+Now please download the six files on your local computer inside the folder pca (inside 02-day2).
+
+We will now work on R studio setting (or keeping) your working directory to this folder ``02_day2``
 
 #### Step 0: load the required libraries.
 ```
@@ -134,15 +143,15 @@ During the PCA tutorial, I will use the awesome ``%>%``. This code feature is a 
 #### Step 1: load initial required data files
 ```
 #1. load population map
-popmap <- read.table("info_samples.csv", h=T,sep=';')
+popmap <- read.table("pca/info_samples.csv", h=T,sep=';')
 #if this doesn't work, please import amnually or  try 
-popmap <- read.csv("info_samples.csv", sep=';')
+popmap <- read.csv("pca/info_samples.csv", sep=';')
 
 #2. load geno data for the 2lin
-geno.012_2lin <- read.table("populations_2lin_random.012")[,-1] #load genotype matrix
-geno.012_2lin.pos <- read.table("populations_2lin_random.012.pos") %>% #load SNPs info
+geno.012_2lin <- read.table("pca/populations_2lin_random.012")[,-1] #load genotype matrix
+geno.012_2lin.pos <- read.table("pca/populations_2lin_random.012.pos") %>% #load SNPs info
   mutate(., locus=paste(V1,V2,sep='_')) #create a new column for SNP info name (CHR + position)
-geno.012_2lin.indv <- read.table("populations_2lin_random.012.indv") #load individuals info
+geno.012_2lin.indv <- read.table("pca/populations_2lin_random.012.indv") #load individuals info
 
 #Set rownames and colnames to the geno matrix
 dimnames(geno.012_2lin) <- list(geno.012_2lin.indv$V1, geno.012_2lin.pos$locus)
@@ -228,7 +237,7 @@ ggplot(pca.2lin.sub) + aes(x=PC1, y=PC2, col=pop) +
         panel.grid = element_blank())
 
 #Print it !
-ggsave("PCA_biplot_2lin.png", width = 6, height = 5)
+ggsave("pca/PCA_biplot_2lin.png", width = 6, height = 5)
 ```
 Done ! Good job.
 ![PCA_img](04-correction_figures_PCA_practical/pca_2lin.jpeg)
@@ -251,7 +260,7 @@ ggplot(data=loadings.melt) +
         axis.ticks.x = element_blank())
 
 #Print it !
-ggsave("PCA_loadings.png", height = 4, width = 15)
+ggsave("pca/PCA_loadings.png", height = 4, width = 15)
 ```
 ![img_loadings](04-correction_figures_PCA_practical/loading_2lin.jpeg)
 
@@ -283,13 +292,17 @@ Here, we will screen for population structure among populations two datasets, th
 
 Today, I will show you only the guidelines for the population_2lin_random.vcf dataset. Next, I let you to practice for the second one. 
 
-Because LEA is a R package, you need to work in R environment on the server (just write `R') or on your own computer.
+Because LEA is a R package, you need to work in R environment. We recommand that you do it on your own computer but you can always start a R session on the server with the command 'R'.
 
 ### Step 1: Prepare input files
 To conduct population structure analyses, LEA needs its own input format (LEA geno-like format). Great 👍, the authors of the R package give us a useful function to do it easely !
 
 ```
+#load the library
+library(LEA)
 #change vcf to geno 
+#note that we are working in the directory 02-day2 telling the program the path of the populations.snps.vcf is inside the folder populations_2lin_random, and the output should go inside the folder LEA, with the name population_2lin_random.geno.
+
 LEA::vcf2geno("populations_2lin_random/populations.snps.vcf",
               output.file = "LEA/population_2lin_random.geno")
               
@@ -335,8 +348,7 @@ On your desktop, create three new folders named ```populations_2lin_random```, `
 ```
 ### load adegenet package
 library(adegenet)
-### set working directory
-setwd("~/Desktop")
+
 ### load dataset and convert it from structure to genind format
 twolin<-import2genind("populations_2lin_random/populations.str") # 80 ind and 8530 SNPs in my case, check your populations.log file to get the right number of SNPs
 ### This command will prompt questions about the structure of the file
