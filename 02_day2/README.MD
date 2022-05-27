@@ -333,7 +333,7 @@ The next step is to display a barplot for the Ancestry matrix (also called the Q
 ### Step 4: Plot ancestry proportions across samples
 ```
 barchart(obj, K=2,run=best,border=NA,space=0,
-         col=my.col,
+         col=c("red","yellow"),
          xlab = "Individuals", ylab = "Ancestry proportions (K=2)", main = "Capelin lineages")
 ```
 ![LEA_2lin_barchart](04-correction_figures_PCA_practical/results_LEA_2lin.png)
