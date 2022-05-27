@@ -2,7 +2,9 @@
 ## 1: Calculating F-statistics
 First we will copy the folder of day2 and work within it. 
 
-We have put inside that folder the similar files that you produced yesterday with Stacks, except that they are compressed to fit on github. So if you have not managed to finish the tutorial, if you forgot where the files were generated yesterday (and even if you doon't have access to the server and work on your own computer), don't worry they are here.
+We have put inside that folder the similar files that you produced yesterday with Stacks, except that they are compressed to fit on github. 
+
+So if you have not managed to finish the tutorial, if you forgot where the files were generated yesterday (and even if you don't have access to the server and work on your own computer), don't worry they are here.
 
 ```
 cd #make sure you are at the root of the directory 
