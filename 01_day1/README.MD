@@ -126,7 +126,7 @@ Please copy the scripts inside your folder and make executable the one we are in
 cd # come back to your home
 cd scripts #get inside your scripts
 #now copy files inside your 01_scripts folder. (replace the one you may have copy earlier as I edited them)
-cp ~/Share/physalia_adaptation_course/01_day1/01_scripts/* .
+cp ~/Share/physalia_adaptation_course/01_day1/01_scripts/* 01_scripts/
 #make the file executable
 chmod +x ~/scripts/01_scripts/stacks_gstacks.sh ### notice that the script name has turned green?
 #open the file
