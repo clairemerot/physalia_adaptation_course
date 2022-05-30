@@ -130,13 +130,13 @@ cd
 mkdir -p stacks
 cd stacks
 mkdir -p gstacks
-gstacks -I ~/bamfiles -M ~/scripts/popmap_all.txt -O ~/stacks/gstacks -t 3
+gstacks -I ~/bamfiles -M ~/scripts/00_documents/popmap_all.txt -O ~/stacks/gstacks -t 3
 ```
 This is simple and self explanatory: we tell the server that we are writing in bash, create a couple of folders (but only if they are not already present with the ```-p``` flag) and run ```gstacks```.
 
 To run this job, we can either use the command ```bash``` before the script or make it executable before running it:
 ```
-nohup bash ~/scripts/stacks_gstacks.sh >& gstacks.log &
+nohup bash ~/scripts/01_scripts/stacks_gstacks.sh >& gstacks.log &
 ```
 or
 ```
@@ -160,13 +160,13 @@ G3: Genes|Genomes|Genetics, 7(5), 1393–1404.
 ```
 To expedite things (and while the first gstacks script runs), we can focus on a smaller dataset. This includes only 80 individuals, 40 from two populations in Canada and 40 from 2 populations in Greenland. Run
 ```
-nohup bash ~/scripts/stacks_gstacks_2lin.sh >& gstacks_2lin.log &
+nohup bash ~/scripts/01_scripts/stacks_gstacks_2lin.sh >& gstacks_2lin.log &
 ```
 Once we have our catalog of variants in the ```gstacks_2lin``` folder we can run ```populations``` to apply filters and print variant files in different formats. As ```populations``` is very fast for this small dataset, we can run it from the terminal. But first you make the folder where you want your results to be saved.
 ```
 cd ~/stacks
 mkdir populations_2lin_random
-populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
+populations -P ~/stacks/01_scripts/gstacks_2lin/ -M ~/scripts/00_documents/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
 ```
 Let's break the scripts down to understand what ```populations``` is doing here.
 
@@ -206,7 +206,7 @@ Now, run ```populations``` on the new catalog twice, once for all individuals, a
 ```
 cd ~/stacks
 mkdir populations_2lin_random
-populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
+populations -P ~/stacks/01_scripts/gstacks_2lin/ -M ~/scripts/00_documents/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
 ```
  
 Make sure you print these outputs in each of these two folders ```populations_all_random``` and ```populations_canada_random```.
