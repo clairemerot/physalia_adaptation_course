@@ -78,3 +78,6 @@ This tutorial show how to filter RAD loci to exclude duplicated ones (keep a rel
 5-3: Gene ontology enrichment
 
 5-4: (Optional) Intersection between CNVs and repeats/TE
+
+## cheatsheet for terminal command lines
+![cheatsheet](./images_tutorial/bash_cheatsheet.png)
