@@ -178,7 +178,7 @@ Once we have our catalog of variants in the ```gstacks_2lin``` folder we can run
 ```
 cd ~/stacks
 mkdir populations_2lin_random
-populations -P ~/stacks/01_scripts/gstacks_2lin/ -M ~/scripts/00_documents/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
+populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/00_documents/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
 ```
 Let's break the scripts down to understand what ```populations``` is doing here.
 
@@ -218,7 +218,7 @@ Now, run ```populations``` on the new catalog twice, once for all individuals, a
 ```
 cd ~/stacks
 mkdir populations_2lin_random
-populations -P ~/stacks/01_scripts/gstacks_2lin/ -M ~/scripts/00_documents/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
+populations -P ~/stacks/gstacks_2lin/ -M ~/scripts/00_documents/popmap_2lin.txt -O populations_2lin_random -t 4 -p 2 -r 0.8 --fstats --vcf --genepop --structure --write-random-snp
 ```
  
 Make sure you print these outputs in each of these two folders ```populations_all_random``` and ```populations_canada_random```.
