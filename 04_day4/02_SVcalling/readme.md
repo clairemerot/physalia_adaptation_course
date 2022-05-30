@@ -54,5 +54,44 @@ As we have highlighted several times, a VCF is a VCF, whether the variants are c
 
 ## Structural variation
 Calling structural variants (i.e. inversions, deletions, insertions, duplications, translocations) requires analyzing different types of information from the sequence data, such as overlap, orientation and read splitting. Therefore, we need software specifically designed to extract this kind of information. One commonly used of these programs is Delly2, which takes into account all of these 3 types of information. 
+This below is teh general approach to call SVs from Delly:
+```
+###Germline SV calling
+#SV calling is done by sample for high-coverage genomes or in small batches for low-coverage genomes
+delly call -g hg19.fa -o s1.bcf -x hg19.excl sample1.bam
+
+#Merge SV sites into a unified site list
+delly merge -o sites.bcf s1.bcf s2.bcf ... sN.bcf
+
+#Genotype this merged SV site list across all samples. This can be run in parallel for each sample.
+delly call -g hg19.fa -v sites.bcf -o s1.geno.bcf -x hg19.excl s1.bam
+
+delly call -g hg19.fa -v sites.bcf -o sN.geno.bcf -x hg19.excl sN.bam
+
+#Merge all genotyped samples to get a single VCF/BCF using bcftools merge
+bcftools merge -m id -O b -o merged.bcf s1.geno.bcf s2.geno.bcf ... sN.geno.bcf
+
+#Apply the germline SV filter which requires at least 20 unrelated samples
+delly filter -f germline -o germline.bcf merged.bcf
+
+```
+However, in our case, we have low-coverage whole genome resequencing data from only 12 individuals, so we can call SVs directly from all the samples combine and forego the filtering step. Keep in mind that this is just a toy dataset, and the quality of these SV calls may not be very high.
+```
+cd
+mkdir delly
+cd delly
+mkdir bams
+ln -s /home/ubuntu/Share/WGS_bam/* .
+
+### Run delly to call SVs on all samples combined
+delly call -g ~/Share/resources/genome_mallotus_dummy.fasta -o capelin_sv.bcf BELB9_1.trimmed.sorted.bam BELD3_1.trimmed.sorted.bam BLA13_1.trimmed.sorted.bam BLA15_1.trimmed.sorted.bam BLA16_1.trimmed.sorted.bam BLA17_1.trimmed.sorted.bam BLA22_1.trimmed.sorted.bam BLA24_1.trimmed.sorted.bam BSO17_1.trimmed.sorted.bam BSO23_1.trimmed.sorted.bam BSO28_1.trimmed.sorted.bam POR19_1.trimmed.sorted.bam 
+
+###Convert file from .bcf to .vcf
+bcftools convert -O v -o capelin_sv.vcf capelin_sv.bcf
+```
+You can run this code, but it will take ~45 minutes. Because we don't have that time, you can copy the VCF file containing all the SVs
+
+
+
 
 
