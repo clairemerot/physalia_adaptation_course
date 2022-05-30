@@ -425,10 +425,10 @@ You will find it in the files ending with `betai_reg.out` in the column BF.dB.
 "the Bayes Factor (column BF(dB)) in dB units (i.e., 10 × log10(BF)) measuring the support of the association of each SNP with each population covariable and the corresponding regression coefficients βi (column Beta_is)"
 BF can be informative in itself, good candidate are usually above 20. 
 Following the rule of Jeffrey, we can consider BF as meaning
-* < 3 nothing
-* 3 to 10 weak support
-* 10 to 20 interesting
-* > 20 strong support
+* < 3 --> nothing
+* 3 to 10 --> weak support
+* 10 to 20 --> interesting
+* more than 20 --> strong support
 
 See Jeffreys, H. (1961). Theory of probability (3rd ed.). Oxford: Oxford University Press, Clarendon Press. https://global.oup.com/academic/product/theory-of-probability-9780198503682?cc=ca&lang=en&
  and Robert E. Kass & Adrian E. Raftery (1995): Bayes Factors, Journal of the American Statistical Association, 90:430, 773-795 http://dx.doi.org/10.1080/01621459.1995.10476572
@@ -446,7 +446,7 @@ Controlled model
 
 ![bf_controlled](07_img_readme/bf_controlled.png)
 
-In the datset we analized today we find very few putative outlier SNPs associated with temperature. It may be that 1) we don't have the power to detect significant associations, 2) we have only 12 populations and 3) a reduced representation of the genome, and 4) given the presence of high gene flow among populations, very few regions of the genome are under selection that is strong enough to result in detectable differences in allelic frequencies among populations exposed to different temperatures.
+In the dataset we analized today we find very few putative outlier SNPs associated with temperature. It may be that 1) we don't have the power to detect significant associations, 2) we have only 12 populations and 3) a reduced representation of the genome, and 4) given the presence of high gene flow among populations, very few regions of the genome are under selection that is strong enough to result in detectable differences in allelic frequencies among populations exposed to different temperatures.
 
 We can export the list of outlier SNPs for subsequent analysis on day 5. Here is the code for the controlled models.
 ```
@@ -466,21 +466,32 @@ write.table(outliers, "05_baypass/outlier_temp_bp.txt", row.names=F, quote=F, se
 ```
 
 ### 3.2 With redundancy analysis (multi-loci)
-Until now we have look at signatrue of adaptation locus by locus. This is a design that is more likely to point strong selective sweep, large-effect locus and large islands of divergence. Yet, most adaptation is expected to be polygenic and genome-scan are possibly not the best option to tackle this problem... Yet, doing RDa analysis which consider the whole genetic variance together with the geographic variation or ecological variation may be one of the first step in that direction.
+Until now we have looked for signatures of selection one locus at a time. This is a design that is more likely to point to strong selective sweeps, large-effect loci, and/or large islands of divergence. Yet, most adaptation is expected to be polygenic and genome-scans may not be the best option to tackle this problem. However, RDA considers the whole genetic variance, the geographic variation in the environment and/or phenotypic variation all at once, and for this reason, it represents a better tool than what we've seen so far in the course. 
 
 Again, we can also used the RDA to identify putative candidate.
-Today we will follow a tutorial inspired by this paper https://onlinelibrary.wiley.com/doi/abs/10.1111/mec.14584 
+Today we will follow a tutorial accompanying this paper https://onlinelibrary.wiley.com/doi/abs/10.1111/mec.14584 
+```
 Forester, BR, Lasky, JR, Wagner, HH, Urban, DL. Comparing methods for detecting multilocus adaptation with multivariate genotype–environment associations. Mol Ecol. 2018; 27: 2215– 2233. https://doi.org/10.1111/mec.14584
+```
 
-Which has a super nice vignette that you can check here https://popgen.nescent.org/2018-03-27_RDA_GEA.html I encourage you to read it and follow it in details as it is good and more detailled than what we will do today. We will largely follow her tutorial today, and just add a few more analysis controlling for geographical structure.
+Which has a super nice vignette that you can check here https://popgen.nescent.org/2018-03-27_RDA_GEA.html 
+Our tutorial will be pretty simple compared to this one because we're going test for associations with only one environmental variable, that is temperature. I encourage you to explore the Forester's tutorial in detail as it provides more details. Also, I would recommend two more papers on RDA and their application in real studies. The first is a follow-up from Forester's et al. (2018), which is also accompanied by a tutorial (for more advanced users I would say)
+```
+Capblancq, T. and Forester, B.R., 2021. Redundancy analysis: A Swiss Army Knife for landscape genomics. Methods in Ecology and Evolution, 12(12), pp.2298-2309.
+```
+With tutorial stored here https://github.com/Capblancq/RDA-landscape-genomics
 
-We will do most of the computational aspect of the RDA on the server (in R) but you could probably also run it locally, it is usually quite fast.
+Finally, this is a great example of a landscape genomics study from one of those authors, showing the application of the method, how to report the results, and, most important, how to estimates 'genomic offsets' and the adaptive potential of populations based on climate change scenarios.
+```
+Capblancq, T., Morin, X., Gueguen, M., Renaud, J., Lobreaux, S. and Bazin, E., 2020. Climate‐associated genetic variation in Fagus sylvatica and potential responses to climate change in the French Alps. Journal of Evolutionary Biology, 33(6), pp.783-796.
+```
+
+Today, we will do most of the computational work of the RDA on the server (in R) but you could probably also run it locally, it is usually quite fast.
 
 #### Prepare data 
-RDA takes a matrix of genotypes (0,1,2) with as many rows as samples and as many columns as loci. No missing data.We’ll use a simple approach to imputing missing values: we will impute using the most common genotype at each SNP across all individuals 
+RDA takes a matrix of genotypes (0,1,2) with as many rows as samples and as many columns as loci. As RDA doesn't allow any missing data, we’ll use a simple approach fill in the blanks: we will substitute missing genotypes with the most common genotype at each SNP across all individuals. As we've already started to discuss on Monday, the more missing data, the more you will introduce 'fake' data, which, if too many, can bias your results and create spurious associations. 
 
-We can obtain following the same method as we did for the PCA yesterday. 
-We can also use the geno matrix that we exported earlier from vcfR, and the associated SNP_pos file
+The imputation will follow the same approach that we used yesterday for the PCA. We can also use the genotype matrix that we exported earlier from vcfR, and the associated SNP_pos file.
 
 Let's open R in our terminal
 
@@ -529,8 +540,8 @@ and then to its significance using permutation tests.
 temp.signif.full <- anova.cca(temp.rda, parallel=getOption("mc.cores")) # default is permutation=999
 temp.signif.full
 ```
-so you see that temperature does not explain a large fraction of total variance (0.1%!!) but the model appear significant. It likely means that very few loci covary with temperature but this parameter does not explain a large fraction of genetic variation as a whole. This is expected as most SNPs will likely be neutral.
-Yet, formal test allows rejecting the null hypothesis that no linear relationship exists between the SNP data and the environmental predictor.
+As you can see, temperature does not explain a large fraction of total variance (0.1%!!) but the model appears significant nonetheless. It likely means that very few loci covary with temperature and that this factor does not explain a large fraction of genetic variation as a whole. This is expected as most SNPs will likely be neutral or controlling a miryad of other traits.
+Yet, this formal test allows us to reject the null hypothesis that no linear relationship exists between the SNP data and the environmental factor.
 
 
 ####  Analyse RDA output
