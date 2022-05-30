@@ -136,8 +136,8 @@ nohup bash ~/scripts/stacks_gstacks.sh >& gstacks.log &
 ```
 or
 ```
-chmod +x ~/scripts/stacks_gstacks.sh ### notice that the script name has turned green?
-nohup ~/scripts/stacks_gstacks.sh >& gstacks.log &
+chmod +x ~/scripts/01_scripts/stacks_gstacks.sh ### notice that the script name has turned green?
+nohup ~/scripts/01_scripts/stacks_gstacks.sh >& gstacks.log &
 ```
 
 Note that we use ```nohup``` to send the job to the background, so that we have the terminal free for us to do other things and can save the stdout to a file of our choice.
