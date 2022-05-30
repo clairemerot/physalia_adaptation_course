@@ -121,7 +121,19 @@ Methods in Ecology and Evolution, 8(10), 1360-1373.
 
 Although the modules ```gstacks``` and ```populations``` can be run in one go with the ```ref_map.pl``` pipeline, we generally call variants in ```gstacks``` once, and then run ```populations``` several times to tune variant filtering, to print variants for different subsets of samples and to generate F-statistics for each of these subsets.
 
-You should already have all the scripts in your ```~/scripts``` folder.
+Please copy the scripts inside your folder and make executable the one we are interested in 
+```
+cd # come back to your home
+cd scripts #get inside your scripts
+#now copy files inside your 01_scripts folder. (replace the one you may have copy earlier as I edited them)
+cp ~/Share/physalia_adaptation_course/01_day1/01_scripts/* .
+#make the file executable
+chmod +x ~/scripts/01_scripts/stacks_gstacks.sh ### notice that the script name has turned green?
+#open the file
+less ~/scripts/01_scripts/stacks_gstacks.sh
+#to exit, press 'q'
+```
+
 Let's have a look at the ```stacks_gstacks.sh``` script.
 ```
 #!/bin/bash
@@ -140,7 +152,7 @@ nohup bash ~/scripts/01_scripts/stacks_gstacks.sh >& gstacks.log &
 ```
 or
 ```
-chmod +x ~/scripts/01_scripts/stacks_gstacks.sh ### notice that the script name has turned green?
+
 nohup ~/scripts/01_scripts/stacks_gstacks.sh >& gstacks.log &
 ```
 
