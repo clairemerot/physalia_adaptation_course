@@ -10,15 +10,19 @@ cd scripts
 cp -r ~/Share/physalia_adaptation_course/00_documents . ###this command copies a folder (note the -r juste after the command "cp" in the folder 00_documents into the folder you're currently in
 cp -r ~/Share/physalia_adaptation_course/01_day1/01_scripts .
 ```
-Use ```ls``` to get a list of the files we have copied over, and look at the content of one of those files with
+Use ```ls``` to get a list of the files we have copied over, and look at the content of one of those files with the ```less``` command.
 ```
-less popmap_2lin.txt 
+less 00_documents/popmap_2lin.txt 
 ```
-You can stroll down by pressing the bar on your keyboard and exit from the screen with ```q```.
+Or another possibility is to navigate inside the folders with ```cd WantedFolder``` command and then use ```less WantedFile``` to display the file content.
+
+Example for the population map : ```cd 00_documents/popmap_2lin.txt```
+
+Then, you can stroll down by pressing the bar on your keyboard and exit from the screen with ```q```.
 
 If you want to print a few lines to the screen (which won't disapper) type
 ```
-head popmap_2lin.txt
+head 00_documents/popmap_2lin.txt
 ```
 which will print the first 10 lines by default. You can specify the number of lines with ```-n 25```. Same for ```tail```, which shows the end of the file.
 
