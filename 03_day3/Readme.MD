@@ -520,8 +520,8 @@ head(info)
 ```
 
 
-#### Run rda on environmental variable and test it 
-The command lines to run a rda are quite simple:
+#### Run RDA on environmental variable and test it 
+The code to run a RDA is quite simple:
 
 #run rda
 ```
@@ -529,13 +529,13 @@ library(vegan)
 temp.rda <- rda(gen.imp ~ info$temperature, scale=T)
 temp.rda
 ```
-Since we have only one variable, only RDA1 (the 1st axis is meaningful)
-We can look at the fraction of variance explained by this RDA 
+Since we have only one variable, only RDA1 (the 1st axis) is meaningful.
+We can look at the fraction of variance explained by this RDA with 
 
 ```
 RsquareAdj(temp.rda)
 ```
-and then to its significance using permutation tests. 
+and then test the significance of the model using permutation tests. 
 ```
 temp.signif.full <- anova.cca(temp.rda, parallel=getOption("mc.cores")) # default is permutation=999
 temp.signif.full
@@ -546,8 +546,8 @@ Yet, this formal test allows us to reject the null hypothesis that no linear rel
 
 ####  Analyse RDA output
 We can plot the RDA. As we have only one informative RDA1, this will not be super informative.
-We’ll start with simple triplots from vegan. Here we’ll use scaling=3 (also known as “symmetrical scaling”) for the ordination plots. This scales the SNP and individual scores by the square root of the eigenvalues.
-Here, the SNPs are in red (in the center of each plot), and the individuals are coloured by their population. The blue vectors are the environmental predictors. The relative arrangement of these items in the ordination space reflects their relationship with the ordination axes, which are linear combinations of the predictor variables.
+We’ll start with simple triplots from vegan. Here we’ll use scaling=3 (also known as “symmetrical scaling”) for the ordination plots. This scales the SNP and individual scores by the square root of the eigenvalues so that we can easily visualize them in the sample plot.
+Here, the SNPs are in red (in the center of each plot), and the individuals are colour-coded by population. The blue vectors are the environmental predictors. The relative arrangement of these items in the ordination space reflects their relationship with the ordination axes, which are linear combinations of the predictor variables.
 
 ```
 jpeg("06_rda/rda1_triplot.jpeg")
@@ -560,8 +560,8 @@ dev.off()
 
 RDA2 is meaningless and samples are dispersed along RDA1 which represent temperature.
 
-We can now use the loadings of the SNPs in  the ordination space to determine which SNPs are candidates for local adaptation. The SNP loadings are stored as species in the RDA object. We’ll extract the SNP loadings from rda1 (choices is for which RDA axis we want) and extract the ones that are in the tail of this distribution. The most frequently used cut-off is 3 * sd (standard deviation) but you can choose to be more stringent or more inclusive depending on your objectives. 
-Here we chose a very low cut-off of 2, which will likely include false-positive but we want to have enough outliers to be able to perform gene ontology enrichment tomorrow and to look at the overlap with baypass
+We can now use the loadings of the SNPs in  the ordination space to determine which SNPs are candidates for local adaptation. The SNP loadings are stored as "species" in the RDA object. We’ll extract the SNP loadings from RDA1 (choices is for which RDA axis we want) and extract the ones that are in the tail of this distribution. The most frequently used cut-off is 3SD (standard deviation) but you can choose to be more stringent or more inclusive depending on your objectives. 
+Here we chose a very low cut-off of 2, which will likely include false positives but we want to have enough outliers to be able to perform gene ontology enrichment analyses tomorrow and to look at the overlap with baypass
 - 2 (p=0.05)
 - 2.25 (p=0.025)
 - 2.5 (p=0.01)
@@ -616,14 +616,14 @@ ggplot(load.temp.rda.pos, aes(x=position, y=RDA1, colour=chromosome))+
 
 ![loading_temp_manhattanplot](07_img_readme/loading_temp_manhattanplot.jpeg)
 
-As with baypass, we have very few outliers associated with temperature. Yet, their signal is quite strong so they are likley worth exploring a little more.
+As with baypass, we have very few outliers associated with temperature. Yet, their signal is quite strong so they are likely worth exploring a little more.
 
-In our system in which gene flow is super high and geographic structure very low, it is not recommended to control the rda by geography or neutral structure. Yet, as a proff of principle, you can explore how to do it.
+In our system in which gene flow is super high and geographic structure very low, it is not recommended to control the RDA by geography or population structure. Yet, as a proof of principle, you can explore how to do it in this complementary tutorial.
 
 [Complementary RDA tutorial](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/00_documents/RDA.md)
 
-### 3.3 Take outliers detected by two different methods
-It is often recommended to keep only outliers (or SNPs with strong GEA) detected by more than one method to avoid false positive. This will nevertheless also reduce the power of the analysis... a matter of choice? Here we will run a few R command to keep the intersection of our baypass and rda outliers. It is worth noting that since RDA and baypass works differently, it may not be surprising to have a limited overlap.
+### 3.3 Identify outliers detected by two different methods
+It is often recommended to keep only outliers (or SNPs with strong GEA) detected by more than one method to avoid false positive. This will nevertheless also reduce the power of the analysis... a matter of choice? Here we will run a few R command to keep the intersection of our baypass and RDA outliers. It is worth noting that since RDA and baypass works differently, it may not be surprising to have a limited overlap.
 
 You can run that in Rstudio on your computer if you copy the outliers files into their respective folders. 
 We will also make a Venn-diagram
