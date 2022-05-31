@@ -1,3 +1,5 @@
+## BECAREFUL THERE IS AN ERROR FOR THE NEXT STEP OF THIS TUTO (BAD MIGRATION OF THIS PRACTICE FROM DAY_03 TO DAY_02); WE ARE TRYING TO FIX IT... Sorry for that.
+
 ### 1.1 Pairwise differentiation between populations
 
 **[On the Amazon server]**
@@ -75,7 +77,6 @@ Inside you will have the pairwise FST matrix (file suffix ``_fst_matrix.txt``) i
 * documents/info_samples.csv
 * documents/popmap_canada.txt
 
-## BECAREFUL THERE IS AN ERROR FOR THE NEXT STEP OF THIS TUTO (BAD MIGRATION OF THIS PRACTICE FROM DAY_03 TO DAY_02); WE ARE TRYING TO FIX IT... Sorry for that.
 
 **[On your local computer]**
 We are now in Rstudio on your computer. Please set you working directory as "03_day3"
