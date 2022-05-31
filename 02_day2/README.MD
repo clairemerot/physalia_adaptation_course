@@ -90,6 +90,9 @@ However, these single-site estimates of π are not very meaningful. π is define
 For example, STACKS adopts an AMOVA F<sub>ST</sub> by Weir (from Genetic Data Analysis II, chapter 5, "F Statistics," pp166-167) and VCFtools uses the F<sub>ST</sub> estimate by Weir and Cocherham (1984). These two will give you slightly different estimates. Furthermore, VCFtools provided a weighted estimate of F<sub>ST</sub> that may be better suited to capture genome-wide population differentiatiation.
 
 ####  optional: Investigate structure in relation to geography
+
+**! Optional practice discarded for now as we found mistakes due to tutorial migration from day_3 to day_02. Sorry about that... continue to PCA analysis below please.**
+
 To assess genetic structure in relation to geography and pre-existing partitions (e.g. sampling locations), we can also look into population pairwise F<sub>ST</sub>. Here is an extra tutorial to get a matrix of population pairwise F<sub>ST</sub> (for the 12 Canadian populations) and assess whether genetic differentiation iscorrelated with geographic distance (e.g., isolation-by-distance). If you have extra time, or need it in the future, you can find the tutorial at this link below
 
 [Population pairwise F<sub>ST</sub> and IBD tutorial - extra](https://github.com/clairemerot/physalia_adaptation_course/blob/2022/03_day3/00_documents/IBD.md)
