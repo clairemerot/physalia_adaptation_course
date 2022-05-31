@@ -1,5 +1,3 @@
-## BECAREFUL THERE IS AN ERROR FOR THE NEXT STEP OF THIS TUTO (BAD MIGRATION OF THIS PRACTICE FROM DAY_03 TO DAY_02); WE ARE TRYING TO FIX IT... Sorry for that.
-
 ### 1.1 Pairwise differentiation between populations
 
 **[On the Amazon server]**
