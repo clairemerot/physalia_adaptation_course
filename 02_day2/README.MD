@@ -53,7 +53,7 @@ vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop docum
 In fact, window estimates are a practical way to summarize data and to reduce the number of datapoints to handle, which can be problematic for visualization.
 
 
-Now, to visualise it, we recommend that you can download the file to your own computer and use R. The best is to download the whole folder 02-day2, so that you will always work with the same folder/file names and hierarchy as the rest of the group.
+Now, to visualise it, we recommend that you can download the file from the server to your own computer with Filezilla. The best is to download the whole folder 02-day2, so that you will always work with the same folder/file names and hierarchy as the rest of the group.
 
 On your local computer, in R studio, simply set your working directory to 02-day2
 
