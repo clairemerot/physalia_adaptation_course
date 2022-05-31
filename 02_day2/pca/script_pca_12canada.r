@@ -8,10 +8,10 @@ library(reshape2)
 popmap <- read.table("info_samples.csv", h=T,sep=';')
 
 #2. load geno data for the 12 canadian pop
-geno.012_can <- read.table("populations_can_random.012")[,-1] #load genotype matrix
-geno.012_can.pos <- read.table("populations_can_random.012.pos") %>% #load SNPs info
+geno.012_can <- read.table("pca/populations_can_random.012")[,-1] #load genotype matrix
+geno.012_can.pos <- read.table("pca/populations_can_random.012.pos") %>% #load SNPs info
   mutate(., locus=paste(V1,V2,sep='_')) #create a new column for SNP info name (CHR + position)
-geno.012_can.indv <- read.table("populations_can_random.012.indv") #load individuals info
+geno.012_can.indv <- read.table("pca/populations_can_random.012.indv") #load individuals info
 
 Set rownames and colnames to the geno matrix
 dimnames(geno.012_can) <- list(geno.012_can.indv$V1, geno.012_can.pos$locus)
