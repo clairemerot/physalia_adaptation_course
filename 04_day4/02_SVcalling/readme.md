@@ -53,8 +53,9 @@ What is the proportion of SNPs surviving filters? How many are left? According t
 As we have highlighted several times, a VCF is a VCF, whether the variants are called from RADseq or WGR data, whether you call hundreds or millions of variants, so you can repeat all the analyses we presented to you during the course using this new WGR dataset. For this tutorial we will focus on the visualization of genomic variation with PCA (see below).
 
 ## Structural variation
-Calling structural variants (i.e. inversions, deletions, insertions, duplications, translocations) requires analyzing different types of information from the sequence data, such as overlap, orientation and read splitting. Therefore, we need software specifically designed to extract this kind of information. One commonly used of these programs is Delly2, which takes into account all of these 3 types of information. 
-This below is teh general approach to call SVs from Delly:
+1. SVs calling
+Calling structural variants (i.e. inversions, deletions, insertions, duplications, translocations) requires analyzing different types of information from the sequence data, such as read overlap, orientation and splitting. Therefore, we need software specifically designed to extract this kind of information. One commonly used of these programs is Delly2, which takes into account all of these 3 types of information. 
+This below is the general approach to call SVs from Delly:
 ```
 ###Germline SV calling
 #SV calling is done by sample for high-coverage genomes or in small batches for low-coverage genomes
@@ -89,7 +90,35 @@ delly call -g ~/Share/resources/genome_mallotus_dummy.fasta -o capelin_sv.bcf BE
 ###Convert file from .bcf to .vcf
 bcftools convert -O v -o capelin_sv.vcf capelin_sv.bcf
 ```
-You can run this code, but it will take ~45 minutes. Because we don't have that time, you can copy the VCF file containing all the SVs
+You can run this code, but it will take ~45 minutes. Because we don't have that time, you can copy the VCF file containing all the SVs into ~/wgr/svs_delly
+```
+cp PATH/capelin_sv.vcf
+```
+2. VCF filtering and splitting
+Though we don't have enough samples to run `delly filter` properly, we can do some filtering using the same approach we use for SNP filtering but in this case we'll filter just by missing data
+```
+vcftools --vcf capelin_sv.vcf \
+    --max-missing 0.7 \
+    --recode \
+    --stdout > capelin_sv_filtered.vcf
+```
+Then, we can split the vcf file by SV type (or extract one particular SV type of interest with this script
+```
+grep "#" capelin_sv_filtered.vcf > capelin_sv_ins.vcf && grep "SVTYPE=INS" capelin_sv.vcf >> capelin_sv_ins.vcf ###insertions
+grep "#" capelin_sv_filtered.vcf > capelin_sv_del.vcf && grep "SVTYPE=DEL" capelin_sv.vcf >> capelin_sv_del.vcf ###deletions
+grep "#" capelin_sv_filtered.vcf > capelin_sv_inv.vcf && grep "SVTYPE=INV" capelin_sv.vcf >> capelin_sv_inv.vcf ###inversions
+grep "#" capelin_sv_filtered.vcf > capelin_sv_dup.vcf && grep "SVTYPE=DUP" capelin_sv.vcf >> capelin_sv_dup.vcf ###duplications
+grep "#" capelin_sv_filtered.vcf > capelin_sv_bnd.vcf && grep "SVTYPE=BND" capelin_sv.vcf >> capelin_sv_bnd.vcf ###break points
+```
+and count the number of SV identified, overall or for each type with
+```
+grep -v "#" capelin_sv_ins.vcf | wc -l
+```
+What is the most abundant SV type?
+
+Next, we'll convert the genotypes in 012 format for PCA of the whole dataset and each specific 
+
+
 
 
 
