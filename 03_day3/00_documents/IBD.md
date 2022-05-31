@@ -12,6 +12,13 @@ To download the toolbox in your current working folder on the server (03_day3), 
 git clone https://gitlab.com/YDorant/Toolbox
 ```
 
+To run, the Toolbox needs an unzipped vcf file (I'have to add the gzip option in the Toolbox for the next update !).
+
+So, unzip the vcf with the following command :
+```gunzip 02-data/populations.snps.vcf.gz```
+
+Then move to the Toolbox directory with ``cd Toolbox/``
+
 Ok, now we are ready to convert our VCF files to the StAMPP file format. The toolbox have an easy way to do that with a bash script. This bash script require four args:
 * -v VCF file
 * -p population map
@@ -19,10 +26,11 @@ Ok, now we are ready to convert our VCF files to the StAMPP file format. The too
 * -o output prefix name
 
 ```
-bash Toolbox/00-VCF_Reshaper.sh -v 02_data/canada.vcf -p 02_data/popmap_canada.txt -f StAMPP -o 03_fst/canada
+bash Toolbox/00-VCF_Reshaper.sh -v ../02_data/populations.snps.vcf -p ../02_data/popmap_canada.txt -f StAMPP -o canada
 ```
-Then check output folder ``ls 03_fst/``
-Once is done, you will see that a ``.StAMPP`` file in the 03_fst folder.
+
+Then check your current folder ``ls``, you should be able to see your ``.StAMPP`` input file (*quick overview of the file with less -S command).
+
 Then, we can run the Rscript `StAMPP-fst.R` to perform pairwise FST for each dataset. This script require three args.
 * Input StAMPP file
 * Output prefix
@@ -48,7 +56,7 @@ q()
 
 Here we are ready to run the StAMPP and perform FST calculations.
 ```
-Rscript Toolbox/StAMPP-fst.R 03_fst/canada.StAMPP 03_fst/canada 1
+Rscript StAMPP-fst.R canada.StAMPP canada 1
 ```
 Allowing 1 CPU, each FST calculation should take around 5-6 minutes
 
@@ -58,12 +66,16 @@ Once FST calculations are done, you will see that four FST output files have bee
 * prefix_fst_pvalue.txt
 * prefix_fst_reshape.txt
 
+Here, move this files to the FST folder with ```mv canada_fst*.txt ../FST```, then move in this folder with ```cd ../FST``
+
 You can explore each of one with the cmd line ``less -S file.txt``. However, today, we only use the FST matrix.
 
-So, now you can export the wole 03_day3 folder to your local computer. 
-Inside you will have the pairwise FST matrix (file suffix ``_fst_matrix.txt``) in the subfolder 03_fst and the info files about populations in the subfodler 02_data
-* 02_data/info_pop_geo_eco.txt
-* 02_data/info_samples_canada.txt
+So, now you can export the whole 02_day2 folder to your local computer. 
+Inside you will have the pairwise FST matrix (file suffix ``_fst_matrix.txt``) in the subfolder FST and the info files about populations in the subfodler ``documents/``
+* documents/info_samples.csv
+* documents/popmap_canada.txt
+
+## BECAREFUL THERE IS AN ERROR FOR THE NEXT STEP OF THIS TUTO (BAD MIGRATION OF THIS PRACTICE FROM DAY_03 TO DAY_02); WE ARE TRYING TO FIX IT... Sorry for that.
 
 **[On your local computer]**
 We are now in Rstudio on your computer. Please set you working directory as "03_day3"
