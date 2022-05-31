@@ -347,7 +347,10 @@ Next step, practice with the second dataset. What's your feeling about results ?
 ## 4. Structure with DAPC (Adegenet)
 A Discriminant Analysis of Principal Components is a multivariate approach that merges a Principal Component Analysis (PCA) and a Discriminant Analysis (DA). A PCA aims to summarize the variation among individuals and it runs very fast, also on large datasets. However, it is not powerful at discriminating groups because it doesn't use any a priori information on grouping, and intra-group variation can overwhelm inter-group variation. A DA, on the other hand, tries to summarize the variation among groups, while minimizing the variatoin within groups. Thus, a DAPC takes the best of the two analyses to describe population structure. Also, compared to structure-like analysis it is not based on strict model assumptions and is more powerful at describing isolation-by-distance and hierarchical structure that the Bayesian approaches implemented in STRUCTRURE, fastSTRUCTURE, or ADMIXTURE.
 
-On your desktop, create three new folders named ```populations_2lin_random```, ```populations_all_random``` and  ```populations_canada_random``` and download the file ```populations.structure``` from each of three corresponding ```populations``` folders on the server. Change extension ```.structure```to ```.str``` of each of three files and open R Studio. Let's start analyzing the reduced dataset including 80 individuals from Canada and Greenland.
+On R studio, still with 02-day2 as working directory, we will use adegenet to do a DAPC.
+Adegenet uses a file produced by stacks. To take your file, you usually need to change extension ```.structure```to ```.str``` but here we already did that for you.
+
+Let's start analyzing the reduced dataset including 80 individuals from Canada and Greenland.
 
 please be careful to copy the command line by line, as it will prompt questions.
 
