@@ -108,7 +108,7 @@ bcftools convert -O v -o capelin_sv.vcf capelin_sv.bcf
 ```
 You can run this code, but it will take ~45 minutes. Because we don't have that time, you can copy the VCF file containing all the SVs into ~/wgr/svs_delly
 ```
-cp PATH/capelin_sv.vcf
+cp ~/Share/WGS_bam/svs_delly/capelin_sv.vcf ~/wgr/svs_delly/.
 ```
 2. VCF filtering and splitting
 Though we don't have enough samples to run `delly filter` properly, we can do some filtering using the same approach we use for SNP filtering but in this case we'll filter just by missing data
