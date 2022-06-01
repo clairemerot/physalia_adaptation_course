@@ -21,9 +21,10 @@ cp /home/ubuntu/Share/WGS_bam/bams_list.txt .
 Call variants using bcftools
 ```
 cd snps
-bcftools mpileup -Ou -f ~/Share/resources/genome_mallotus_dummy.fasta -b bams_list.txt -q 5 -I -a AD,DP,SP,ADF,ADR -d 200 | bcftools call - -mv -Ov > snps_bcftools/capelin_wgs_unfiltered.vcf
+bcftools mpileup -Ou -f ~/Share/ressources/genome_mallotus_dummy.fasta -b bams_list_rg.txt -r Chr1 -q 5 -I -a AD,DP,SP,ADF,ADR -d 200 | bcftools call - -mv -Ov > snps_bcftools/capelin_wgs_unfiltered.vcf
+
 ```
-Variant filtering is done in two steps. First we use 'bcftools filter' to filter SNPs based on mapping quality. Then, we apply a series of filters using VCFtools 
+Variant filtering is done in two steps. First we use 'bcftools filter' to filter SNPs based on mapping quality. Then, we apply a series of filters using VCFtools. Note that I'm calling variants from only chromosome 1 to save time. 
 ```
 bcftools filter -e 'MQ < 30' snps_bcftools/capelin_wgs_unfiltered.vcf -Ov > snps_bcftools/capelin_wgs_filtered.tmp.vcf
 ### Count number of unfiltered SNPs surviving filters
@@ -46,8 +47,21 @@ vcftools --vcf snps_bcftools/capelin_wgs_filtered.tmp.vcf \
 ### Count number of SNPs surviving filters
 grep -v ^\#\# snps_bcftools/capelin_wgs_filtered.vcf | wc -l 
 ```
+Also, because there was a problem with the internal individual flags in the read files, which cause the addition of an individual, I used this line to fix it
+```
+grep "##" capelin_wgs_filtered.vcf > capelin_wgs_filtered_fixed.vcf
+grep -v "##" capelin_wgs_filtered.vcf | awk '{$10=""; print $0}' >> capelin_wgs_filtered_fixed.vcf
+```
 
+Because the variant calling takes quite some time, you can copy the original unfiltered and clean files to your working directory to explore the different files, theyir differences and play with filtering if you want
+```
+cp ~/Share/WGS_bam/snps_bcftools/capelin_wgs_*.vcf ~/wgr/snps_bcftools/.
+```
 What is the proportion of SNPs surviving filters? How many are left? According to your dataset and needs, you may want to change or tweak these filters.
+Finally, we prepare the data in the same way as the SVs below and recode the genotypes in 012 format with
+```
+vcftools --vcf capelin_wgs_filtered_fixed.vcf --012 --out capelin_wgs_filtered_fixed
+```
 
 ### 2. Analysis of sequence variation
 As we have highlighted several times, a VCF is a VCF, whether the variants are called from RADseq or WGR data, whether you call hundreds or millions of variants, so you can repeat all the analyses we presented to you during the course using this new WGR dataset. For this tutorial we will focus on the visualization of genomic variation with PCA (see below).
@@ -117,9 +131,20 @@ grep -v "#" capelin_sv_ins.vcf | wc -l
 What is the most abundant SV type?
 
 Next, we'll convert the genotypes in 012 format for PCA of the whole dataset and each specific 
+```
+###Recode genotypes for PCA
+module load vcftools
+vcftools --vcf capelin_sv_filtered.vcf --012 --out capelin_sv
 
+###and for each SV type
+vcftools --vcf capelin_sv_ins.vcf --012 --out capelin_sv_ins
+vcftools --vcf capelin_sv_del.vcf --012 --out capelin_sv_del
+vcftools --vcf capelin_sv_inv.vcf --012 --out capelin_sv_inv
+vcftools --vcf capelin_sv_dup.vcf --012 --out capelin_sv_dup
+vcftools --vcf capelin_sv_bnd.vcf --012 --out capelin_sv_bnd
+```
 
-
+Because we have 
 
 
 
