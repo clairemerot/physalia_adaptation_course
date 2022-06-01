@@ -30,6 +30,8 @@ escape less by pressing "q"
 ####  run lostruct (on the server)
 We will run the end of lostruct procedure. you can do it either on the terminal (start R ) or in Rstudio on your computer
 
+Installing the libraries will write a lot of lines, don't worry it means it is going well. Answer "y" if it asks you if you want a personal library, and 1 if you are ask to pick a cran mirror. Please run the lines one by one.
+
 ```
 #install libraries
 install.packages("data.table")
@@ -38,6 +40,7 @@ devtools::install_github("petrelharp/local_pca/lostruct")
 #load library
 library(lostruct)
 ```
+
 
 ```
 #load matrix
