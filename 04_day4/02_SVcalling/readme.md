@@ -69,7 +69,7 @@ and download the resulting files on your computer.
 As we have highlighted several times, a VCF is a VCF, whether the variants are called from RADseq or WGR data, whether you call hundreds or millions of variants, so you can repeat all the analyses we presented to you during the course using this new WGR dataset. For this tutorial we will focus on the visualization of genomic variation with PCA (see below).
 
 ## Structural variation
-1. SVs calling
+### 1. SVs calling
 Calling structural variants (i.e. inversions, deletions, insertions, duplications, translocations) requires analyzing different types of information from the sequence data, such as read overlap, orientation and splitting. Therefore, we need software specifically designed to extract this kind of information. One commonly used of these programs is Delly2, which takes into account all of these 3 types of information. 
 This below is the general approach to call SVs from Delly:
 ```
@@ -110,7 +110,7 @@ You can run this code, but it will take ~45 minutes. Because we don't have that 
 ```
 cp ~/Share/WGS_bam/svs_delly/capelin_sv.vcf ~/wgr/svs_delly/.
 ```
-2. VCF filtering and splitting
+### 2. VCF filtering and splitting
 Though we don't have enough samples to run `delly filter` properly, we can do some filtering using the same approach we use for SNP filtering but in this case we'll filter just by missing data
 ```
 vcftools --vcf capelin_sv.vcf \
@@ -148,7 +148,7 @@ vcftools --vcf capelin_sv_bnd.vcf --012 --out capelin_sv_bnd
 and download the resulting files on your computer.
 
 
-### PCA to compare patterns from different types of genetic variation
+### 3. PCA to compare patterns from different types of genetic variation
 On your computer in R, perform one PCA and plot results based on each type of structural variant. The one below is the code for the PCA based on all SVs. Once you've done this, modify the script to perform the analysis on each type of SV and on the SNPs.
 Note that the bam files that I used for thw two types of analysis, sequence and structural variation, were slightly different because of the introduction of an individual flag during mapping, which was later fixed. So, when you run the PCA with the SNPs dataset, you have to replace `Sample` with `Id`.
 ```
