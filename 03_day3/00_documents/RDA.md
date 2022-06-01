@@ -36,7 +36,7 @@ plot(geo.rda, scaling=3)
 points(geo.rda, display="sites", pch=20, cex=1.3, col=info$pop, scaling=3)
 dev.off()
 ```
-![rda1_triplot_geo](07_img_readme/rda1_triplot_geo.jpeg)
+![rda1_triplot_geo](https://github.com/clairemerot/physalia_adaptation_course/blob/2022/03_day3/07_img_readme/rda1_triplot_geo.jpeg)
 
 Only RDA1 describe significant association between genetic variation and latitude. Yet, geography explains only 0.2% of variance in our case!
 Well, let's try the controlled the rda by geography anyway:
