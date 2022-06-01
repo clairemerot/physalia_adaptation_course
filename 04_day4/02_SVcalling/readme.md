@@ -58,10 +58,12 @@ Because the variant calling takes quite some time, you can copy the original unf
 cp ~/Share/WGS_bam/snps_bcftools/capelin_wgs_*.vcf ~/wgr/snps_bcftools/.
 ```
 What is the proportion of SNPs surviving filters? How many are left? According to your dataset and needs, you may want to change or tweak these filters.
-Finally, we prepare the data in the same way as the SVs below and recode the genotypes in 012 format with
+
+Finally, we prepare the data in the same way as the SVs below and recode the genotypes in 012 format with 
 ```
 vcftools --vcf capelin_wgs_filtered_fixed.vcf --012 --out capelin_wgs_filtered_fixed
 ```
+and download the resulting files on your computer.
 
 ### 2. Analysis of sequence variation
 As we have highlighted several times, a VCF is a VCF, whether the variants are called from RADseq or WGR data, whether you call hundreds or millions of variants, so you can repeat all the analyses we presented to you during the course using this new WGR dataset. For this tutorial we will focus on the visualization of genomic variation with PCA (see below).
@@ -143,8 +145,7 @@ vcftools --vcf capelin_sv_inv.vcf --012 --out capelin_sv_inv
 vcftools --vcf capelin_sv_dup.vcf --012 --out capelin_sv_dup
 vcftools --vcf capelin_sv_bnd.vcf --012 --out capelin_sv_bnd
 ```
-
-Because we have 
+and download the resulting files on your computer.
 
 
 
