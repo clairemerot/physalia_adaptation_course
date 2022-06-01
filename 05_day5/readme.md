@@ -196,11 +196,12 @@ row.names(transcript_info)<-transcript_info$TranscriptName
 As you see go terms are all side by side, which will not be super helpful to make a list transcripts/GO
 Please install the library splitstackshape which is able to split a whole column, and the library data.table which is super helpful to transform wide datatbale into long datatable
 ```
+install.packages("splitstackshape")
 library(splitstackshape)
 #split the GO terms
-go_split = cSplit(transcript_info, "GeneGo", sep = ";")
+go_split = cSplit(transcript_info, "GeneGo", sep = ";", type.convert=FALSE)
 go_split$contig<- transcript_info$TranscriptName
-head(go_split)
+head(go_split[,1:10])
 ```
 
 ```
@@ -286,7 +287,7 @@ But we may want to see only the the significant enrichments:
 ```
 enrich_outliers[which(enrich_outliers$over_represented_padjust<0.10),]
 ```
-What do you think? Sometimes it may be significan tbut when one has low numbers (1 gene out of 4), is this really interpretable? 
+What do you think? Sometimes it may be significant but when one has low numbers (1 gene out of 4), is this really interpretable? 
 Anyhow, you know how to do it!
 
 If you wish, you can repeat the analysis on the outliers from baypass, or joined BP/rda, or on the outliers of divergence found on chr4 and chr5. 
