@@ -199,3 +199,4 @@ ggplot(pca.geno_capelin_sv.sub2) + aes(x=PC1, y=PC2, col=Pop) +
   theme_bw() 
   ```
 
+Do you see the same patterns from each type of variant? Let's discuss.
