@@ -148,5 +148,54 @@ vcftools --vcf capelin_sv_bnd.vcf --012 --out capelin_sv_bnd
 and download the resulting files on your computer.
 
 
+### PCA to compare patterns from different types of genetic variation
+On your computer in R, perform one PCA and plot results based on each type of structural variant. The one below is the code for the PCA based on all SVs. Once you've done this, modify the script to perform the analysis on each type of SV and on the SNPs.
+Note that the bam files that I used for thw two types of analysis, sequence and structural variation, were slightly different because of the introduction of an individual flag during mapping, which was later fixed. So, when you run the PCA with the SNPs dataset, you have to replace `Sample` with `Id`.
+```
+#load the population map with population assignment for each individual
+popmap_delly<-read.table("popmap_capelin_wgr_delly.txt", header= TRUE)
 
+#load geno data for SVs
+geno_capelin_sv <- read.table("capelin_sv.012")[,-1] #load genotype matrix
+geno_capelin_sv.pos <- read.table("capelin_sv.012.pos") %>% #load SNPs info
+  mutate(., locus=paste(V1,V2,sep='_')) #create a new column for SNP info name (CHR + position)
+geno_capelin_sv.indv <- read.table("capelin_sv.012.indv") #load individuals info
+
+#Set rownames and colnames to the geno matrix
+dimnames(geno_capelin_sv) <- list(geno_capelin_sv.indv$V1, geno_capelin_sv.pos$locus)
+#check the geno matrix
+geno_capelin_sv[1:12,1:10]
+
+#impute missing data
+geno_capelin_sv[geno_capelin_sv == -1] <- NA
+geno_capelin_sv.imp <- apply(geno_capelin_sv,2,function(x){
+  replace(x, is.na(x), as.numeric(names(which.max(table(x))))) })
+
+geno_capelin_sv.imp[1:12,1:9]
+
+##run and visualized PCA
+pca.geno_capelin_sv <- prcomp(data.imp)
+screeplot(pca.geno_capelin_sv)
+
+#get stats info from the pca
+sum.pca <- summary(pca.geno_capelin_sv)
+#print stats info
+sum.pca$importance[,1:5]
+
+#prepare dataset to plot PCAs
+pca.geno_capelin_sv.sub <- pca.geno_capelin_sv$x[,1:4] %>% #retain the first four PCs
+  as.data.frame(.) %>% #transform to dataframe object
+  tibble::rownames_to_column(., var='Sample') %>% #set rownames to a new column for samples ids
+  dplyr::left_join(., popmap_delly, by='Sample')
+pca.geno_capelin_sv.sub2<-cbind(pca.geno_capelin_sv.sub[1:5], popmap_delly[2:3])
+
+#Here we use the left_join function
+#from dplyr to wrap the population vector
+#of our samples.
+ggplot(pca.geno_capelin_sv.sub2) + aes(x=PC1, y=PC2, col=Pop) +
+  ggtitle("PCA with all SVs from Delly") +
+  geom_point() + 
+  coord_fixed() +
+  theme_bw() 
+  ```
 
