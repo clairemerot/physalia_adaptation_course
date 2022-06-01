@@ -327,6 +327,8 @@ Please copy the output on the simulated dataset on your local computer.
 If you are curious, you can explore the different file, look at the omega matrix, etc, which will be more or less like the pairwise fst matrix that we look at earlier
 We will focus on xtx values
 ```
+library(ggplot2)
+
 #load xtx values
 xtx_allsnps<-read.table("05_baypass/allsnps.controlled.output_summary_pi_xtx.out", header = T)
 head(xtx_allsnps)
