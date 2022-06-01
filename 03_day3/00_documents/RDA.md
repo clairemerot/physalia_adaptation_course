@@ -33,7 +33,7 @@ RsquareAdj(geo.rda)
 
 jpeg("06_rda/rda1_triplot_geo.jpeg")
 plot(geo.rda, scaling=3) 
-points(geo.rda, display="sites", pch=20, cex=1.3, col=info$pop, scaling=3)
+points(geo.rda, display="sites", pch=20, cex=1.3, col=as.factor(info$pop), scaling=3)
 dev.off()
 ```
 ![rda1_triplot_geo](https://github.com/clairemerot/physalia_adaptation_course/blob/2022/03_day3/07_img_readme/rda1_triplot_geo.jpeg)
