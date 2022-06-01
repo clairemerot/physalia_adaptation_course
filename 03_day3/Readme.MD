@@ -276,7 +276,7 @@ python Toolbox/reshaper_baypass.py 02_data/canada.pruned.recode.vcf 02_data/popm
 ```
 
 ####  run baypass controlled for population structure
-We installed Baypass on the ```Share/``` folder. However, your working session doesn't know where it have been installed. So we have to add the path to baypass. In such, use the following command line : ```èxport PATH=$PATH:~/Share/baypass_2.3/sources/```
+We installed Baypass on the ```Share/``` folder. However, your working session doesn't know where it have been installed. So we have to add the path to baypass. In such, use the following command line : ```echo "export PATH=$PATH:~/Share/baypass_2.3/sources/" >> ~/.bashrc```
 
 Then test that Baypass is well referenced for your session by typing ```g_baypass```. This will give you :
 ```
