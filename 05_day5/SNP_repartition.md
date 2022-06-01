@@ -43,30 +43,3 @@ head(outlier_annotated)
 outlier_repartition<-as.matrix(table(outlier_annotated$category))
 outlier_repartition
 ```
-we can join both matrix of repartition to have a look:
-```
-joined_repartition1<-as.data.frame(cbind(as.matrix(table(snpEff_db$category)),as.matrix(table(outlier_annotated$category))))
-colnames(joined_repartition1)<-c("n_all_snps","n_oulier")
-joined_repartition1$category<-as.character(row.names(joined_repartition1))
-joined_repartition1
-```
-And we can use Fisher exact test to ask whether one category of variant is enriched in our outlires
-```
-total_snp<-dim(snpEff_db)[1]
-total_outlier<-dim(outlier_annotated)[1]
-
-# for row i (category i)
-i=1
-joined_repartition1$category[i]
-
-#build the contigency table
-cont_tab<-rbind(c(joined_repartition1$n_oulier[i],total_outlier),
-                c(joined_repartition1$n_all_snps[i],total_snp))
-cont_tab
-
-#run Fisher test
-cont_tab[ which(is.na(cont_tab))]<-0
-fish_res<-fisher.test(cont_tab,alternative = "greater")
-fish_res
-```
-You can change Fisher alternative hypothesis to "two.sided", "greater" or "less"
