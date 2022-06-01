@@ -291,7 +291,3 @@ Anyhow, you know how to do it!
 
 If you wish, you can repeat the analysis on the outliers from baypass, or joined BP/rda, or on the outliers of divergence found on chr4 and chr5. 
 
-## Optional: Step4 Annotation of repeated regions and CNV
-Tranposable elements and repeated regions are frequent source of duplicated loci in RAD-seq data, and in CNVs in general. We may want to see which fraction of the CNVs detected yesterday overlap with them. If you are interested in this aspect, please find the detailled tutorial here:
-
-[CNV_TE](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/05_day5/CNV_repeats.md)
