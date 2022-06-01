@@ -302,7 +302,7 @@ g_baypass -npop 12 -gfile 05_baypass/canada.baypass \
 
 Please copy the controlled output on your local computer. We can have a look at the output. the most importnat are the omega matrix, which is covariance between populations and the xtx value which represent a kind of value associated to each SNP. the higher it gets, the more this snps differentiate the populations.
 
-If we don't want to control for population structure, we could have run it directly (please do not run now ) ``` $PATH_TO_SOFT/g_baypass -npop 12 -gfile 05_baypass/canada.baypass -outprefix 05_baypass/allsnps.output -nthreads 1 ```
+If we don't want to control for population structure, we could have run it directly (please do not run now ) ```g_baypass -npop 12 -gfile 05_baypass/canada.baypass -outprefix 05_baypass/allsnps.output -nthreads 1 ```
 
 #### Have a threshold for the xtx value
 While this runs, we can prepare our subsequent analysis. We need to know above which xtx threhold value we can consider a locus to be an outlier of population differentiation
