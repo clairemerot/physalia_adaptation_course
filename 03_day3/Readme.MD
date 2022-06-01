@@ -509,7 +509,7 @@ gen [1:10,1:10]
 #replace 9 by NA
 gen[which(gen=="9")]<- NA
 #evaluate % of missing
-sum(is.na(gen))/(dim(gen)[1]*dim(gen)[2]) # about 1.5% of missing data
+sum(is.na(gen))/(dim(gen)[1]*dim(gen)[2]) # <3% of missing data
 #impute missing with the most common geno
 gen.imp <- apply(gen, 2, function(x) replace(x, is.na(x), as.numeric(names(which.max(table(x))))))
 sum(is.na(gen.imp)) # No NAs
