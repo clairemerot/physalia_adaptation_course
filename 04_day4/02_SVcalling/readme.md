@@ -49,8 +49,7 @@ grep -v ^\#\# snps_bcftools/capelin_wgs_filtered.vcf | wc -l
 ```
 Also, because there was a problem with the internal individual flags in the read files, which cause the addition of an individual, I used this line to fix it
 ```
-grep "##" capelin_wgs_filtered.vcf > capelin_wgs_filtered_fixed.vcf
-grep -v "##" capelin_wgs_filtered.vcf | awk '{$10=""; print $0}' >> capelin_wgs_filtered_fixed.vcf
+vcftools --remove-indv ind --vcf capelin_wgs_filtered.vcf --recode --stdout > capelin_wgs_filtered_fixed.vcf
 ```
 
 Because the variant calling takes quite some time, you can copy the original unfiltered and clean files to your working directory to explore the different files, theyir differences and play with filtering if you want
