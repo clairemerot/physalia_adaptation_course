@@ -94,15 +94,14 @@ delly filter -f germline -o germline.bcf merged.bcf
 However, in our case, we have low-coverage whole genome resequencing data from only 12 individuals, so we can call SVs directly from all the samples combine and forego the filtering step. Keep in mind that this is just a toy dataset, and the quality of these SV calls may not be very high.
 ```
 cd
-mkdir delly
-cd delly
-mkdir bams
+cd wgr
 ln -s /home/ubuntu/Share/WGS_bam/* .
 
 ### Run delly to call SVs on all samples combined
-delly call -g ~/Share/ressources/genome_mallotus_dummy.fasta -o capelin_sv.bcf BELB9_1.trimmed.sorted.bam BELD3_1.trimmed.sorted.bam BLA13_1.trimmed.sorted.bam BLA15_1.trimmed.sorted.bam BLA16_1.trimmed.sorted.bam BLA17_1.trimmed.sorted.bam BLA22_1.trimmed.sorted.bam BLA24_1.trimmed.sorted.bam BSO17_1.trimmed.sorted.bam BSO23_1.trimmed.sorted.bam BSO28_1.trimmed.sorted.bam POR19_1.trimmed.sorted.bam 
+delly call -g ~/Share/ressources/genome_mallotus_dummy.fasta -o svs_delly/capelin_sv.bcf BELB9_1.trimmed.sorted.bam BELD3_1.trimmed.sorted.bam BLA13_1.trimmed.sorted.bam BLA15_1.trimmed.sorted.bam BLA16_1.trimmed.sorted.bam BLA17_1.trimmed.sorted.bam BLA22_1.trimmed.sorted.bam BLA24_1.trimmed.sorted.bam BSO17_1.trimmed.sorted.bam BSO23_1.trimmed.sorted.bam BSO28_1.trimmed.sorted.bam POR19_1.trimmed.sorted.bam 
 
 ###Convert file from .bcf to .vcf
+cd svs_delly
 bcftools convert -O v -o capelin_sv.vcf capelin_sv.bcf
 ```
 You can run this code, but it will take ~45 minutes. Because we don't have that time, you can copy the VCF file containing all the SVs into ~/wgr/svs_delly
