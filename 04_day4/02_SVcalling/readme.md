@@ -26,7 +26,7 @@ bcftools mpileup -Ou -f ~/Share/ressources/genome_mallotus_dummy.fasta -b bams_l
 Variant filtering is done in two steps. First we use 'bcftools filter' to filter SNPs based on mapping quality. Then, we apply a series of filters using VCFtools. Note that I'm calling variants from only chromosome 1 to save time. 
 ```
 cd snps_bcftools
-bcftools filter -e 'MQ < 30' capelin_wgs_unfiltered.vcf -Ov > snps_bcftools/capelin_wgs_filtered.tmp.vcf
+bcftools filter -e 'MQ < 30' capelin_wgs_unfiltered.vcf -Ov > capelin_wgs_filtered.tmp.vcf
 ### Count number of unfiltered SNPs surviving filters
 grep -v ^\#\# capelin_wgs_filtered.tmp.vcf | wc -l  
 
