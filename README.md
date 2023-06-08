@@ -10,23 +10,21 @@ Here is the tentative schedule for the week. Within each block we'll keep some f
 
 
 ## Logging on the AWS server from your computer
-
-[AWS for Mac OS X and Linux users](https://github.com/clairemerot/physalia_adaptation_course/blob/2022/AWS_mac.md)
-
-For Windows users, please use MobaXterm adn FileZilla following the instructions sent by Carlo.
+Please follow instructions sent by Carlo
 https://github.com/clairemerot/physalia_adaptation_course/blob/2021/Connection%20to%20the%20Amazon%20EC2%20service_.pdf
 
-This is a guide for windows but it uses different softwares (putty/winSCP) a bit more complex
-[AWS for windows users](https://github.com/clairemerot/physalia_adaptation_course/blob/2022/AWS_windows.md)
+[Additional info for AWS for Mac OS X and Linux users](https://github.com/clairemerot/physalia_adaptation_course/blob/2022/AWS_mac.md)
+
+[Additional info for AWS for windows users using Putty/winSCP](https://github.com/clairemerot/physalia_adaptation_course/blob/2022/AWS_windows.md)
 
 
 ## Day1: Handling NGS data: From raw reads to SNPs matrix
 
-Capelin: Data taken from Cayuela et al,2020. Molecular Ecology https://doi.org/10.1111/mec.15499
+Data: All our analyses will be based on the dataset presented in [Cayuela et al. (2020), Molecular Ecology](https://onlinelibrary.wiley.com/doi/10.1111/mec.15499).
  
-Genome assembly: For this course, we made a dummy assembly of about 90 MB (instead of about 500 MB) and 5 chromosomes (instead of 24).
+Genome assembly: For this course, we generated a dummy assembly of about 90 MB (instead of about 500 MB) and 5 chromosomes (instead of 24) to expedite analysis running time.
 
-Raw reads: Obtained by GBS methods (= Rad-seq), sequenced with IonTorrent.
+Raw data: Data were generated using a reduced-representation approach (GBS/RADseq) and sequenced with IonTorrent. Note that the analyses we'll learn during the course are scalable to whole genome resequencing data or other type of genomic data.
 
 1-1: Getting familiar with Unix environment
 
@@ -36,7 +34,7 @@ Raw reads: Obtained by GBS methods (= Rad-seq), sequenced with IonTorrent.
  
 ## Day2: Population structure and confounding factors
 
-2-1: Fst statistics with vcftools (optionnal: with Stacks, optional: Pairwise-Fst and isolation-by-Distance )
+2-1: Fst statistics with vcftools (optional: with Stacks, optional: Pairwise-Fst and isolation-by-Distance )
 
 2-2: Principal component analysis (PCA)
 
@@ -46,9 +44,9 @@ Raw reads: Obtained by GBS methods (= Rad-seq), sequenced with IonTorrent.
 
 ## Day3: Outlier detection - Environmental associations
 
-Data: We focus on 12 population from Canada for which there is almost no geographic structure but environmental variability
+Data: We focus on 12 population from Canada for which there is almost no geographic structure but great environmental variability
 
-3-1: Genetic structure and LD-pruned data
+3-1: Genetic structure and LD-pruning
 
 3-2: Outlier of differentiation with two methods (Outflank & Baypass)
 
@@ -56,7 +54,7 @@ Data: We focus on 12 population from Canada for which there is almost no geograp
 
 ## Day4: Accounting for Structural Variants
 
-We focus on 12 population from Canada. We recommend that you pick one of the two tutorials (haploblocks by local PCA or CNVs on RAD-seq data)
+We focus on 12 population from Canada. We recommend that you pick one of the two tutorials (haploblocks by local PCA or CNVs from RAD-seq data)
 
 4-1: Investigating haplotypes blocks ( ~inversions?)
 
