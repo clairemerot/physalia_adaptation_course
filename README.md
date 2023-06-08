@@ -1,8 +1,7 @@
 # Physalia Adaptation Genomics Course
 
 ## Welcome to the Physalia Adaptation Genomics 2023 GitHub page
-This repository includes scripts and data associated with the practical sessions of the Physalia Course about Adaptation Genomics
-Prepared by Anna Tigano, Yann Dorant and Claire Mérot for the course in June 2023
+This repository includes scripts and data associated with the practical sessions of the 2023 Physalia Course on Adaptation Genomics prepared by Anna Tigano, Yann Dorant and Claire Mérot.
 
 Except for day 1 in which you won't have the bam files, all the tutorial can be completed with the compressed files stored in the github page for each day (day 2 to day 5). Each daily tutorial can be run independantly of the other days.
 
@@ -14,7 +13,7 @@ Here is the tentative schedule for the week. Within each block we'll keep some f
 
 [AWS for Mac OS X and Linux users](https://github.com/clairemerot/physalia_adaptation_course/blob/2022/AWS_mac.md)
 
-For windows users, please use MobaXterm adn FilZilla following the document sent by Carlo.
+For Windows users, please use MobaXterm adn FileZilla following the instructions sent by Carlo.
 https://github.com/clairemerot/physalia_adaptation_course/blob/2021/Connection%20to%20the%20Amazon%20EC2%20service_.pdf
 
 This is a guide for windows but it uses different softwares (putty/winSCP) a bit more complex
