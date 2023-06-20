@@ -115,7 +115,6 @@ https://onlinelibrary.wiley.com/doi/abs/10.1111/1755-0998.12995
 So we will also restrict our matrix to the most frequent SNPs (MAF> 1%). We can do this thanks to vcf tools.
 
 ```
-cd ~/stacks
 vcftools --vcf populations_2lin_random/populations.snps.vcf --maf 0.01 --012 --out pca/populations_2lin_random
 
 #if the second file is not unzipped use:
