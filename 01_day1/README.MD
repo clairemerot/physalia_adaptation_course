@@ -225,4 +225,67 @@ Make sure you print these outputs in each of these two folders ```populations_al
 
 If you are struggling with this last step, have a look at the solution [here](./populations_script.md).
 
+# Variant calling from whole genome resequencing data
+As both sequence and structural variant calling take quite some time, I did this step for you. Whether you want to try it running it when you have some spare time or use it in the future for the analysis of your own data, I will provide the command below. 
+First, let's set up new folders for these analyses
+```
+cd
+mkdir wgr #for whole genome resequencing
+mkdir wgr/svs_delly
+mkdir wgr/snps_bcftools
+```
+
+### 1. SNPs calling
+Copy bam files (symbolic links) storing aligned reads to reference genome
+```
+cd wgr
+ln -s /home/ubuntu/Share/WGS_bam/.bam* .
+cp /home/ubuntu/Share/WGS_bam/bams_list* .
+```
+Call variants using bcftools
+```
+bcftools mpileup -Ou -f ~/Share/ressources/genome_mallotus_dummy.fasta -b bams_list_rg.txt -r Chr1 -q 5 -I -a AD,DP,SP,ADF,ADR -d 200 | bcftools call - -mv -Ov > snps_bcftools/capelin_wgs_unfiltered.vcf
+
+```
+Variant filtering is done in two steps. First we use 'bcftools filter' to filter SNPs based on mapping quality. Then, we apply a series of filters using VCFtools. Note that I'm calling variants from only chromosome 1 to save time. 
+```
+cd snps_bcftools
+bcftools filter -e 'MQ < 30' capelin_wgs_unfiltered.vcf -Ov > capelin_wgs_filtered.tmp.vcf
+### Count number of unfiltered SNPs surviving filters
+grep -v ^\#\# capelin_wgs_filtered.tmp.vcf | wc -l  
+
+echo "
+>>> Filtering through VCFtools now!!
+"
+vcftools --vcf capelin_wgs_filtered.tmp.vcf \
+    --minQ 30 \
+    --minGQ 20 \
+    --minDP 3 \
+    --mac 2 \
+    --max-alleles 2 \
+    --max-missing 0.7 \
+    --maf 0.05 \
+    --recode \
+    --stdout > capelin_wgs_filtered.vcf
+
+### Count number of SNPs surviving filters
+grep -v ^\#\# capelin_wgs_filtered.vcf | wc -l 
+```
+Also, because there was a problem with the internal individual flags in the read files, which cause the addition of an individual, I used this line to fix it
+```
+vcftools --remove-indv ind --vcf capelin_wgs_filtered.vcf --recode --stdout > capelin_wgs_filtered_fixed.vcf
+```
+
+Because the variant calling takes quite some time, you can copy the original unfiltered and clean files to your working directory to explore the different files, theyir differences and play with filtering if you want
+```
+cp ~/Share/WGS_bam/snps_bcftools/capelin_wgs_*.vcf ~/wgr/snps_bcftools/.
+```
+What is the proportion of SNPs surviving filters? How many are left? According to your dataset and needs, you may want to change or tweak these filters.
+
+Finally, we prepare the data in the same way as the SVs below and recode the genotypes in 012 format with 
+```
+vcftools --vcf capelin_wgs_filtered_fixed.vcf --012 --out capelin_wgs_filtered_fixed
+```
+and download the resulting files on your computer.
+
 ### The end.
