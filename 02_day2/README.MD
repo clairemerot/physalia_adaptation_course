@@ -15,7 +15,7 @@ As you can see if you ```cd``` in one of the folders storing the output from you
 
 There are many ways, approaches, software and formulas to calculate F<sub>ST</sub>, a relative measure of population differentiation. Here we will use mainly VCFtools. If you want to explore Stacks for summary statistics in your spare time you will find a Stacks specific tutorial [here](./summary_stats_stacks.md)
 
-In VCFtools you need to provide the list of samples for each population to include in the calculation and a VCF file with all your variants and asscoiated information. For the reduced dataset, including only 80 individuals from Greenland and Canada, you will find the list of samples for each of the two lineages in the ```~/scripts``` folder. The VCF file name is saved as ```populations.snps.vcf```, one for each of the datsets we analyzed. For example, to calculate F<sub>ST</sub> in the smallest of the three datsets we produced, type
+In VCFtools you need to provide the list of samples for each population to include in the calculation and a VCF file with all your variants and associated information. For the reduced dataset, including only 80 individuals from Greenland and Canada, you will find the list of samples for each of the two lineages in the ```~/scripts``` folder. The VCF file name is saved as ```populations.snps.vcf```, one for each of the datsets we analyzed. For example, to calculate F<sub>ST</sub> in the smallest of the three datsets we produced, type
 ```
 vcftools --vcf populations_2lin_random/populations.snps.vcf --weir-fst-pop ~/scripts/pop_canada40.txt --weir-fst-pop ~/scripts/pop_greenland40.txt  --out fst_2lin
 ```
@@ -124,7 +124,7 @@ In genomics, PCA are multivariate analyses which could be bias by ultra rare var
 >Linck, E., & Battey, C. J. (2019). Minor allele frequency thresholds strongly affect population structure inference with genomic data sets. Molecular Ecology Resources, 19(3), 639–647. doi: 10.1111/1755-0998.12995
 https://onlinelibrary.wiley.com/doi/abs/10.1111/1755-0998.12995
 
-So we will also restrict our matrix to the most frequent SNPs (Maf> 1%). We can do this thanks to vcf tools.
+So we will also restrict our matrix to the most frequent SNPs (MAF> 1%). We can do this thanks to vcf tools.
 
 First we will copy the folder of day2 and work within it
 ```
@@ -132,8 +132,8 @@ cd
 cp -r ~/Share/physalia_adaptation_course/02_day2 .
 cd 02_day2
 cd pca
-vcftools --vcf ~/Share/populations_2lin_random/populations.snps.vcf --maf 0.01 --012 --out populations_2lin_random
-vcftools --vcf ~/Share//populations_canada_random/populations.snps.vcf --maf 0.01 --012 --out populations_can_random
+vcftools --vcf ~/stacks/populations_2lin_random/populations.snps.vcf --maf 0.01 --012 --out populations_2lin_random
+vcftools --vcf ~/stacks/populations_canada_random/populations.snps.vcf --maf 0.01 --012 --out populations_can_random
 ```
 Once this is done, you will see via the cmd line `ls` (for listing all files in the directory), that six new files have been generated.
 * Two files ending with only `.012` contain genotypes information (0 for Ref homozygous, 1 for heterozygous, 2 for Alt homozygous and -1 for misisng data)
