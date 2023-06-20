@@ -103,7 +103,7 @@ The first few lines starting with ```@``` is the header. If you have a lot of sc
 
 (exit less by pressing q)
         
-## Step 3: Call variants in STACKS
+## Step 3: Call variants in STACKS from RADseq data
 STACKS <http://catchenlab.life.illinois.edu/stacks/> is a bioinformatic pipeline for building loci from short-read data from GBS/RADseq libraries and calling variants for population genomics, phylogenomics and linkage maps. STACKS includes two main pipelines: ```denovo_map.pl``` to build a catalog of loci *de novo*, i.e. it assembles loci from short-read data in absence of a reference genome, and ```ref_map.pl``` to call variants from data mapped to a reference genome. Each of the two pipelines includes several steps. Note that everything here is based on STACKS v.2.5.3.
 
 ```denovo_map.pl``` = ```ustacks``` --> ```cstacks``` --> ```sstacks``` --> ```tsv2bam``` --> ```gstacks``` --> ```populations```
@@ -225,13 +225,12 @@ Make sure you print these outputs in each of these two folders ```populations_al
 
 If you are struggling with this last step, have a look at the solution [here](./populations_script.md).
 
-# Variant calling from whole genome resequencing data
-As both sequence and structural variant calling take quite some time, I did this step for you. Whether you want to try it running it when you have some spare time or use it in the future for the analysis of your own data, I will provide the command below. 
+### Variant calling from whole genome resequencing data
+As variant calling from whole genome resequencing data take quite some time, I did this step for you. Whether you want to try it running it when you have some spare time or use it in the future for the analysis of your own data, I will provide the command below. 
 First, let's set up new folders for these analyses
 ```
 cd
 mkdir wgr #for whole genome resequencing
-mkdir wgr/svs_delly
 mkdir wgr/snps_bcftools
 ```
 
@@ -247,7 +246,7 @@ Call variants using bcftools
 bcftools mpileup -Ou -f ~/Share/ressources/genome_mallotus_dummy.fasta -b bams_list_rg.txt -r Chr1 -q 5 -I -a AD,DP,SP,ADF,ADR -d 200 | bcftools call - -mv -Ov > snps_bcftools/capelin_wgs_unfiltered.vcf
 
 ```
-Variant filtering is done in two steps. First we use 'bcftools filter' to filter SNPs based on mapping quality. Then, we apply a series of filters using VCFtools. Note that I'm calling variants from only chromosome 1 to save time. 
+Variant filtering is done in two steps. First we use 'bcftools filter' to filter SNPs based on mapping quality. Then, we apply a series of filters using VCFtools. Note that I'm calling variants from chromosome 1 only to save time. 
 ```
 cd snps_bcftools
 bcftools filter -e 'MQ < 30' capelin_wgs_unfiltered.vcf -Ov > capelin_wgs_filtered.tmp.vcf
@@ -276,13 +275,13 @@ Also, because there was a problem with the internal individual flags in the read
 vcftools --remove-indv ind --vcf capelin_wgs_filtered.vcf --recode --stdout > capelin_wgs_filtered_fixed.vcf
 ```
 
-Because the variant calling takes quite some time, you can copy the original unfiltered and clean files to your working directory to explore the different files, theyir differences and play with filtering if you want
+Because the variant calling takes quite some time, you can copy the original unfiltered and clean files to your working directory to explore the different files and play with filtering.
 ```
 cp ~/Share/WGS_bam/snps_bcftools/capelin_wgs_*.vcf ~/wgr/snps_bcftools/.
 ```
 What is the proportion of SNPs surviving filters? How many are left? According to your dataset and needs, you may want to change or tweak these filters.
 
-Finally, we prepare the data in the same way as the SVs below and recode the genotypes in 012 format with 
+Finally, prepare the data for downstream analyses by recoding the genotypes in 012 format with 
 ```
 vcftools --vcf capelin_wgs_filtered_fixed.vcf --012 --out capelin_wgs_filtered_fixed
 ```
