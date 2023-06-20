@@ -225,7 +225,7 @@ Make sure you print these outputs in each of these two folders ```populations_al
 
 If you are struggling with this last step, have a look at the solution [here](./populations_script.md).
 
-### Variant calling from whole genome resequencing data
+## Step 4. Variant calling from whole genome resequencing data
 As variant calling from whole genome resequencing data take quite some time, I did this step for you. Whether you want to try it running it when you have some spare time or use it in the future for the analysis of your own data, I will provide the command below. 
 First, let's set up new folders for these analyses
 ```
@@ -234,7 +234,7 @@ mkdir wgr #for whole genome resequencing
 mkdir wgr/snps_bcftools
 ```
 
-### 1. SNPs calling
+### SNPs calling
 Copy bam files (symbolic links) storing aligned reads to reference genome
 ```
 cd wgr
