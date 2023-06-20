@@ -112,12 +112,13 @@ In genomics, PCA are multivariate analyses which could be bias by ultra rare var
 >Linck, E., & Battey, C. J. (2019). Minor allele frequency thresholds strongly affect population structure inference with genomic data sets. Molecular Ecology Resources, 19(3), 639–647. doi: 10.1111/1755-0998.12995
 https://onlinelibrary.wiley.com/doi/abs/10.1111/1755-0998.12995
 
-So we will also restrict our matrix to the most frequent SNPs (Maf> 1%). We can do this thanks to vcf tools.
+So we will also restrict our matrix to the most frequent SNPs (MAF> 1%). We can do this thanks to vcf tools.
 
 ```
+cd ~/stacks
 vcftools --vcf populations_2lin_random/populations.snps.vcf --maf 0.01 --012 --out pca/populations_2lin_random
 
-#if the second file is not unzip use:
+#if the second file is not unzipped use:
 gunzip populations_canada_random/populations.snps.vcf
 vcftools --vcf populations_canada_random/populations.snps.vcf --maf 0.01 --012 --out pca/populations_can_random
 ```
