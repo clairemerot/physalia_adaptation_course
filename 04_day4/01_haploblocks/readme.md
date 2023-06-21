@@ -1,26 +1,27 @@
-# Exploring heterogeneity in the genome and putative rearrangement on Chr 4
-IMPORTANT: Please copy all the folder 04_day4 from /Share into you repository on the AWS server. Please copy it in your own computer and try to follow the same architecture when moving your files.
+# Exploring differentiation heterogeneity across the genome and putative chromosomal rearrangements on Chr 4
+IMPORTANT: Please copy all the folder 04_day4 from `~/Share` into you repository on the AWS server. Please copy it in your own computer and try to follow the same folder architecture when moving your files.
 
-``` 
+```
+cd 
 cp -r ~/Share/physalia_adaptation_course/04_day4 .
 cd 04_day4/01_haploblocks
 ```
-We will run all commands from here
+We will run all commands from this folder.
 
-## Step 1 Local PCA along the genome to detect non-recombining haploblocks
-As you saw on day 2, the PCA performed on the 240 samples from the 12 populations from Canada display a very unexpected pattern. The loadings indicate that some portion of the genome are overwhelmingly driving the structure.We suspect there may be sex-linked markers and/or chromosomal rearrangements
+## Step 1. Local PCA along the genome to detect non-recombining haploblocks
+As you saw on day 2, the PCA performed on the 240 samples from the 12 populations from Canada displays a very unexpected pattern. The loadings indicate that some portions of the genome are overwhelmingly driving population structure, making us suspect there may be sex-linked markers and/or chromosomal rearrangements.
 
-To get a better sense of what's going on, we will be doing PCA again, but along the genome by window of X SNPs.For this we will use  R package * lostruct* available here https://github.com/petrelharp/local_pca and presented in this publication https://www.genetics.org/content/211/1/289
+To get a better sense of what's going on, we will be running a PCA again, but along the genome using windows of X SNPs. For this we will use  R package *lostruct*, available here https://github.com/petrelharp/local_pca and presented in this publication https://www.genetics.org/content/211/1/289.
 
-####  prepare files
-We will jump over the preparation of the file and the 1st steps of lostruct to read and prepare the windows because R does not communicate with bcftools on the AWS and we wan tto save you time to see all the analysis. So keep in mind that there are preparative steps if you want to re-do the analysis on your dataset. You can look into this file to see them
-[preparation_lostruct](https://github.com/clairemerot/physalia_adaptation_course/blob/master/04_day4/01_haploblocks/step0_filepreparation.md)
+####  Prepare files
+We will skip the preparation of the file and the 1st steps of lostruct to read and prepare the windows because R does not communicate with bcftools on the AWS and we want to save you time to see all the analysis. So keep in mind that there are preparative steps if you want to re-do the analysis on your dataset. 
+[Link to preliminary steps in_lostruct](https://github.com/clairemerot/physalia_adaptation_course/blob/master/04_day4/01_haploblocks/step0_filepreparation.md)
 
-Briefly, this analysis is more powerful if we keep all SNPs including those in LD so we will use the vcf unfiltered (before we took one random SNP per RADlocus) for the 12 canadian populations. We do several steps to convert into a bcf. Then we use a function in lostruct to make windows of your chosen size. We suggest to use window of 100 snp since we are not very dense (RAD data) and we don't have a lot of snps.Typically with whole genome you may first run by windows of 1000 or 5000 snps for a first look, and then refine with smaller windows. The analysis can be run chromosome by chromosome (as in the paper) or on the entire genome. Here, we are going for the entire genome.
+Briefly, this analysis is more powerful if we keep all SNPs, including those in LD so we will use the unfiltered VCF (before we even selected one random SNP per RAD locus) for the 12 canadian populations. We convert this file into BCF format. Then we use a function in lostruct to make windows of your chosen size. We suggest to use window of 100 SNPs since coverage of the genome is low (RAD data) and we don't have a lot of SNPs. Typically, with whole genome data you may first run by windows of 1000 or 5000 SNPs for a first look, and then refine the analysis with smaller windows. The analysis can be run chromosome by chromosome (as in the paper) or on the entire genome. Here, we are going for the entire genome.
 
-Then, lostruct run the PCA on all windows. Here we choose to consider k=npc=2 because they usually capture most variance for each local PCA
+Then, lostruct runs the PCAs on each window. Here we choose to retain the first 2 PC (Principal Components - k=npc=2) because they usually capture the most variance for each local PCA.
 
-It outputs a matrix pcs in which each rows give the first k eigenvalues and k eigenvectors for each window. This gives you a matrix with 483 columns (3 columns of info, 240 columns with PC1 score for each individual, and 240 column with PC2 score for each individual). It has as many rows as windows (1016 with windows of 100 SNPs). I added 3 columns of information about the window position. you can have a look at it with
+The output consists of a matrix in which each row gives the first k eigenvalues and k eigenvectors for each window. This gives you a matrix with 483 columns (3 columns of info, 240 columns with PC1 score for each individual, and 240 column with PC2 score for each individual). It has as many rows as windows (1016 with windows of 100 SNPs). I added 3 columns of information about the window position. you can have a look at it with
 
 ```
 less -S 00_localPCA/pca_matrix.txt
