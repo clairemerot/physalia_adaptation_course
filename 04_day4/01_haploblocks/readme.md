@@ -21,15 +21,15 @@ Briefly, this analysis is more powerful if we keep all SNPs, including those in 
 
 Then, lostruct runs the PCAs on each window. Here we choose to retain the first 2 PC (Principal Components - k=npc=2) because they usually capture the most variance for each local PCA.
 
-The output consists of a matrix in which each row gives the first k eigenvalues and k eigenvectors for each window. This gives you a matrix with 483 columns (3 columns of info, 240 columns with PC1 score for each individual, and 240 column with PC2 score for each individual). It has as many rows as windows (1016 with windows of 100 SNPs). I added 3 columns of information about the window position. you can have a look at it with
+The output consists of a matrix in which each row gives the first k eigenvalues and k eigenvectors for each window. This gives you a matrix with 483 columns (3 columns of info, 240 columns with PC1 score for each individual, and 240 column with PC2 score for each individual). The matrix consists of as many rows as windows (1016 with windows of 100 SNPs). I added 3 columns of information about the window position. you can have a look at it with
 
 ```
 less -S 00_localPCA/pca_matrix.txt
 ```
 escape less by pressing "q"
 
-####  run lostruct (on the server)
-We will run the end of lostruct procedure. you can do it either on the terminal (start R ) or in Rstudio on your computer
+####  Run lostruct (on the server)
+We will run the final steps of the lostruct Approach. you can do it either on the terminal (start R ) or in Rstudio on your computer
 
 Installing the libraries will write a lot of lines, don't worry it means it is going well. Answer "y" if it asks you if you want a personal library, and 1 if you are ask to pick a cran mirror. Please run the lines one by one.
 
@@ -52,7 +52,7 @@ window_pos<-pca_matrix[,1:3]
 pcs<-as.matrix(pca_matrix[,4:dim(pca_matrix)[2]])
 ```
 
-The lostruct procedure proposes to compute pairwise distances between those windows and visualise it with a MDS (multidimensional scaling). Our goal is to identify groups of windows which display similar PCA pattern.This is done with the following functions (we uses 2 PC per window as above, and will look at the 1st 10 axes of the MDS)
+The lostruct approach is based on the computation of pairwise distances between windows and their visualization with a MDS (multidimensional scaling). Our goal is to identify groups of windows that display similar PCA patterns. This is done with the following functions (we uses 2 PC per window as above, and will look at the 1st 10 axes of the MDS)
 ```
 pcdist <- pc_dist(pcs,npc=2)
 mds_axe<-cmdscale(pcdist, k=10)
@@ -62,11 +62,11 @@ head(mds_axe)
 mds_matrix<-cbind(window_pos, mds_axe)
 write.table(mds_matrix, "00_localPCA/mds_matrix.txt", sep="\t", row.names=FALSE, quote=FALSE)
 ```
-Since this is a little long , we can let it run and explore on your local computer with Rstudio some of the local pca. Let's download pca_matrix.txt locally and we will play in R studio to look at some of those local PCA
+Since this will take some time, we can let it run and explore on your local computer with Rstudio some of the local PCAs. Let's download `pca_matrix.txt` locally and play in Rstudio to look at some of those local PCAs.
 
 #### Visualising the local PCA outputs (on your computer in Rstudio)
 Back on our local computer in R studio, we will look at all those local PCA.
-Set your working directory as 04_day4/01_haploblocks, load useful libraries (ggplot2) and the matrix of pca
+Set your working directory as 04_day4/01_haploblocks, load required libraries (ggplot2) and the matrix of PCAs
 
 ```
 setwd("MY_LOCAL_PATH/04_day4/01_haploblocks")
@@ -78,7 +78,7 @@ pca_matrix[1:10,1:10]
 n_windows<-dim(pca_matrix)[1] # the number of windows we have
 ```
 
-We may want to simply plot the pca for some windows. This is not the most easy because remember the format is a bit tricky
+We may want to simply plot the PCAs for some windows. This is a little difficult due to the tricky matrix format.
 Look at the format. We have 3 columns for position, total eigen values, eigvalue of PC1, of PC2 and then 240 values for PC1 scores of all our samples, and 240 values for PC2 scores of all samples
 ```
    chrom   start     end      total    lam_1     lam_2   PC_1_L_01    PC_1_L_02    PC_1_L_03    PC_1_L_04
@@ -103,12 +103,12 @@ window_i<-paste(pca_matrix[i, 1], midpos_i , sep="_") #paste the name of CHR and
 plot(pc1_i, pc2_i, pch=20, xlab=paste("PC1", var1 , "%"), ylab=paste("PC2", var2, "%"), main=window_i)
 ```
 
-Not super clean but it works. Building on  that you can do anything to reformat your matrix of PC, eigen values, etc...
+Not super clean but it works. Building on that you can do anything to reformat your matrix of PC, eigen values, etc...
 
-Now what do we want to know, we want to look which windows explain the pattern observed in the global pca (the 3 haplogroups). We can look at correlation between global PCs and PC1 of each local PCA. I propose to take the PCA performed on the 12 NWA populations, and look at the correlation between PC1 of the global PCA and PC1 of each local PCA. (then you can do the same with PC2 of the global PCA and PC1 of each local PCA...) To help, I put the geno-transformed matrix inside your folder so that you don't go back to vcftools but the .012 file has been done exactly as shown on day2
+Now we want to look at which windows explain the pattern observed in the global pca (the 3 haplogroups). We can look at correlation between global PCs and PC1 of each local PCA. I propose to take the PCA performed on the 12 NWA populations, and look at the correlation between PC1 of the global PCA and PC1 of each local PCA (then you can do the same with PC2 of the global PCA and PC1 of each local PCA...). To help, I put the geno-transformed matrix inside your folder so that you don't need to go back to vcftools but the .012 file has been done exactly as shown on day2.
 
 I suggest below a very basic loop to store the correlation by windows. You can probably do something more fancy :-)
-Please note here that we could also have used the genotype correlation, for instance call 0/1 or 0/1/2 the cluster observed on the global pca and then look for each snps at the correlation between genotypes and gneotype for the cluster identified.
+Please note here that we could also have used the genotype correlation, for instance call 0/1 or 0/1/2 the cluster observed on the global pca and then look for each snps at the correlation between genotypes and genotype for the cluster identified.
 
 ```
 geno <- read.table("00_localPCA/canada.012")[,-1] #load geno
@@ -127,8 +127,8 @@ for (i in 1 : n_windows)
 }
 
 ```
-Now let's merge correlation and position to do a Manhattan plot of correlation along the genome. We need to take a midposition for each window.
-I suggest that we use ggplot to visualize and facet_grid is a useful way to make quick Manhattan plot with chromosome side by side
+Now let's merge correlation and position to do a Manhattan plot of correlations along the genome. We need to take a midposition for each window.
+I suggest that we use ggplot to visualize and facet_grid is a useful way to make quick Manhattan plots with chromosome side by side
 ```
 pca_correlation<-cbind(pca_matrix[,1:3], corr_vector)
 pca_correlation$midpos<-(pca_correlation$start+pca_correlation$end)/2
@@ -146,9 +146,9 @@ What do you see?  Which windows correlate with PC1? What do you think?
 Now you can have a look at correlation between local PC1s and the global PC2...
 
 ####  Using the MDS
-Here that was easy, because we knew there was something weird on PC1 and PC2. But please keep in mind that, even if on the global PCA, no region is driving a specific clustering, there may still be, on some chromosome, or some regions, similar clustering of individuals that reveal population structure, chromosomal rearragements, sex, non recombining haploblocks, etc. Exploring the MDS is a way to detect such heterogeneity in the genome.
+Here that was easy, because we knew there was something weird on PC1 and PC2. But please keep in mind that, even if on the global PCA no region is driving a specific clustering, there may still be, on some chromosome, or some regions, similar clustering of individuals due to population structure, chromosomal rearragements, sex, non-recombining haploblocks, etc. Exploring the MDS is a way to detect such heterogeneity in the genome.
 
-Let's load the mds and plot the first axes
+Let's load the MDS and plot the first axes
 ```
 mds_matrix<-read.table("00_localPCA/mds_matrix.txt", header=TRUE)
 head(mds_matrix)
