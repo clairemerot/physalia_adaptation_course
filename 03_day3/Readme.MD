@@ -55,14 +55,13 @@ We could also have given a R² threshold with --indep-pairwise $WINDOW $SNP $R2
 gunzip 02_data/canada.vcf.gz
 plink --vcf 02_data/canada.vcf --make-bed --out 02_data/canada
  
-WINDOW=100000
+WINDOW=200000
 SNP=100
-VIF=2
+R2=0.5
 plink --bed 02_data/canada.bed \
 --bim 02_data/canada.bim \
 --fam 02_data/canada.fam \
---indep $WINDOW $SNP $VIF --allow-extra-chr \
---memory 1000 \
+--indep-pairwise $WINDOW $SNP $R2 --allow-extra-chr \
 --out 02_data/canada
 ```
 You can have a look at the files 02_data/canada.prune.in and 02_data/canada.prune.out
