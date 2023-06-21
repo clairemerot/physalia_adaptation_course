@@ -166,7 +166,7 @@ ggplot(mds_matrix, aes(x=mds3, y=mds4, colour=chrom))+
 ```
 ![mds1_2](00_localPCA/images/mds1_2.png)
 
-As you see, MDS 1 and 2 are largely driven by Chr 4 and Chr5. Let's look at mds scores along the genome to pinpoint those regions
+As you see, MDS 1 and 2 are largely driven by Chr4 and Chr5. Let's look at MDS scores along the genome to pinpoint those regions.
 Building on what we did before, you can probably make a Manhattan plot with a midposition as x, and mds1 or mds2 as y.
 
 ```
@@ -203,8 +203,8 @@ option2 <- argv[2]
 ## Step 2 Explore the putative haploblock
 
 ### Genotype the individuals for the haploblocks
-Thanks to our local PCA exploration on day 2, we know that there are non-recombining haploblocks which may be an inversion on chromosome 4.
-We located the breakpoints approximately from 4.8MB to 16.6MB. We can make a PCa in that region only and use k-means approaches to classify the individuals into 3 groups. 
+Thanks to our local PCA exploration on day 2, we know that there are non-recombining haploblocks, which on chromosome 4 may be an inversion.
+We located the breakpoints approximately from 4.8MB to 16.6MB. We can make a PCA based on variants in that region only and use k-means approaches to classify the individuals into 3 groups. 
 
 To save time I did this for you and put the AA.list, AB.list and BB. list into the 02_data folder. 
 
@@ -215,13 +215,13 @@ If you are interested in the code, you can have a look in this file
 
 ### Study linkage disequilibrium
 
-#### On the server: calculate Ld with Plink
+#### On the server: calculate LD with Plink
 To calculate LD we will use plink, but not in pruning mode. We want all pairwise LD on each chromosome.
-for Ld, we will remove SNPs at low frequency as they will be uninformative and increase the size of the matrix (>5% of frequency - we could have filter up to 5% or 10% with whole genome data). 
-We will focus on chromosome 4 but feel free to try other chromosome.
+We will remove SNPs at low frequency as they are not very informative and increase the size of the matrix (>5% of frequency - we could have filter up to 5% or 10% with whole genome data). 
+We will focus on chromosome 4 but feel free to try other chromosomes.
 
-Plink requires three inputs (.bed, .bim, .fam). The argument --r2 calculate the Ld as R2 (you could also have chosen D), inter-chr makes a long matrix (square would have amke a suare one)
-we need to put --allow-extra-chromosome since we are not on humans! and --ld-window-r2 0 asks all output to be printed. To reduce the file you can choose here a minimum threshold for R2
+Plink requires three inputs (.bed, .bim, .fam). The argument --r2 calculate the LD as R2 (you could also have chosen D), inter-chr makes a long matrix (square would make a square one).
+We need to add --allow-extra-chromosome since we are not working with human data and --ld-window-r2 0 to require all output to be printed. To reduce the file you can choose here a minimum threshold for R2
 
 ```
 #unzip vcf
@@ -243,12 +243,12 @@ plink --bed 03_ld/maf0.05_chr4.bed \
 head 03_ld/maf0.05_chr4.ld
 ```
 
-Let's do LD within a group of homokaryotes. We choose the group that has many individuals. For me that was AA.
+Let's calculate LD within a group of homokaryotes. We choose the group that has many individuals. For me that was AA.
 
-We want to consider the same SNPs so we used the recode vcf >5% and keep the AA individuals using the command keep.
+We want to consider the same SNPs so we used the recoded VCF with MAF >5% and kept the AA individuals using the command keep in vcftools.
 
 ```
-#extract a reduced vcf with the same snps but only BB individuals
+#extract a reduced vcf with the same snps but only AA individuals
 vcftools --vcf 03_ld/maf0.05_chr4.recode.vcf --keep 02_data/AA.list --recode --out 03_ld/AA_maf0.05_chr4
 
 #format for plink
@@ -299,8 +299,8 @@ ggplot(chr4.ld,aes(x=BP_A,y=BP_B, col=R2)) + theme_classic() +
 What do you think? do you observe the linkage possibly due to an inversion (or a non-recombining block?)? Is it also observed in the BB group?
 
 ### Studying divergence with Fst (optional)
-We may be interested in calculating several statistics for each haplogroup (diversity, divergence, etc). For instance we can calculate Fst between our groups, as you learnt to do on day 2 with vcftools, both as an overall Fst value and in sliding-windows along the genome
-Note that here, this is not ideal since it is better to have balanced sample size (and our group AA is pretty small).
+We may be interested in calculating several statistics for each haplogroup (diversity, divergence, etc). For instance we can calculate Fst between our groups, as you learnt to do on day 2 with vcftools, both as an overall Fst value and in sliding-windows along the genome.
+Note that here this is not ideal since it is better to have balanced sample size (and our group AA is pretty small).
 
 If you are interested in following this extra tutorial, you will find all details here:
 
@@ -310,8 +310,8 @@ These are the results:
 
 ![fst](06_images/Fst_AAvsBB.png)
 
-As you can note within our region of interest on Chr4, some SNP have a super high Fst (up to 1), suggesting fixed alleles and extremely high divergence
-You may have noticed that some FSt values are negatives.. This is likely driven by very low frequency alleles and inbalanced sample sizes. We also observe NA in the calculation of FSt by site
+As you can note within our region of interest on Chr4, some SNP have a super high Fst (up to 1), suggesting fixed alleles and extremely high divergence.
+You may have noticed that some FSt values are negatives.. This is likely driven by very low frequency alleles and inbalanced sample sizes. We also observe NA in the calculation of FSt by site.
 
 Try to plot also the AA_AB and AB_BB contrasts. 
 
@@ -330,7 +330,7 @@ These are the results:
 ![Hobs_all](06_images/Hobs_all.png)
 
 As you observed on the Manhattan plots, there is a lot of heterogeneity between SNPs. Perhaps it might be worth looking at results by sliding-windows?
-Our case is not ideal because SNPs are sparese (RAD-seq) but with whole-genome data you would have no choice but doing windows.
+Our case is not ideal because SNPs are sparse (RAD-seq) but with whole-genome data you would have no choice but doing windows.
 
 
 We can also visualize them with violin-plots
@@ -340,4 +340,4 @@ In all cases, we nevertheless note the expected higher observed heterozygosity i
 On Chr5, there is a region of high heterozygosity in all three groups, which may be driven by sex.
 
 ### About haploblocks
-Not all haploblocks detected by MDS will be rearrangements, low-recombination regions, introgression, linked selection or sex-determining loci can leav the same signature. If you are curious and if you have time, you may want to try exploring the Chr5 in the same way to see what's similar and what differs. Note that you won't need the first step to find clusters since we already have the sex information.
+Not all haploblocks detected by MDS will be rearrangements. Low-recombination regions, introgression, linked selection or sex-determining loci can leave the same signature. If you are curious and if you have time, you may want to try exploring Chr5 in the same way to see what's similar and what differs. Note that you won't need the first step to find clusters since we already have the sex information.
