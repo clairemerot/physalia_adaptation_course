@@ -1,27 +1,32 @@
-Today, we will explore the annotation of the genome, to see if some of the outliers we found might belong to candidate genes, the distribution of our SNPs in exons, introns, regulatory regions,etc. We will also look at the annotation of repeated and transposable elements and compare that to our CNV detection.
+Today, we will explore SNP annotation to see if they fall on genes of known function, and evaluate the distribution of outlier SNPs across exons, introns, regulatory regions, etc. We will also look at the annotation of repeats and transposable elements and compare that to our CNV detection.
 
 ## Getting started 
 
-First of all, like previous days please copy into your directory the folder 05_day5, open it and we will work from there all day.
+First of all,  please copy into your directory the folder 05_day5, open it and we will work from there all day.
 
 ```
+cd
 cp -r ~/Share/physalia_adaptation_course/05_day5 .
 cd 05_day5
 ```
 
-Inhere, you should have everything we need for today. You can explore the different folders and files
-``` ls 02_data``` in which you will find the vcf, ``` ls 03_outliers``` in which I put the txt files that we exported on day 3 when analysing the association with temperature, and on day4 when analysing divergence between haploblocks or between sexes
-I also put here the list of all SNPs present in the vcf. you can look at each file with the command ``` head 03_outliers/SNP_pos.txt``` for instance
+Now you should have everything we need for today. You can explore the different folders and files
+`ls 02_data` in which you will find the vcf, `ls 03_outliers` in which I put the .txt files that we exported on day 3 when analysing the association with temperature, and on day4 when analysing divergence between haploblocks or between sexes.
+I also put here the list of all SNPs present in the vcf. You can look at each file with the command `head 03_outliers/SNP_pos.txt` for instance.
 
-The annotated transcriptome (which is generally in .gff format) as well as the transposition onto the genome in an annotation table are located at the following path ~/Share/ressources/ A copy of the .gff transcriptome is inside the 02_data folder.
-You don't need to copy them as we have prepared simplified files (in R simply selecting the relevant column) when needed. You may want to have a look to get a sense of what it looks like.
-``` less ~/Share/ressources/genome_mallotus_dummy.gff3``` 
+The annotated transcriptome (which is generally in .gff format) as well as the transposition onto the genome in an annotation table are located at the following path `~/Share/ressources/`. A copy of the .gff transcriptome is inside the 02_data folder.
+You don't need to copy them as we have prepared simplified files (in R, simply selecting the relevant column) when needed. You may want to have a look to get a sense of what it looks like.
+``` 
+less ~/Share/ressources/genome_mallotus_dummy.gff3
+``` 
 press "q" to exit the less visualisation
-``` less ~/Share/ressources/genome_mallotus_dummy_annotation_table.tsv``` 
+```
+less ~/Share/ressources/genome_mallotus_dummy_annotation_table.tsv
+``` 
 
-## Step 1 SNPeff : annotating our snps 
+## Step 1. SNP annotation with SNPeff 
 
-SNPeff is a program that uses the gff file and the position of each SNP to annotate the vcf.
+SNPeff is a program that uses the .gff file and the position of each SNP to annotate the vcf.
 If you work on a model species which already has a database, you are lucky! If not, you need to build a database. 
 
 As it is a bit long, and takes space on the server, I have done it for you. It was not very straightforward, so I thought I will keep track of how I did and put it for you in this file https://github.com/clairemerot/physalia_adaptation_course/blob/master/05_day5/SNPeff_createDB.md (but do not try to run it on the server please)
@@ -35,7 +40,7 @@ java -jar ~/Share/ressources/snpEff/snpEff.jar dump genome_mallotus_dummy | less
 It may take a minute to open. To exit "less" simply press "q"
 
 #### Annotate the vcf 
-Now we can annotate our vcf. As you are getting used to now, we use a raw vcf file in the folder 02_data and will write the output into the folder 04_snpEff in which we will have all subsequent files related to the snpEff analyses
+Now we can annotate our VCF. As you may have gotten used to by now, we use a raw VCF file in the folder 02_data and will write the output into the folder 04_snpEff in which we will have all subsequent files related to the snpEff analyses.
 ```
 java -Xmx4g -jar ~/Share/ressources/snpEff/snpEff.jar genome_mallotus_dummy 02_data/canada.vcf > 04_snpEff/canada_annotated.vcf
 ```
@@ -43,7 +48,7 @@ Let's look at the new vcf
 ```
 less -S 04_snpEff/canada_annotated.vcf
 ```
-As you see it kepts the vcf format with its specific header but this is not easy to use as it is now if we want to import SNP information in R.
+As you see, it keeps the vcf format with its specific header but this is not easy to use as it is now if we want to import SNP information in R.
 We will use a few bash command and awk to split the information by the symbol "|" and rather make different column separated by tab
 
 ```
@@ -72,8 +77,8 @@ Here is a small tutorial (optional) to look at SNP repartition:
 
 
 ## Step 2 Bedtools : find the intersection between SNPs and genes
-Bedtools is a program that is great to find the intersection between two files. It usually works on a specific bedformat which have at least three columns (Chromosome, FromPosition, ToPosition) and 12 columns to the maximum.
-It won't like having header. We will try to keeep a 4th column with SNP id.
+Bedtools is a great program to find the intersection between two files. It usually works on a specific bed format which have at least three columns (Chromosome, FromPosition, ToPosition) and 12 columns to the maximum.
+It won't like having header. We will try to keeep a 4th column with SNP ID.
 
 I have prepared for your the annotation file of the genome in a bed-readable format, that you may want to see by doing
 ```
@@ -81,7 +86,7 @@ less -S 05_bed/genome_mallotus_dummy_annotation_simplified.bed
 ```
 (q to exit from less)
 
-If you remember our outliers files they were not formatted as such... Because we do not cover all the genome, we will look for genes in a window of X kb around the SNP position. The size of this window should ideally be adjust depending on LD decay in your organism (which can be assessed by plotting LD against distance with the output of plink that we found yesterday... For today we will choos 10 kb but if you are curious you can explore different size.
+If you remember our outliers files, they were not formatted as such... Because we do not cover all the genome, we will look for genes in a window of X kb around the SNP position. The size of this window should ideally be adjusted depending on LD decay in your organism (which can be assessed by plotting LD against distance with the output of plink that we found yesterday...). For today we will choose 10 kb but if you are curious you can explore different sizes.
 To prepare the files, we will use R. 
 
 ### In R (in a R terminal on the server)
@@ -125,7 +130,7 @@ write.table(all_snps_bed, "05_bed/all_snps.bed", row.names=F, sep="\t", quote=F,
 And you can do the same for the outliers from baypass, or the outliers of divergence on chr4 or chr5... (if you are late skip)
 
 ### on the server (quit R with the command q() or quit() )
-If you did the bedfiles in Rstudio, Please copy back your formatted outliers and snp bedfiles into the 05_day5/05_bed folder on the server. 
+If you did the bed files in Rstudio, please copy back your formatted outliers and SNP bed files into the 05_day5/05_bed folder on the server. 
 We will now run bedtools. The command intersect will look for overlap between the file givne with -a, and the file given with -b, the argument -wb will print the information coming from the annotation file (gene names, gene ontology, uniprot ID, etc)
 the command ">" redirect the output in the file of your choice
 
@@ -157,7 +162,7 @@ head 06_go/all_snps.transcript
 You may now repeat the commands for other outliers files if you wish. (if you are late skip)
 
 ### Have a look at your results
-So copying back your .intersect files (and .transcript) on your computer (inside 05_day5/05_bed of course!), you can easily open them with a text editor (notepad ++ or equivalent). You cna see the name of the genes, gene ontology. What do you think?
+So copying back your .intersect files (and .transcript) on your computer (inside 05_day5/05_bed of course!), you can easily open them with a text editor (notepad ++ or equivalent). You can see the name of the genes and their gene ontology codes. What do you think?
 For information about gene ontology codes, you may want to check this website http://geneontology.org/docs/ontology-documentation/
 
 For information about proteins, you can look at https://www.uniprot.org/
@@ -193,7 +198,7 @@ transcript_info = read.table("06_go/transcript_go_simplified.txt", header=T, str
 head(transcript_info)
 row.names(transcript_info)<-transcript_info$TranscriptName
 ```
-As you see go terms are all side by side, which will not be super helpful to make a list transcripts/GO
+As you see go terms are all side by side, which will not be super helpful to make a list transcripts/GO.
 Please install the library splitstackshape which is able to split a whole column, and the library data.table which is super helpful to transform wide datatbale into long datatable
 ```
 install.packages("splitstackshape")
@@ -216,7 +221,7 @@ head(go_ready)
 ```
 
 ####  Enrichment test
-First we need to know which genes were in our pool of analysis, in other words, which genes are nearby a SNP covered by a RAD loci. This will be a subset of all the genes presents in the transcriptome/genome since we did a reduced-representation sequencing. Note that for whole genome you may be in the same situation if because of coverage, quality or whatever reason we have genes not covered by SNPs (after filtration)
+First we need to know which genes were in our pool of analysis or, in other words, which genes are nearby a SNP covered by a RAD locus. This will be a subset of all the genes presents in the transcriptome/genome since we did a reduced-representation sequencing. Note that for whole genome you may be in the same situation if because of coverage, quality or whatever reason we have genes not covered by SNPs (after filtering)
 
 ```
 #upload transcript intersecting with snps
@@ -245,7 +250,7 @@ dim(all_transcripts_unique) # see the matrix has reduced...
 row.names(all_transcripts_unique)<-all_transcripts_unique$TranscriptName
 head(all_transcripts_unique)
 ```
-Now let's open one of our outlier list and format it. We will start with the outliers from the associations with temperature as found by the rda
+Now let's open one of our outlier list and format it. We will start with the outliers from the associations with temperature as found by the RDA
 
 ```
 #transcripts in outliers
