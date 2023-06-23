@@ -38,7 +38,8 @@ Installing the libraries will write a lot of lines, don't worry it means it is g
 install.packages("data.table")
 devtools::install_github("petrelharp/local_pca/lostruct")
 
-#load library
+#load libraries
+library(data.table)
 library(lostruct)
 ```
 
