@@ -28,7 +28,7 @@ However, in our case, we have low-coverage whole genome resequencing data from o
 ```
 cd
 cd wgr
-mkdir wgr/svs_delly
+mkdir svs_delly
 
 ln -s /home/ubuntu/Share/WGS_bam/* .
 
@@ -41,7 +41,7 @@ bcftools convert -O v -o capelin_sv.vcf capelin_sv.bcf
 ```
 You can run this code, but it will take ~45 minutes. Because we don't have that time, you can copy the VCF file containing all the SVs into ~/wgr/svs_delly
 ```
-cp ~/Share/WGS_bam/sv_delly/capelin_sv.vcf ~/wgr/svs_delly/.
+cp ~/Share/WGS_bam/svs_delly/capelin_sv.vcf ~/wgr/svs_delly/.
 ```
 ### 2. VCF filtering and splitting
 Though we don't have enough samples to run `delly filter` properly, we can do some filtering using the same approach we use for SNP filtering but in this case we'll filter just by missing data
@@ -68,7 +68,6 @@ What is the most abundant SV type?
 Next, we'll convert the genotypes in 012 format for PCA of the whole dataset and each specific 
 ```
 ###Recode genotypes for PCA
-module load vcftools
 vcftools --vcf capelin_sv_filtered.vcf --012 --out capelin_sv
 
 ###and for each SV type
