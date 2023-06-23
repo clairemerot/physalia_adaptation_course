@@ -44,7 +44,7 @@ Raw data: Data were generated using a reduced-representation approach (GBS/RADse
 
 ## Day3: Outlier detection - Environmental associations
 
-Data: We focus on 12 population from Canada for which there is almost no geographic structure but great environmental variability
+Data: We focus on 12 populations from Canada for which there is almost no geographic structure but great environmental variability
 
 3-1: Genetic structure and LD-pruning
 
