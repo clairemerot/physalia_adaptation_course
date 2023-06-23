@@ -235,15 +235,15 @@ mkdir wgr/snps_bcftools
 ```
 
 ### SNPs calling
-Copy bam files (symbolic links) storing aligned reads to reference genome
+Copy bam files (symbolic links) and their indexes storing aligned reads to reference genome
 ```
 cd wgr
-ln -s /home/ubuntu/Share/WGS_bam/.bam* .
-cp /home/ubuntu/Share/WGS_bam/bams_list* .
+ln -s /home/ubuntu/Share/WGS_bam/*.bam* .
+ls -1 *.bam > bams_list.txt ### create list of bam files
 ```
 Call variants using bcftools
 ```
-bcftools mpileup -Ou -f ~/Share/ressources/genome_mallotus_dummy.fasta -b bams_list_rg.txt -r Chr1 -q 5 -I -a AD,DP,SP,ADF,ADR -d 200 | bcftools call - -mv -Ov > snps_bcftools/capelin_wgs_unfiltered.vcf
+bcftools mpileup -Ou -f ~/Share/ressources/genome_mallotus_dummy.fasta -b bams_list.txt -r Chr1 -q 5 -I -a AD,DP,SP,ADF,ADR -d 200 | bcftools call - -mv -Ov > snps_bcftools/capelin_wgs_unfiltered.vcf
 
 ```
 Variant filtering is done in two steps. First we use 'bcftools filter' to filter SNPs based on mapping quality. Then, we apply a series of filters using VCFtools. Note that I'm calling variants from chromosome 1 only to save time. 
@@ -253,22 +253,19 @@ bcftools filter -e 'MQ < 30' capelin_wgs_unfiltered.vcf -Ov > capelin_wgs_filter
 ### Count number of unfiltered SNPs surviving filters
 grep -v ^\#\# capelin_wgs_filtered.tmp.vcf | wc -l  
 
-echo "
->>> Filtering through VCFtools now!!
-"
 vcftools --vcf capelin_wgs_filtered.tmp.vcf \
-    --minQ 30 \
-    --minGQ 20 \
-    --minDP 3 \
-    --mac 2 \
     --max-alleles 2 \
     --max-missing 0.7 \
+    --minDP 3 \
     --maf 0.05 \
+    --minQ 30 \
+    --minGQ 20 \
     --recode \
-    --stdout > capelin_wgs_filtered.vcf
+    --stdout > capelin_wgs_filtered.vcf 
+
 
 ### Count number of SNPs surviving filters
-grep -v ^\#\# capelin_wgs_filtered.vcf | wc -l 
+grep -v "#" capelin_wgs_filtered.vcf | wc -l 
 ```
 Also, because there was a problem with the internal individual flags in the read files, which cause the addition of an individual, I used this line to fix it
 ```
