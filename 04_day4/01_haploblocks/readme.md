@@ -210,7 +210,7 @@ We located the breakpoints approximately from 4.8MB to 16.6MB. We can make a PCA
 To save time I did this for you and put the AA.list, AB.list and BB. list into the 02_data folder. 
 
 If you are interested in the code, you can have a look in this file
-[extract_genotypes_from_pca](https://github.com/clairemerot/physalia_adaptation_course/blob/master/04_day4/01_haploblocks/Step1_tuto.md)
+[extract_genotypes_from_pca](Step1_tuto.md)
 
 ![pca](06_images/pca_cluster.png)
 
@@ -305,7 +305,7 @@ Note that here this is not ideal since it is better to have balanced sample size
 
 If you are interested in following this extra tutorial, you will find all details here:
 
-[Fst_sliding_windows](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/04_day4/01_haploblocks/Step4_fst.md)
+[Fst_sliding_windows](Step4_fst.md)
 
 These are the results:
 
@@ -323,7 +323,7 @@ Try to plot also the AA_AB and AB_BB contrasts.
 We are also interested to figure out whether heterozygosity is indeed higher in our AB middle group. We will use the --hardy options for vcftools which tests hardy-weinberg equilibrium for each SNP and report the observed and expected fraction of heterozygotes at each position
 
 You can following the tutorial to do so here:
-[Hobs_sliding_windows](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/04_day4/01_haploblocks/Step5_Hobs.md)
+[Hobs_sliding_windows](Step5_Hobs.md)
 This tutorial also includes how to subset vcf with vcftools, filter for MAF, extract H-W statistics, etc and some re-formatting.
 
 These are the results:
