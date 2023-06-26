@@ -238,7 +238,7 @@ Copy bam files (symbolic links) and their indexes storing aligned reads to refer
 ```
 cd wgr
 ln -s /home/ubuntu/Share/WGS_bam/*.bam* .
-ls -1 *.bam > bams_list.txt ### create list of bam files
+ls *sorted.bam > bams_list.txt ### create list of bam files
 ```
 Call variants using bcftools
 ```
