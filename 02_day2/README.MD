@@ -91,11 +91,9 @@ For example, STACKS adopts an AMOVA F<sub>ST</sub> by Weir (from Genetic Data An
 
 ####  optional: Investigate structure in relation to geography
 
-**! Optional practice discarded for now as we found mistakes due to tutorial migration from day_3 to day_02. Sorry about that... continue to PCA analysis below please.**
-
 To assess genetic structure in relation to geography and pre-existing partitions (e.g. sampling locations), we can also look into population pairwise F<sub>ST</sub>. Here is an extra tutorial to get a matrix of population pairwise F<sub>ST</sub> (for the 12 Canadian populations) and assess whether genetic differentiation iscorrelated with geographic distance (e.g., isolation-by-distance). If you have extra time, or need it in the future, you can find the tutorial at this link below
 
-[Population pairwise F<sub>ST</sub> and IBD tutorial - extra](https://github.com/clairemerot/physalia_adaptation_course/blob/2022/03_day3/00_documents/IBD.md)
+[Population pairwise F<sub>ST</sub> and IBD tutorial - extra](IBD.md)
 
 
 ## 2. PCA
