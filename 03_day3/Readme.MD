@@ -315,7 +315,7 @@ To do so we have simulated genotypes in R using a program provided with Baypass.
 I did that for you to save some time and the file is here 05_baypass/G.simulates_pods 
 
 If you want to see how to do, the code is here.
-[simulate_baypass](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/00_documents/simulate_baypass.md) 
+[simulate_baypass](00_documents/simulate_baypass.md) 
 
 ```
 #controlled run on the simu dataset
@@ -401,7 +401,7 @@ To test for environnmental associations with Baypass, we will use the same scrip
 ####  Get environmental data and format env file 
 Today we will test for correlations between genotypes and temperature, which I have extracted for each population location from the database MarSPEC (for marine environments). bioOracle is another good option for marine environments, whereas WorldClim is a commonly used database for terrestrial environments. 
 Here is an example script to extract environmental variables for each location of interest.
-[extract clim variables](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/tuto_worldclim.R)
+[extract clim variables](tuto_worldclim.R)
 
 The format of the environmental data file is one row for each environmenral variable and one column for each population location, without header.
 I have used the file 02_data/info_pop_geo_eco.txt as input and format it in R to produce the file 05_baypass/env.txt.
@@ -625,7 +625,7 @@ As with baypass, we have very few outliers associated with temperature. Yet, the
 
 In our system in which gene flow is super high and geographic structure very low, it is not recommended to control the RDA by geography or population structure. Yet, as a proof of principle, you can explore how to do it in this complementary tutorial.
 
-[Complementary RDA tutorial](https://github.com/clairemerot/physalia_adaptation_course/blob/2021/03_day3/00_documents/RDA.md)
+[Complementary RDA tutorial](00_documents/RDA.md)
 
 ### 3.3 Identify outliers detected by two different methods
 It is often recommended to keep only outliers (or SNPs with strong GEA) detected by more than one method to avoid false positive. This will nevertheless also reduce the power of the analysis... a matter of choice? Here we will run a few R command to keep the intersection of our baypass and RDA outliers. It is worth noting that since RDA and baypass works differently, it may not be surprising to have a limited overlap.
