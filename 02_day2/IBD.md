@@ -135,7 +135,7 @@ Why do you think A and J are so different?
 ### 1.2 Isolation by distance
 To explore whether this is linked to distance between population, we will do a IBD test (Isolation by distance)
 ```
-library(SoDA)
+library(geosphere)
 library(reshape2)
 library(dplyr)
 library(magrittr)
@@ -146,8 +146,12 @@ library(ggplot2)
 info_pop <- read.table("02_data/info_pop_geo_eco.txt", header=T)
 head(info_pop)
 #calculate geogrpahic (euclidian) distances between all pairs of populations
-distance <- dist(SoDA::geoXY(info_pop$latitude, info_pop$longitude)) %>%
+distance <- geosphere::distm(info_pop[,c(3,4)], fun=distGeo) %>%
   as.matrix(.)
+#change it from meters to km
+distance <- distance/1000
+
+#set the colnames and rownames of the distance matrix
 dimnames(distance) <- list(info_pop$pop,info_pop$pop)
 distance
 
