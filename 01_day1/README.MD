@@ -237,8 +237,8 @@ mkdir wgr/snps_bcftools
 Copy bam files (symbolic links) and their indexes storing aligned reads to reference genome
 ```
 cd wgr
-ln -s /home/ubuntu/Share/WGS_bam/*.bam* .
-ls *sorted.bam > bams_list.txt ### create list of bam files
+ln -s /home/ubuntu/Share/WGS_bam/*reheader.bam* .
+ls *reheader.bam > bams_list.txt ### create list of bam files
 ```
 Call variants using bcftools
 ```
