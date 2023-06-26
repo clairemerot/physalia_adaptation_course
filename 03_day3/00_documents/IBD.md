@@ -7,7 +7,7 @@ To get pairwise FSt, we will use the R package STAMPP.
 to save time today, we will use a toolbox developped by Yann Dorant. You may be interested in looking at the scripts to understand how this is done.
 This toolbox embed various useful script in order to fastly convert vcf format to common pop genomics formats (genepop, StAMPP, baypass, bayenv...). If you are interested to learn more about this toolbox, you will find the full description at https://gitlab.com/YDorant/Toolbox
 
-To download the toolbox in your current working folder on the server (03_day3), use the following command line:
+To download the toolbox in your current working folder on the server (02_day2), use the following command line:
 ```
 git clone https://gitlab.com/YDorant/Toolbox
 ```
@@ -15,9 +15,7 @@ git clone https://gitlab.com/YDorant/Toolbox
 To run, the Toolbox needs an unzipped vcf file (I'have to add the gzip option in the Toolbox for the next update !).
 
 So, unzip the vcf with the following command :
-```gunzip 02-data/populations.snps.vcf.gz```
-
-Then move to the Toolbox directory with ``cd Toolbox/``
+```gunzip -k populations_canada_random/populations.snps.vcf.gz```
 
 Ok, now we are ready to convert our VCF files to the StAMPP file format. The toolbox have an easy way to do that with a bash script. This bash script require four args:
 * -v VCF file
@@ -26,7 +24,8 @@ Ok, now we are ready to convert our VCF files to the StAMPP file format. The too
 * -o output prefix name
 
 ```
-bash Toolbox/00-VCF_Reshaper.sh -v ../02_data/populations.snps.vcf -p ../02_data/popmap_canada.txt -f StAMPP -o canada
+chmod +x Toolbox/00-VCF_Reshaper.sh
+bash Toolbox/00-VCF_Reshaper.sh -v populations_canada_random/populations.snps.vcf -p documents/popmap_canada.txt -f StAMPP -o canada
 ```
 
 Then check your current folder ``ls``, you should be able to see your ``.StAMPP`` input file (*quick overview of the file with less -S command).
@@ -77,7 +76,7 @@ Inside you will have the pairwise FST matrix (file suffix ``_fst_matrix.txt``) i
 
 
 **[On your local computer]**
-We are now in Rstudio on your computer. Please set you working directory as "03_day3"
+We are now in Rstudio on your computer. Please set you working directory as "02_day2"
 
 We keep it simple and do a simple numeric matrix but you can imagine more fancy ways, with heatmaps or so.
 
