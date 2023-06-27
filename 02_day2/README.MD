@@ -57,7 +57,7 @@ Now, to visualise it, we recommend that you can download the file from the serve
 
 On your local computer, in R studio, simply set your working directory to 02-day2
 
-To do Manhattan plot, there are great package like QQMan
+To do Manhattan plot, there are great packages like QQMan
 https://cran.r-project.org/web/packages/qqman/vignettes/qqman.html
 
 And you can also simply use ggplot if you have few Chromosomes
