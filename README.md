@@ -10,8 +10,7 @@ Here is the tentative schedule for the week. Within each block we'll keep some f
 
 
 ## Logging on the AWS server from your computer
-Please follow instructions sent by Carlo
-https://github.com/clairemerot/physalia_adaptation_course/blob/2021/Connection%20to%20the%20Amazon%20EC2%20service_.pdf
+Please follow [the instructions sent by Carlo](Connection%20to%20the%20Amazon%20EC2%20service_.pdf)
 
 [Additional info for AWS for Mac OS X and Linux users](https://github.com/clairemerot/physalia_adaptation_course/blob/2022/AWS_mac.md)
 
