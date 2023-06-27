@@ -135,12 +135,18 @@ Why do you think A and J are so different?
 ### 1.2 Isolation by distance
 To explore whether this is linked to distance between population, we will do a IBD test (Isolation by distance)
 ```
-library(geosphere)
 library(reshape2)
 library(dplyr)
 library(magrittr)
 library(tibble)
 library(ggplot2)
+
+#We switched SoDA to geosphere package.
+if(!require(geosphere)){
+    install.packages("geosphere")
+    library(geosphere)
+}
+
 
 #import information about populations
 info_pop <- read.table("02_data/info_pop_geo_eco.txt", header=T)
