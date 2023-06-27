@@ -44,7 +44,7 @@ Weir and Cockerham weighted Fst estimate: 0.22947
 After filtering, kept 8530 out of a possible 8530 Sites
 Run Time = 0.00 seconds
 ```
-The calculation is very fast, and in addition to per-site estimates you get mean and weighted F<sub>ST</sub> estimates, which you could save in a separate file by adding ```> fst_2lin.log``` at the end of the previous command.
+The calculation is very fast, and in addition to per-site estimates you get mean and weighted F<sub>ST</sub> estimates, which you could display in a separate logfile outputted by vcftools ```less FST/fst_2lin.log```.
 
 If you have a reference genome and panel of SNPs dense enough (or whole genome resequencing data) you can calculate window estimates with
 ```
