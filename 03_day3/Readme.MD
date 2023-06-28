@@ -45,19 +45,26 @@ Because we don't want to mix 2 lineages, tofay we will only work on the 12 canad
 
 Linkage disequilibrium can particularly bias the structure, whether this is due to regions of low-recombination, variable SNP density, structural rearrangements, selection, etc. this will be particularly true with whole-genome data. So a good practice to assess neutral structure is to use a LD-pruned set of SNPs. This will also be taken by some of the outlier detection methods that we use hereafter
 
-For this we will use PLINK which compute LD between SNPs by windows along the genome and keep one SNP out of several SNPs in linkage. Here we are interested in long distance LD (since we have already removed short-distance LD by keepin only one SNP per RAD locus) so I have set the window quite large.
+For this we will use PLINK which compute LD between SNPs by windows along the genome and keep one SNP out of several SNPs in linkage. Here we are interested in long distance LD (since we have already removed short-distance LD by keeping only one SNP per RAD locus) so I have set the window quite large.
 
 Plink requires a bim file when taking a vcf input this can be created with the first line.
 Then we give our parameters. We chose to be very stringent removing SNP with a VIF>2 in windows of 100 SNPs or 100KB
 We could also have given a R² threshold with --indep-pairwise $WINDOW $SNP $R2
 
+To explain a little what the command below means. WINDOW=200000 allows storing in a variable called "WINDOW" a value of 200000bp. We next call this variable with $WINDOW in the plink line.v Same for SNP and R2.
+the --out parameter allows us to give a prefix, on which plink will add a suffix describing the file (e.g. .prune.in)
+
 ```
+#prepare files
 gunzip 02_data/canada.vcf.gz
 plink --vcf 02_data/canada.vcf --make-bed --out 02_data/canada
- 
+
+#give variables
 WINDOW=200000
 SNP=100
 R2=0.5
+
+#run plink
 plink --bed 02_data/canada.bed \
 --bim 02_data/canada.bim \
 --fam 02_data/canada.fam \
