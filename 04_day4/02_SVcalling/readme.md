@@ -67,7 +67,7 @@ grep "#" capelin_sv_filtered.vcf > capelin_sv_ins.vcf && grep "SVTYPE=INS" capel
 grep "#" capelin_sv_filtered.vcf > capelin_sv_del.vcf && grep "SVTYPE=DEL" capelin_sv.vcf >> capelin_sv_del.vcf ###deletions
 grep "#" capelin_sv_filtered.vcf > capelin_sv_inv.vcf && grep "SVTYPE=INV" capelin_sv.vcf >> capelin_sv_inv.vcf ###inversions
 grep "#" capelin_sv_filtered.vcf > capelin_sv_dup.vcf && grep "SVTYPE=DUP" capelin_sv.vcf >> capelin_sv_dup.vcf ###duplications
-grep "#" capelin_sv_filtered.vcf > capelin_sv_bnd.vcf && grep "SVTYPE=BND" capelin_sv.vcf >> capelin_sv_bnd.vcf ###break points
+grep "#" capelin_sv_filtered.vcf > capelin_sv_bnd.vcf && grep "SVTYPE=BND" capelin_sv.vcf >> capelin_sv_bnd.vcf ###breakends 
 ```
 and count the number of SV identified, overall or for each type with
 ```
