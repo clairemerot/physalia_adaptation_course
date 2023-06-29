@@ -24,7 +24,8 @@ bcftools merge -m id -O b -o merged.bcf s1.geno.bcf s2.geno.bcf ... sN.geno.bcf
 delly filter -f germline -o germline.bcf merged.bcf
 
 ```
-However, in our case, we have low-coverage whole genome resequencing data from only 12 individuals, so we can call SVs directly from all the samples combine and forego the filtering step. Keep in mind that this is just a toy dataset, and the quality of these SV calls may not be very high.
+However, in our case, we have low-coverage whole genome resequencing data from only 12 individuals, so we can call SVs directly from all the samples combined and forego the filtering step. Keep in mind that this is just a toy dataset, and the quality of these SV calls may not be very high.
+You can run this code, but it will take > 1h. If you prefer, you can copy the VCF file directly with the second block of commands.
 ```
 cd
 cd wgr
@@ -39,7 +40,7 @@ delly call -g ~/Share/ressources/genome_mallotus_dummy.fasta -o svs_delly/capeli
 cd svs_delly
 bcftools convert -O v -o capelin_sv.vcf capelin_sv.bcf
 ```
-You can run this code, but it will take ~45 minutes. Because we don't have that time, you can copy the VCF file containing all the SVs into ~/wgr/svs_delly
+To copy the VCF file containing all the SVs into ~/wgr/svs_delly
 ```
 #make the wgr directory and the svs_delly directory if you haven't yet
 mkdir wgr
