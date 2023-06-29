@@ -94,7 +94,8 @@ and download the resulting files on your computer.
 On your computer in R, perform one PCA and plot results based on each type of structural variant. The one below is the code for the PCA based on all SVs. Once you've done this, modify the script to perform the analysis on each type of SV and on the SNPs.
 ```
 #load the population map with population assignment for each individual
-popmap_delly<-read.table("popmap_capelin_wgr_delly.txt", header= TRUE)
+popmap_delly<-read.table("popmap_capelin_wgr_delly.txt", header= FALSE)
+colnames(popmap_delly)<-c("Sample","Pop")
 
 #load geno data for SVs
 geno_capelin_sv <- read.table("capelin_sv.012")[,-1] #load genotype matrix
