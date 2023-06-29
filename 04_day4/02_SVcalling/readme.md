@@ -92,7 +92,6 @@ and download the resulting files on your computer.
 
 ### 3. PCA to compare patterns from different types of genetic variation
 On your computer in R, perform one PCA and plot results based on each type of structural variant. The one below is the code for the PCA based on all SVs. Once you've done this, modify the script to perform the analysis on each type of SV and on the SNPs.
-Note that the bam files that I used for thw two types of analysis, sequence and structural variation, were slightly different because of the introduction of an individual flag during mapping, which was later fixed. So, when you run the PCA with the SNPs dataset, you have to replace `Sample` with `Id`.
 ```
 #load the population map with population assignment for each individual
 popmap_delly<-read.table("popmap_capelin_wgr_delly.txt", header= TRUE)
