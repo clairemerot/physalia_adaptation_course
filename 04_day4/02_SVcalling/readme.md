@@ -129,7 +129,7 @@ pca.geno_capelin_sv.sub <- pca.geno_capelin_sv$x[,1:4] %>% #retain the first fou
   as.data.frame(.) %>% #transform to dataframe object
   tibble::rownames_to_column(., var='Sample') %>% #set rownames to a new column for samples ids
   dplyr::left_join(., popmap_delly, by='Sample')
-pca.geno_capelin_sv.sub2<-cbind(pca.geno_capelin_sv.sub[1:5], popmap_delly[2:3])
+
 
 #Here we use the left_join function
 #from dplyr to wrap the population vector
