@@ -266,10 +266,6 @@ vcftools --vcf capelin_wgs_filtered.tmp.vcf \
 ### Count number of SNPs surviving filters
 grep -v "#" capelin_wgs_filtered.vcf | wc -l 
 ```
-Also, because there was a problem with the internal individual flags in the read files, which cause the addition of an individual, I used this line to fix it
-```
-vcftools --remove-indv ind --vcf capelin_wgs_filtered.vcf --recode --stdout > capelin_wgs_filtered_fixed.vcf
-```
 
 Because the variant calling takes quite some time, you can copy the original unfiltered and clean files to your working directory to explore the different files and play with filtering.
 ```
@@ -279,7 +275,7 @@ What is the proportion of SNPs surviving filters? How many are left? According t
 
 Finally, prepare the data for downstream analyses by recoding the genotypes in 012 format with 
 ```
-vcftools --vcf capelin_wgs_filtered_fixed.vcf --012 --out capelin_wgs_filtered_fixed
+vcftools --vcf capelin_wgs_filtered.vcf --012 --out capelin_wgs_filtered
 ```
 and download the resulting files on your computer.
 
