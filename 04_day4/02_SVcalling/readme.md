@@ -116,7 +116,7 @@ geno_capelin_sv.imp <- apply(geno_capelin_sv,2,function(x){
 geno_capelin_sv.imp[1:12,1:9]
 
 ##run and visualized PCA
-pca.geno_capelin_sv <- prcomp(data.imp)
+pca.geno_capelin_sv <- prcomp(geno_capelin_sv.imp )
 screeplot(pca.geno_capelin_sv)
 
 #get stats info from the pca
