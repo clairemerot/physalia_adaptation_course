@@ -143,6 +143,7 @@ You may copy it to your own directory with the following command.
 cd ~/wgr/snps_bcftools
 cp ~/Share/WGS_bam/snps_bcftools/capelin_wgs_filtered.vcf ~/wgr/snps_bcftools/.
 cp ~/Share/WGS_bam/snps_bcftools/capelin_wgs_filtered.012 ~/wgr/snps_bcftools/.
+cp ~/Share/WGS_bam/snps_bcftools/capelin_wgs_filtered.012* ~/wgr/snps_bcftools/.
 ```
 Now you can do the PCA as above. 
 Do you see the same patterns from each type of variant? Let's discuss.
