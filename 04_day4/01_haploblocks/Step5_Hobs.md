@@ -80,28 +80,3 @@ ggplot(all.hwe, aes(x=geno, y=het_fraction, col=geno))+
 ```
 ![Hobs_violin](06_images/Hobs_violin.png)
 
-As you observed on the Manhattan plots, there is a lot of heterogeneity between SNPs. Perhaps it might be worth looking at results by sliding-windows?
-Our case is not ideal because SNPs are sparese (RAD-seq) but with shole-genome data you would have no choice bu doing windows.
-
-We will use an easy function provided in the package windowscannr. It is not super fast but with our data, that should be ok.
-If you have not installed it already you can do with 
-```
-library(devtools)
-install_github('tavareshugo/windowscanr')
-library(windowscanr)
-```
-As argument you can give the window size, step and whether it is doing the mean (or another summary statistics) within each window.
-We need to give groups = chromosomes to avoid joining positions on different chromosomes!
-
-```
-WINDOW<-500000
-WINDOW_STEP<-100000
-BB.hwe_win <- winScan(x = BB.hwe,groups = "CHR", position = "POS",values = c("het_fraction"),win_size = WINDOW,win_step = WINDOW_STEP,funs = c("mean"))
-head(BB.hwe_win)
-```
-
-You can perform the window summary on AA and AB, try plotting as above group by group, or all groups together.
-It is slightly more readable. 
-
-In all cases, we nevertheless note the expected higher observed heterozygosity in AB around the middle of Chr4. 
-On Chr5, there is a region of high heterozygosity in all three groups, which may be driven by sex.
