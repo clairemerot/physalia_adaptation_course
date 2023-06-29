@@ -134,7 +134,7 @@ pca.geno_capelin_sv.sub <- pca.geno_capelin_sv$x[,1:4] %>% #retain the first fou
 #Here we use the left_join function
 #from dplyr to wrap the population vector
 #of our samples.
-ggplot(pca.geno_capelin_sv.sub2) + aes(x=PC1, y=PC2, col=Pop) +
+ggplot(pca.geno_capelin_sv.sub) + aes(x=PC1, y=PC2, col=Pop) +
   ggtitle("PCA with all SVs from Delly") +
   geom_point() + 
   coord_fixed() +
