@@ -16,6 +16,9 @@ Please follow [the instructions sent by Carlo](Connection%20to%20the%20Amazon%20
 
 [Additional info for AWS for windows users using Putty/winSCP](https://github.com/clairemerot/physalia_adaptation_course/blob/2022/AWS_windows.md)
 
+## Overview of the tutorials
+
+![workflow](workflow_tuto_physallia2023.jpg)
 
 ## Day1: Handling NGS data: From raw reads to SNPs matrix
 
